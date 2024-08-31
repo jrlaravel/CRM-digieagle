@@ -77,6 +77,7 @@ Route::prefix('admin')->group(function () {
         Route::post('update-card', [CardsController::class, 'store'])->name('admin/update-card');
         Route::get('assign-card', [CardsController::class, 'assign_card'])->name('admin/assign-card');
         Route::post('add-assign-card', [CardsController::class, 'assign_card_store'])->name('admin/add-assign-card');
+        Route::get('delete-assign-card/{id}', [CardsController::class, 'assign_card_delete'])->name('admin/delete-assign-card');
 
 
     });

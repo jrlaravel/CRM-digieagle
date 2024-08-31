@@ -32,7 +32,8 @@ class EmployeeDashboardController extends Controller
         $presentDaysCount = $collection->where('Status', 'P')->count();
         $absentDaysCount = $collection->where('Status', 'A')->count();
 
-        return view('employee.employeedashboard',compact('presentDaysCount', 'absentDaysCount'));
+        $cards = DB::select('SELECT card.name,card.image,ac.message,ac.date FROM `assign_card` as ac join card on ac.card_id = card.id WHERE ac.user_id = '.session('employee')->id);
+        return view('employee.employeedashboard',compact('presentDaysCount', 'absentDaysCount','cards'));
     }
 
     public function profile()

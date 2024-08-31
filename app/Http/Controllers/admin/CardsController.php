@@ -15,6 +15,7 @@ class CardsController extends Controller
     public function index()
     {
         $data = Card::all();  
+       
         return view('admin/cards',compact('data'));
     }
 
@@ -88,7 +89,8 @@ class CardsController extends Controller
     {
         $data = DB::select('select first_name,last_name,id from users where role = '.'"employee"');
         $card = DB::select('select id,name from card');
-        return view('admin/assign-card',compact('data','card'));
+        $assigncard = DB::select('SELECT first_name,last_name,assign_card.id,assign_card.date,card.name,assign_card.message FROM `assign_card` join card on assign_card.card_id = card.id join users on assign_card.user_id = users.id');
+        return view('admin/assign-card',compact('data','card','assigncard'));
     }
 
     public function assign_card_store(Request $request)
@@ -101,5 +103,13 @@ class CardsController extends Controller
             'date' => Carbon::now()
         ]);
         return back()->with('success', 'Card assigned successfully.');
+    }
+
+    public function assign_card_delete($id)
+    {
+        $data = Assign_card::find($id);
+        $data->delete();
+
+        return back()->with('success', 'Card unassigned successfully.');
     }
 }

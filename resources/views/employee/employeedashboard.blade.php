@@ -70,6 +70,22 @@
 <div class="row mb-2 mb-xl-3">
     <div class="col-auto d-none d-sm-block">
         <h3>Cards</h3>
+
+        <div class="row">
+            @foreach($cards as $card)
+                <div class="col"> 
+                    <div class="card" style="width: 18rem;">
+                        <img src="{{ asset('storage/cards/' . $card->image) }}" class="card-img-top" alt="{{ $card->name }}">
+                        <div class="card-body">
+                            <h5 class="card-title">{{ $card->name }}</h5>
+                            <p class="card-text">{{ $card->message }}</p>
+                            <p class="card-text">{{ \Carbon\Carbon::parse($card->date)->format('d M Y') }}</p>
+                        </div>
+                    </div>
+                </div>
+            @endforeach
+        </div>
+        
         
     </div>
 </div>
