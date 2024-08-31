@@ -15,6 +15,9 @@ class Kernel extends ConsoleKernel
     protected $commands = [
         // Register your commands here
         \App\Console\Commands\SendBirthdayReminderCommand::class,
+        
+        \App\Console\Commands\SendBirthdayEmailCommand::class,
+
     ];
 
     /**
@@ -27,6 +30,8 @@ class Kernel extends ConsoleKernel
     {
         // Schedule your command to run daily at midnight
         $schedule->command('send:birthday-reminder')->everyMinute();
+
+        $schedule->command('send:birthday-email')->everyMinute();
 
     }
 

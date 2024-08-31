@@ -26,7 +26,7 @@ class DepartmentController extends Controller
 
         if($validator->passes()){ 
             Department::create([
-                'name' => $request->name,
+                'name' => $request->name,   
                 'status' => 1
             ]);
 
@@ -73,7 +73,7 @@ class DepartmentController extends Controller
 
     public function designationStore(Request $request)
     {
-        designation::create([
+        Designation::create([
             'department_id' => $request->department,
             'name' => $request->name,
             'status' => 1

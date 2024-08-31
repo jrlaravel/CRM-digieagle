@@ -145,7 +145,7 @@
                     </div>
                     <div class="mb-3">
                         <label class="form-label" for="inputAddress">Birthdate</label>
-                        <input type="date" class="form-control @error('date') is-invalid @enderror" name="date" id="date">
+                        <input type="date" class="form-control @error('date') is-invalid @enderror" required name="date" id="date">
                         @error('date')
                         <p class="invalid-feedback">{{$message}}</p>
                         @enderror
@@ -169,7 +169,9 @@
                                 @error('designation')
                                 <p class="invalid-feedback">{{$message}}</p>
                                 @enderror
-                
+                                @foreach($designation as $data1)
+                                <option value="{{$data1->id}}">{{$data1->name}}</option>
+                                @endforeach
                             </select>
                         </div>
                     </div>
@@ -212,16 +214,18 @@
             },
             statusCode:{
               200: function (response) {
-                console.log(response);
-                // if success
+                let birthDate = new Date(response.birth_date);
+                let formattedDate = birthDate.toISOString().split('T')[0];
                 $('#id').val(response.id);
                 $('#fname').val(response.first_name);
                 $('#lname').val(response.last_name);
                 $('#email').val(response.email);
                 $('#phone').val(response.phone);
                 $('#address').val(response.address);
-                $('#date').val(response.birth_Date);
-                // $('#department').val(response.department);
+                $('#date').val(formattedDate);
+                $('#department').val(response.department);
+                $('#designation').val(response.designation);
+
             }
             },
             error: function (error) {

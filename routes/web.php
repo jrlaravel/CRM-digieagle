@@ -9,6 +9,8 @@ use App\Http\Controllers\admin\EmployeeController;
 use App\Http\Controllers\admin\DepartmentController;
 use App\Http\Controllers\employee\AttendanceController;
 use App\Http\Controllers\admin\AttendanceController as AdminAttendanceController;
+use App\Http\Controllers\admin\CardsController;
+
 
 Route::get('/', [LoginController::class, 'index'])->name('emp/login'); 
 Route::prefix('emp')->group(function () {
@@ -68,6 +70,15 @@ Route::prefix('admin')->group(function () {
         Route::get('birthdayCalender',[EmployeeController::class, 'birthday'])->name('admin/birthdayCalender');
         Route::get('getnotification',[AdminDashboardController::class, 'notification'])->name('admin/getnotification');
         Route::post('updatenotification/{id}',[AdminDashboardController::class, 'updatenotification'])->name('admin/updatenotification');
+        Route::get('mail', [EmployeeController::class, 'mail'])->name('admin/mail');
+        Route::get('cards', [CardsController::class, 'index'])->name('admin/cards');
+        Route::post('add-card', [CardsController::class, 'store'])->name('admin/add-card');
+        Route::get('delete-card/{id}', [CardsController::class, 'delete'])->name('admin/delete-card');
+        Route::post('update-card', [CardsController::class, 'store'])->name('admin/update-card');
+        Route::get('assign-card', [CardsController::class, 'assign_card'])->name('admin/assign-card');
+        Route::post('add-assign-card', [CardsController::class, 'assign_card_store'])->name('admin/add-assign-card');
+
+
     });
 });
 

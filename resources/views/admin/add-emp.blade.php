@@ -7,8 +7,7 @@
     <div class="flex-grow-1 ps-2">
         
           <p class="text-white">{{session('user')->first_name}}</p>
-      
-        {{-- <div class="sidebar-user-subtitle">Designer</div> --}}
+
     </div>
 </div>
 @endsection
@@ -83,7 +82,7 @@
                 </div>
                 <div class="mb-3">
                     <label class="form-label" for="inputPassword4">Password</label>
-                        <input type="password" class="form-control @error('password') is-invalid @enderror" name="password" id="password" placeholder="Password">
+                        <input type="password" class="form-control @error('password') is-invalid @enderror" name="password" value="{{old('password')}}" id="password" placeholder="Password">
                         @error('password')
                         <p class="invalid-feedback">{{$message}}</p>
                         @enderror  

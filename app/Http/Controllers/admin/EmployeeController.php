@@ -9,7 +9,7 @@ use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\DB;
 use App\Models\User;
 use App\Models\Department;
-use App\Models\designation;
+use App\Models\Designation;
 use App\Models\Notification;
 
 class EmployeeController extends Controller
@@ -21,7 +21,7 @@ class EmployeeController extends Controller
 
     public function getDesignations(Request $request)
     {
-        $designations = Designation::where('id', $request->department_id)->get();
+        $designations = Designation::where('department_id', $request->department_id)->get();
         return response()->json($designations);
     }
 
@@ -93,7 +93,8 @@ class EmployeeController extends Controller
         
         $employees = DB::select('SELECT users.id as uid,users.first_name,users.last_name,users.username,users.birth_date,users.email,users.phone,users.address,dep.name as depname,dep.id as depid,des.id as desid,des.name as desname FROM `users` join department as dep on users.department = dep.id join designation as des on users.designation = des.id;');
         $department = Department::all();
-        return view('admin.list-emp', compact('employees','department'));
+        $designation = Designation::all();
+        return view('admin.list-emp', compact('employees','department','designation'));
     }
 
     public function edit($id){
@@ -119,6 +120,8 @@ class EmployeeController extends Controller
                 echo 'error';
             }
         }
+
+       
         $user->first_name = $request->input('fname');
         $user->last_name = $request->input('lname');
         $user->email = $request->input('email');
@@ -127,13 +130,10 @@ class EmployeeController extends Controller
         $user->birth_date = $request->input('date');
         $user->designation = $request->input('designation');
         $user->department = $request->input('department');
-        if($request->hasFile('profile')){
-            $user->profile = $request->file('profile')->store('profile');
-        }
-
         $user->save();
 
         return redirect()->route('admin/list-emp');  
+    
     }
 
     public function delete($id){
@@ -146,4 +146,9 @@ class EmployeeController extends Controller
         $data = DB::select('SELECT concat(first_name, last_name) as name, DATE_FORMAT(birth_date, "%d-%m") AS start FROM users;');
         return view('admin/birthdaycalendar',compact('data'));
     }
+
+    public function mail(){
+        return view('admin/birthdayReminder');
+}
+
 }

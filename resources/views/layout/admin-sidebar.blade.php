@@ -83,6 +83,18 @@
 					<a data-bs-target="#dashboards" href="{{route('admin/attendance')}}"  class="sidebar-link">
 						<i class='far fa-calendar-alt'></i> <span class="align-middle">Attendance</span>
 					</a>
+
+					<li class="sidebar-item">
+						<a data-bs-target="#card" data-bs-toggle="collapse" class="sidebar-link collapsed">
+							<i class="fa fa-line-chart"></i> <span class="align-middle">Cards</span>
+						</a>
+						<ul id="card" class="sidebar-dropdown list-unstyled collapse " data-bs-parent="#sidebar">
+							<li class="sidebar-item"></li><a class='sidebar-link' href='{{route('admin/cards')}}'>Add Cards</a>
+						</ul>
+						<ul id="card" class="sidebar-dropdown list-unstyled collapse " data-bs-parent="#sidebar">
+							<li class="sidebar-item"><a class='sidebar-link' href='{{route('admin/assign-card')}}'>Assign Card</a></li>
+						</ul>
+					</li>
 					<a data-bs-target="#dashboards" href="{{route('admin/birthdayCalender')}}"  class="sidebar-link">
 						<i class="fa fa-birthday-cake" aria-hidden="true"></i><span class="align-middle">Birthday Reminder</span>
 					</a>

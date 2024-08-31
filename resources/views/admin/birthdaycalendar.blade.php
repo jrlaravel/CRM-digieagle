@@ -12,7 +12,6 @@
 </div>
 @endsection
 @section('content')
-<main class="content">
     <div class="container-fluid p-0">
         <div class="card">
             <div class="card-body">
@@ -20,15 +19,13 @@
             </div>
         </div>
     </div>
-</main>
-@endsection
-
-<script src="{{asset('js/fullcalendar.js')}}"></script>
+    
+    <script src="{{asset('js/fullcalendar.js')}}"></script>
 
 <script>
     document.addEventListener("DOMContentLoaded", function() {
         var calendarEl = document.getElementById("fullcalendar");
-
+        
         var data = @json($data);
         // Function to convert the data
         function transformData(data) {
@@ -49,17 +46,12 @@
         
         // Transform the data
         var transformedData = transformData(data);
-
+        
         var calendar = new FullCalendar.Calendar(calendarEl, {
             themeSystem: "bootstrap",
             initialView: "dayGridMonth",
             initialDate: "2024-07-07",
-            headerToolbar: {
-                // left: "prev,next today",
-                // center: "title",
-                // right: "dayGridMonth,timeGridWeek,timeGridDay"
-            },
-
+            
             events: transformedData,
         });
         setTimeout(function() {
@@ -67,3 +59,5 @@
         }, 250)
     });
 </script>
+
+@endsection

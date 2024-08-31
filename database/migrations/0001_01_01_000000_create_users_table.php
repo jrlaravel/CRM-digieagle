@@ -29,8 +29,8 @@ return new class extends Migration
             $table->string('profile_photo_path')->nullable();
             $table->rememberToken();
             $table->timestamps();
-            $table->foreign('department')->references('id')->on('department')->onDelete('cascade');
-            $table->foreign('designation')->references('id')->on('designation')->onDelete('cascade');         
+            // $table->foreign('department')->references('id')->on('department')->onDelete('cascade');
+            // $table->foreign('designation')->references('id')->on('designation')->onDelete('cascade');         
         });
 
         Schema::create('password_reset_tokens', function (Blueprint $table) {
