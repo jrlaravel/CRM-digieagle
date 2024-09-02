@@ -6,7 +6,7 @@ use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use App\Models\Department;
 use App\Models\Notification;
-use App\Models\designation;
+use App\Models\Designation;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Support\Facades\DB;
  

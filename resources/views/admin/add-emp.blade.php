@@ -85,7 +85,13 @@
                         <input type="password" class="form-control @error('password') is-invalid @enderror" name="password" value="{{old('password')}}" id="password" placeholder="Password">
                         @error('password')
                         <p class="invalid-feedback">{{$message}}</p>
-                        @enderror  
+                        @enderror 
+                        <i 
+                            id="toggleIcon" 
+                            class="fa fa-eye position-absolute" 
+                            onclick="togglePasswordVisibility()" 
+                            style="cursor: pointer; right: 28px; top: 358px; transform: translateY(-50%);"
+                        ></i> 
                 </div>
                 <div class="mb-3">
                     <label class="form-label" for="inputEmail4">Empcode</label>
@@ -219,6 +225,19 @@
                 skillsHiddenInput.value = skills.join(',');
             }
         });
-    
+
+        function togglePasswordVisibility() {
+		var passwordInput = document.getElementById('password');
+		var toggleIcon = document.getElementById('toggleIcon');
+		if (passwordInput.type === "password") {
+			passwordInput.type = "text";
+			toggleIcon.classList.remove('fa-eye');
+			toggleIcon.classList.add('fa-eye-slash');
+		} else {
+			passwordInput.type = "password";
+			toggleIcon.classList.remove('fa-eye-slash');
+			toggleIcon.classList.add('fa-eye');
+		}
+	}
     </script>
 @endsection

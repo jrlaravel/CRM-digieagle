@@ -34,9 +34,12 @@
                             </tr>
                         </thead>
                         <tbody>
+                             @php
+                                $counter = 1;
+                            @endphp
                             @foreach ($designation as $data1)
                             <tr>
-                                <td>1</td>
+                                <td>{{$counter}}</td>
                                 <td>{{$data1->desname}}</td>
                                 <td>{{$data1->depname}}</td>
                                 <td>
@@ -65,6 +68,9 @@
                                     <a href="{{route('admin/delete-designation',$data1->desid)}}"  class="btn btn-danger">delete</a>
                                 </td>
                             </tr>
+                            @php
+                                $counter++;
+                            @endphp
                             @endforeach
                         </tbody>
                     </table>

@@ -11,7 +11,7 @@ use Illuminate\Queue\SerializesModels;
 use App\Models\User;
 
 
-class BirthdayReminderMail extends Mailable
+class BirthdayEMail extends Mailable
 {
     use Queueable, SerializesModels;
 

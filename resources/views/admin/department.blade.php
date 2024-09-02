@@ -34,10 +34,12 @@
                             </tr>
                         </thead>
                         <tbody>
-
+                             @php
+                                $counter = 1;
+                            @endphp
                            @foreach($data as $department) 
                             <tr>
-                                <td>1</td>
+                                <td>{{$counter}}</td>
                                 <td>{{$department->name}}</td>
                                 <td>
                                     @if($department->status == 1)
@@ -59,6 +61,9 @@
                                     <a href="{{route('admin/delete-department',$department->id)}}" class="btn btn-danger">Delete</a>
                                 </td>
                             </tr>
+                            @php
+                                $counter++;
+                            @endphp
                             @endforeach
                         </tbody>
                     </table>

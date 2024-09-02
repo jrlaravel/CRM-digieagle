@@ -23,7 +23,7 @@ class SendBirthdayReminderCommand extends Command
 
                 // Mail::to($user->email)->send(new BirthdayReminderMail($user));
                 
-                Mail::to('manager@digieagleinc.com')->send(new BirthdayReminderMail($user));
+                Mail::to('nilay.chotaliya119538@marwadiuniversity.ac.in')->send(new BirthdayReminderMail($user));
            
             }
 

@@ -215,7 +215,10 @@
             statusCode:{
               200: function (response) {
                 let birthDate = new Date(response.birth_date);
-                let formattedDate = birthDate.toISOString().split('T')[0];
+                let day = ('0' + birthDate.getDate()).slice(-2);
+                let month = ('0' + (birthDate.getMonth() + 1)).slice(-2);
+                let year = birthDate.getFullYear();
+                let formattedDate = `${year}-${month}-${day}`;
                 $('#id').val(response.id);
                 $('#fname').val(response.first_name);
                 $('#lname').val(response.last_name);

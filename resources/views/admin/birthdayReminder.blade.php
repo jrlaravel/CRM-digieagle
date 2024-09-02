@@ -82,13 +82,13 @@
 </head>
 <body>
     <div class="container">
-        <img src="{{ $message->embed(public_path('mail/logo.png')) }}" width="34%" alt=""><br>
-        <img src="{{ $message->embed(public_path('mail/image-cake.png')) }}" width="" alt="Birthday Cake" class="cake-img">
+        <img src="{{ asset('mail/logo.png') }}" width="34%" alt=""><br>
+        <img src="{{ asset('mail/image-cake.png') }}" width="" alt="Birthday Cake" class="cake-img">
         <h1>Happy Birthday,<br> {{$user->first_name}} {{$user->last_name}} </h1>
         <p class="wish">We want to make this day special, so we thought the best gift is the opportunity to choose what you truly want.</p>
         
         <div class="quote-card">
-            <img src="{{ $message->embed(public_path('mail/cupcake_image.png')) }}" alt="Cupcake Icon">
+            <img src="{{ asset('mail/cupcake_image.png') }}" alt="Cupcake Icon">
             <h3>In Two Days...</h3>
         </div>
 
