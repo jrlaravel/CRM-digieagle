@@ -5,10 +5,13 @@ namespace App\Http\Controllers\admin;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use App\Models\Card;
+use App\Models\User;
 use App\Models\Assign_card;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Support\Facades\DB;
 use Carbon\Carbon;
+use App\Mail\CardAssignedMail;
+use Illuminate\Support\Facades\Mail;
 
 class CardsController extends Controller
 {
@@ -102,14 +105,21 @@ class CardsController extends Controller
             'message' => $request->message,
             'date' => Carbon::now()
         ]);
-        return back()->with('success', 'Card assigned successfully.');
+
+          // Fetch the employee and card details
+        $employee = User::findOrFail($request->employee);
+        $card = Card::findOrFail($request->card);
+
+        // Send the email to the employee
+        Mail::to($employee->email)->send(new CardAssignedMail($card, $employee, $request->message));
+
+        return back()->with('success', 'Card assigned and email sent successfully.');
     }
 
     public function assign_card_delete($id)
     {
         $data = Assign_card::find($id);
         $data->delete();
-
         return back()->with('success', 'Card unassigned successfully.');
     }
 }
