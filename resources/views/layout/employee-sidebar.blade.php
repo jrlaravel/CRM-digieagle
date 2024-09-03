@@ -37,7 +37,7 @@
 	<div class="wrapper">
 		<nav id="sidebar" class="sidebar js-sidebar">
 			<div class="sidebar-content js-simplebar">
-				<a class='sidebar-brand' '>
+				<a class='sidebar-brand'>
 					<span class="sidebar-brand-text align-middle">
 						<img src="{{asset('storage/img/logo/logo.png')}}" width="70%" height="70%" alt="logo">
 					</span>
@@ -55,12 +55,12 @@
 
 				<ul class="sidebar-nav">
 				
-						<a data-bs-target="#dashboards" href="{{route('emp/dashboard')}}"  class="sidebar-link">
+						<a href="{{route('emp/dashboard')}}"  class="sidebar-link">
 							<i class="align-middle" data-feather="sliders"></i> <span class="align-middle">Dashboard</span>
 						</a>
 
-						<a data-bs-target="#dashboards" href="{{route('emp/attendance')}}"  class="sidebar-link">
-							<i class="align-middle" data-feather="sliders"></i> <span class="align-middle">Attendance</span>
+						<a href="{{route('emp/attendance')}}"  class="sidebar-link">
+							<i class='far fa-calendar-alt'></i> <span class="align-middle">Attendance</span>
 						</a>
 				</ul>
 			</div>

@@ -2,7 +2,7 @@
 @section('profile')
 <div class="d-flex justify-content-center">
     <div class="flex-shrink-0">
-        <img src="{{asset('storage/img/avatars/avatar.jpg')}}" class="avatar img-fluid rounded me-1" alt="" />
+        <img src="{{asset('storage/profile_photos').'/'.session('employee')->profile_photo_path}}" class="avatar img-fluid rounded me-1" alt="" />
     </div>
     <div class="flex-grow-1 ps-2">
            <h4 class="text-white">{{session('employee')->first_name}}</h4>
@@ -10,9 +10,31 @@
 </div>
 @endsection
 @section('content')
+<style>
+    .table-container {
+        overflow: auto;
+         height: 500px;
+    }
+
+    .table {
+        width: 100%;
+        border-collapse: collapse; /* Optional: Improve table layout */
+    }
+
+    .table th, .table td {
+        padding: 8px; /* Adjust padding as needed */
+        border: 1px solid #ddd; /* Optional: Add border for better visibility */
+    }
+
+    .table thead th {
+        position: sticky;
+        top: 0;
+        z-index: 1;
+        background-color: #f8f9fa; /* Optional: Header background color */
+    }
+</style>
 <meta name="csrf-token" content="{{ csrf_token() }}">
 <div class="container-fluid p-0">
-
     <div class="mb-3">
         {{-- <h1 class="h3 d-inline align-middle">Attendance Report</h1>     --}}
     </div>
@@ -40,37 +62,43 @@
                         </div>
                     </div>
                     <button type="submit" class="btn btn-success">Generate</button>
+                    <button class="btn btn-primary float-end" id="download-button">Download</button>
                 </form>
             </div>
         </div>
     </div>
-    <div class="row">
-        <div class="col-12">
-            
+</div>
+
+    <div class="row mt-4">
+        <div class="col-12"> 
             <div class="card">
-                <div class="card-body">
-                    <table id="inOutPunchTable" class="table table-striped" style="width:100%">
+                <div class="table-container">
+                    <table id="inOutPunchTable" class="table" style="width:100%">
                         <thead>
                             <tr>
                                 <th>No.</th>
                                 <th>Date</th>
                                 <th>IN Time</th>
                                 <th>OUT Time</th>
-                                <th>Early Out</th>
+                                <th class="text-danger">Early Out</th>
                                 <th>Worktime</th>
-                                <th>Overtime</th>
+                                <th class="text-danger">Overtime</th>
                                 <th>Status</th>
                             </tr>
                         </thead>
-                        <tbody>
-                            <button class="btn btn-primary float-end" id="download-button">Download</button>
+                        <tbody class="mt-2">
                         </tbody>
                     </table>
+ 
+                    
+                </div>
+                <div id="totalWorkHours" class="mt-4" style="display: none;">
+                    <h3>Total Work Hours in Date Range: <span id="workHours"></span></h3>
                 </div>
             </div>
         </div>
     </div>  
-</div>
+
 <!-- Load jQuery -->
 <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 
@@ -106,21 +134,33 @@
                         return;
                     }
 
+                    var totalWorkMinutes = 0; // To store the total work minutes
+
                     // Populate the table with fetched data
                     $.each(response['InOutPunchData'], function(index, item) {
-                        var status = item.INTime === '--:--' ? 'Not Punch In' : (item.OUTTime === '--:--' ? 'Not Punch Out' : 'Completed');
+                        var status = item.INTime === '--:--' ? 'A' : (item.OUTTime === '--:--' ? 'Not Punch Out' : 'P');
                         var row = '<tr>' +
                             '<td>' + (index + 1) + '</td>' + 
                             '<td>' + item.DateString + '</td>' +
                             '<td>' + item.INTime + '</td>' +
                             '<td>' + item.OUTTime + '</td>' +
-                            '<td>' + item.Erl_Out + '</td>' +
+                            '<td class="text-danger">' + item.Erl_Out + '</td>' +
                             '<td>' + item.WorkTime + '</td>' +
-                            '<td>' + item.OverTime + '</td>' +
+                            '<td class="text-danger">' + item.OverTime + '</td>' +
                             '<td>' + status + '</td>' +
                             '</tr>';
                         tableBody.append(row);
+
+                        var workTime = item.WorkTime.split(':');
+                        var workHours = parseInt(workTime[0]);
+                        var workMinutes = parseInt(workTime[1]);
+                        totalWorkMinutes += (workHours * 60) + workMinutes;
+                        $('#totalWorkHours').show();
                     });
+
+                        var totalHours = Math.floor(totalWorkMinutes / 60);
+                        var remainingMinutes = totalWorkMinutes % 60;
+                        $('#workHours').text(totalHours + ' hrs ' + remainingMinutes + ' mins');
                 },
                 error: function(error) {
                     alert('An error occurred while fetching data.');
