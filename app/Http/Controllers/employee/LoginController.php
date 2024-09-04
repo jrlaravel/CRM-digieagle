@@ -22,34 +22,42 @@ class LoginController extends Controller
         return view('employee.login');
     }
 
-    public function authenticate(Request $request){
-        $validator = Validator::make($request->all(),[
+    public function authenticate(Request $request)
+    {
+
+        $validator = Validator::make($request->all(), [
             'username' => 'required',
             'password' => 'required'
         ]);
+    
+        if ($validator->fails()) {
 
-        if($validator->passes())
-        {    
-            if(Auth::guard('web')->attempt(['username' => $request->username, 'password' => $request->password])){
-                $user =  Auth::guard('web')->user();
-                if(Auth::guard('web')->user()->role != 'employee'){
-                    Auth::guard('web')->logout();
-                    return redirect()->route('emp/login')->withInput()->with(['error' => 'You are not authorized to access this area']);
-                }
-                
-                session()->put('employee',$user);
-                return redirect()->route('emp/dashboard');
-            }
-            else{
-                // echo 'error1';
-                return redirect()->route('emp/login')->withInput()->withErrors(['message' => 'Invalid credentials']);
-            }
-        }
-        else{
-            // echo 'error';
             return redirect()->route('emp/login')->withInput()->withErrors($validator);
- 
-        }   
+        }
+    
+        if (Auth::guard('web')->attempt(['username' => $request->username, 'password' => $request->password])) {
+            $user = Auth::guard('web')->user();
+    
+            if ($user->role == 'employee' || $user->role == 'hr') {
+
+                session()->put('employee', $user);
+    
+                // Check if the user is HR and pass the appropriate flag to the view
+                // if ($user->role === 'hr') {
+                //     session()->put('hrPrivileges', true);
+                // } else {
+                //     session()->put('hrPrivileges', false);
+                // }
+                return redirect()->route('emp/dashboard');
+            } else {
+
+                Auth::guard('web')->logout();
+                return redirect()->route('emp/login')->withInput()->with(['error' => 'You are not authorized to access this area']);
+            }
+        } else {
+
+            return redirect()->route('emp/login')->withInput()->withErrors(['message' => 'Invalid credentials']);
+        }
     }
 
     // public function loginWithGoogle()

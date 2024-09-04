@@ -58,7 +58,7 @@
 
 					<li class="sidebar-item">
 						<a data-bs-target="#pages" data-bs-toggle="collapse" class="sidebar-link collapsed">
-							<i class="fa fa-user-circle" aria-hidden="true"></i> <span class="align-middle">Employee</span>
+							<i class="fa fa-user-circle" aria-hidden="true"></i> <span class="align-middle">Employee Management	</span>
 						</a>
 						<ul id="pages" class="sidebar-dropdown list-unstyled collapse " data-bs-parent="#sidebar">
 							<li class="sidebar-item"><a class='sidebar-link' href='{{route('admin/add-emp')}}'>Add Employee</a></li>
@@ -70,7 +70,7 @@
 
 					<li class="sidebar-item">
 						<a data-bs-target="#page" data-bs-toggle="collapse" class="sidebar-link collapsed">
-							<i class="fa fa-briefcase"></i> <span class="align-middle">Department</span>
+							<i class="fa fa-briefcase"></i> <span class="align-middle">Department Management</span>
 						</a>
 						<ul id="page" class="sidebar-dropdown list-unstyled collapse " data-bs-parent="#sidebar">
 							<li class="sidebar-item"></li><a class='sidebar-link' href='{{route('admin/department')}}'>Department</a>
@@ -80,10 +80,7 @@
 						</ul>
 					</li>
 
-					<a data-bs-target="#dashboards" href="{{route('admin/attendance')}}"  class="sidebar-link">
-						<i class='far fa-calendar-alt'></i> <span class="align-middle">Attendance</span>
-					</a>
-
+					
 					<li class="sidebar-item">
 						<a data-bs-target="#card" data-bs-toggle="collapse" class="sidebar-link collapsed">
 							<i class="fa fa-line-chart"></i> <span class="align-middle">Cards</span>
@@ -95,6 +92,20 @@
 							<li class="sidebar-item"><a class='sidebar-link' href='{{route('admin/assign-card')}}'>Assign Card</a></li>
 						</ul>
 					</li>
+					<li class="sidebar-item">
+						<a data-bs-target="#leave" data-bs-toggle="collapse" class="sidebar-link collapsed">
+							<i class="fa fa-line-chart"></i> <span class="align-middle">Leave Management</span>
+						</a>
+						<ul id="leave" class="sidebar-dropdown list-unstyled collapse " data-bs-parent="#sidebar">
+							<li class="sidebar-item"></li><a class='sidebar-link' href='{{route('admin/leave-type')}}'>Leave Type</a>
+						</ul>
+						<ul id="leave" class="sidebar-dropdown list-unstyled collapse " data-bs-parent="#sidebar">
+							<li class="sidebar-item"></li><a class='sidebar-link' href='{{route('admin/leave')}}'>Leave List</a>
+						</ul>
+					</li>
+					<a data-bs-target="#dashboards" href="{{route('admin/attendance')}}"  class="sidebar-link">
+						<i class='far fa-calendar-alt'></i> <span class="align-middle">Attendance</span>
+					</a>
 					<a data-bs-target="#dashboards" href="{{route('admin/birthdayCalender')}}"  class="sidebar-link">
 						<i class="fa fa-birthday-cake" aria-hidden="true"></i><span class="align-middle">Birthday Reminder</span>
 					</a>

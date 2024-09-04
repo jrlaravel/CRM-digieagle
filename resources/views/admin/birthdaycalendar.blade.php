@@ -22,42 +22,75 @@
     
     <script src="{{asset('js/fullcalendar.js')}}"></script>
 
-<script>
-    document.addEventListener("DOMContentLoaded", function() {
-        var calendarEl = document.getElementById("fullcalendar");
-        
-        var data = @json($data);
-        // Function to convert the data
-        function transformData(data) {
-            const year = new Date().getFullYear(); // Current year
+    <script>
+        document.addEventListener("DOMContentLoaded", function() {
+            var calendarEl = document.getElementById("fullcalendar");
             
-            return data.map(item => {
-                const [day, month] = item.start.split('-');
+            var birthdays = @json($data);
+            var leaves = @json($leave);
+    
+            // Function to transform birthday data
+            function transformBirthdayData(birthdays) {
+                const year = new Date().getFullYear(); // Current year
                 
-                // Format to YYYY-MM-DD
-                const formattedDate = `${year}-${month}-${day}`;
-                
-                return {
-                    title:  item.name + "'s birthday",
-                    start: formattedDate
-                };
+                return birthdays.map(item => {
+                    const [day, month] = item.start.split('-');
+                    
+                    // Format to YYYY-MM-DD
+                    const formattedDate = `${year}-${month}-${day}`;
+                    
+                    return {
+                        title: item.name + "'s birthday",
+                        start: formattedDate,
+                        backgroundColor: '#ff9f89', // Color for birthday events
+                        borderColor: '#ff9f89'
+                    };
+                });
+            }
+    
+            // Function to transform leave data
+            function transformLeaveData(leaves) {
+                return leaves.map(item => {
+                    return {
+                        title: item.first_name + ' on leave',
+                        start: item.start_date,
+                        end: item.end_date,
+                        description: item.reason,
+                        backgroundColor: '#1e90ff', // Color for leave events
+                        borderColor: '#1e90ff'
+                    };
+                });
+            }
+    
+            // Transform the data
+            var transformedBirthdays = transformBirthdayData(birthdays);
+            var transformedLeaves = transformLeaveData(leaves);
+    
+            // Combine both arrays
+            var events = transformedBirthdays.concat(transformedLeaves);
+    
+            var calendar = new FullCalendar.Calendar(calendarEl, {
+                themeSystem: "bootstrap",
+                initialView: "dayGridMonth",
+                initialDate: new Date(),
+                events: events, // Load combined events
+                eventDidMount: function(info) {
+                    if (info.event.extendedProps.description) {
+                        $(info.el).tooltip({
+                            title: info.event.extendedProps.description,
+                            placement: 'top',
+                            trigger: 'hover',
+                            container: 'body'
+                        });
+                    }
+                }
             });
-        }
-        
-        // Transform the data
-        var transformedData = transformData(data);
-        
-        var calendar = new FullCalendar.Calendar(calendarEl, {
-            themeSystem: "bootstrap",
-            initialView: "dayGridMonth",
-            initialDate: "2024-07-07",
-            
-            events: transformedData,
+    
+            setTimeout(function() {
+                calendar.render();
+            }, 250);
         });
-        setTimeout(function() {
-            calendar.render();
-        }, 250)
-    });
-</script>
+    </script>
+    
 
 @endsection

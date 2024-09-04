@@ -16,7 +16,8 @@ return Application::configure(basePath: dirname(__DIR__))
             'admin.guest' => \App\Http\Middleware\Adminredirect::class,
             'admin.auth' => \App\Http\Middleware\AdminAuthenticate::class,
             'emp.guest' => \App\Http\Middleware\Employeeredirect::class,
-            'emp.auth' => \App\Http\Middleware\EmployeeAuthenticate::class
+            'emp.auth' => \App\Http\Middleware\EmployeeAuthenticate::class,
+            'employee.hr' => \App\Http\Middleware\CheckEmployeeOrHr::class
         ]);
 
      

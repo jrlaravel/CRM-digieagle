@@ -143,8 +143,9 @@ class EmployeeController extends Controller
     }
 
     public function birthday(){
-        $data = DB::select('SELECT concat(first_name, last_name) as name, DATE_FORMAT(birth_date, "%d-%m") AS start FROM users;');
-        return view('admin/birthdaycalendar',compact('data'));
+        $data = DB::select('SELECT concat(first_name) as name, DATE_FORMAT(birth_date, "%d-%m") AS start FROM users');
+        $leave = DB::select('SELECT first_name,start_date,end_date,reason FROM `leave` as la join users on la.user_id = users.id WHERE status = 1');
+        return view('admin/birthdaycalendar',compact('data','leave'));
     }
 
     public function mail(){

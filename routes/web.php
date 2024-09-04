@@ -10,6 +10,8 @@ use App\Http\Controllers\admin\DepartmentController;
 use App\Http\Controllers\employee\AttendanceController;
 use App\Http\Controllers\admin\AttendanceController as AdminAttendanceController;
 use App\Http\Controllers\admin\CardsController;
+use App\Http\Controllers\admin\LeaveController;
+use App\Http\Controllers\employee\EmployeeLeaveController;
 
 
 Route::get('/', [LoginController::class, 'index'])->name('emp/login'); 
@@ -34,6 +36,12 @@ Route::prefix('emp')->group(function () {
         Route::post('/inoutdata', [AttendanceController::class, 'inoutdata'])->name('emp/inoutdata');;
         Route::post('/download-pdf', [AttendanceController::class, 'downloadPDF'])->name('download.pdf');
         Route::post('profilephoto', [EmployeeDashboardController::class, 'profilePhoto'])->name('emp/profilephoto'); 
+        Route::get('leave', [EmployeeLeaveController::class, 'index'])->name('emp/leave');
+        Route::post('leave', [EmployeeLeaveController::class, 'store'])->name('emp/leave-store');
+        Route::get('leave/{id}', [EmployeeLeaveController::class, 'delete'])->name('emp/leave-delete');
+        Route::get('getnotification',[EmployeeDashboardController::class, 'notification'])->name('emp/getnotification');
+        Route::post('updatenotification/{id}',[EmployeeDashboardController::class, 'updatenotification'])->name('emp/updatenotification');
+
     });
 });
 
@@ -78,6 +86,13 @@ Route::prefix('admin')->group(function () {
         Route::get('assign-card', [CardsController::class, 'assign_card'])->name('admin/assign-card');
         Route::post('add-assign-card', [CardsController::class, 'assign_card_store'])->name('admin/add-assign-card');
         Route::get('delete-assign-card/{id}', [CardsController::class, 'assign_card_delete'])->name('admin/delete-assign-card');
+        Route::get('leave-type', [LeaveController::class, 'index'])->name('admin/leave-type');
+        Route::post('add-leavetype', [LeaveController::class, 'store'])->name('admin/add-leavetype');
+        Route::get('delete-leave-type/{id}', [LeaveController::class, 'delete'])->name('admin/delete-leave-type');
+        Route::post('edit-leave-type', [LeaveController::class, 'store'])->name('admin/edit-leave-type');
+        Route::get('leave', [LeaveController::class, 'leave'])->name('admin/leave');
+        Route::get('leave-delete/{id}', [LeaveController::class, 'leavedelete'])->name('admin/leave-delete');
+        Route::get('leave-update/{id}/{status}', [LeaveController::class, 'leaveupdate'])->name('admin/leave-update');
 
 
     });
