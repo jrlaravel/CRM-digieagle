@@ -106,8 +106,8 @@
 					<a data-bs-target="#dashboards" href="{{route('admin/attendance')}}"  class="sidebar-link">
 						<i class='far fa-calendar-alt'></i> <span class="align-middle">Attendance</span>
 					</a>
-					<a data-bs-target="#dashboards" href="{{route('admin/birthdayCalender')}}"  class="sidebar-link">
-						<i class="fa fa-birthday-cake" aria-hidden="true"></i><span class="align-middle">Birthday Reminder</span>
+					<a data-bs-target="#dashboards" href="{{route('admin/Calender')}}"  class="sidebar-link">
+						<i class="fa fa-birthday-cake" aria-hidden="true"></i><span class="align-middle">Calender</span>
 					</a>
 				</ul>
 			</div>

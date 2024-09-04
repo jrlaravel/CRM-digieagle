@@ -75,7 +75,7 @@ Route::prefix('admin')->group(function () {
         Route::post('add-designation', [DepartmentController::class, 'designationStore'])->name('admin/add-designation');  
         Route::get('delete-designation/{id}', [DepartmentController::class, 'deletedesignation'])->name('admin/delete-designation'); 
         Route::get('status-designation/{id}/{status}', [DepartmentController::class, 'designationstatus'])->name('admin/status-designation');        
-        Route::get('birthdayCalender',[EmployeeController::class, 'birthday'])->name('admin/birthdayCalender');
+        Route::get('Calender',[EmployeeController::class, 'calender'])->name('admin/Calender');
         Route::get('getnotification',[AdminDashboardController::class, 'notification'])->name('admin/getnotification');
         Route::post('updatenotification/{id}',[AdminDashboardController::class, 'updatenotification'])->name('admin/updatenotification');
         Route::get('mail', [EmployeeController::class, 'mail'])->name('admin/mail');
