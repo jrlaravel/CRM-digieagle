@@ -12,7 +12,6 @@ use Carbon\Carbon;
 use App\Http\Controllers\Controller;
 use App\Models\User;
 use Illuminate\Support\Str;
-use Laravel\Socialite\Facades\Socialite;
 use Mail;
 
 
@@ -24,7 +23,6 @@ class LoginController extends Controller
 
     public function authenticate(Request $request)
     {
-
         $validator = Validator::make($request->all(), [
             'username' => 'required',
             'password' => 'required'
@@ -56,32 +54,10 @@ class LoginController extends Controller
             }
         } else {
 
-            return redirect()->route('emp/login')->withInput()->withErrors(['message' => 'Invalid credentials']);
+            return redirect()->route('emp/login')->withInput()->with(['error' => 'Invalid credentials']);
         }
     }
 
-    // public function loginWithGoogle()
-    // {
-    //     $gUser = Socialite::driver('google')->stateless()->user();
-    //     dd($gUser);
-    //     $user = User::where('email', $gUser->getEmail())->first();
-
-    //     if($user->role != 'employee'){
-    //         Auth::guard('web')->logout();
-    //         // return redirect()->route('emp/login')->withInput()->with(['error' => 'You are not authorized to access this area']);
-    //         return redirect()->route('emp/login')->with('message','User not found');
-    //     }
-    //     else{
-    //         session()->put('employee',$user);
-    //         return redirect()->route('emp/dashboard');
-    //     }
-    // }
-
-    // public function redirectToGoogle()
-    // {
-    //     return Socialite::driver('google')->redirect();
-
-    // }
 
     public function resetpassword()
     {
@@ -151,11 +127,7 @@ class LoginController extends Controller
                         ->update(['password' => Hash::make($request->password)]);
 
             DB::table('password_reset_tokens')->where(['email'=> $request->email])->delete();
-            Notification::create([
-                'user_id' => session('user')->id,
-                'title' => 'Employee password reset',
-                'message' => 'Employee has reset password: '. $user->first_name.' '.$user->last_name,
-            ]);
+          
             return redirect()->route('emp/login')->with('message', 'Your password has been changed!');
         }
         else{

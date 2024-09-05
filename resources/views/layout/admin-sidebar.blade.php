@@ -83,7 +83,7 @@
 					
 					<li class="sidebar-item">
 						<a data-bs-target="#card" data-bs-toggle="collapse" class="sidebar-link collapsed">
-							<i class="fa fa-line-chart"></i> <span class="align-middle">Cards</span>
+							<i class="fa fa-th-large"></i> <span class="align-middle">Cards</span>
 						</a>
 						<ul id="card" class="sidebar-dropdown list-unstyled collapse " data-bs-parent="#sidebar">
 							<li class="sidebar-item"></li><a class='sidebar-link' href='{{route('admin/cards')}}'>Add Cards</a>
