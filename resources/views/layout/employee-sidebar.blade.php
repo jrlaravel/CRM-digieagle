@@ -66,6 +66,14 @@
 						<a href="{{route('emp/leave')}}"  class="sidebar-link">
 							<i class='far fa-calendar-alt'></i> <span class="align-middle">Leave Management</span>
 						</a>
+
+						<a href="{{route('emp/calendar')}}"  class="sidebar-link">
+							<i class='fa fa-calendar-alt'></i> <span class="align-middle">Calendar</span>
+						</a>
+
+						<a href="{{route('emp/projects')}}"  class="sidebar-link">
+							<i class='fa fa-project-diagram'></i> <span class="align-middle">Projects</span>
+						</a>
 						
 				</ul>
 			</div>
@@ -76,6 +84,8 @@
 				<a class="sidebar-toggle js-sidebar-toggle">
 					<i class="hamburger align-self-center"></i>
 				</a>
+
+				@yield('menu')
 				<div class="navbar-collapse collapse">
 					<ul class="navbar-nav navbar-align">
 						<li class="nav-item dropdown">
@@ -186,7 +196,6 @@
 
 			<main class="content">
 				<div class="container-fluid p-0">
-
 					<div class="row mb-2 mb-xl-3">
 						<div class="col-auto d-none d-sm-block">
 							<h3><strong>Employee</strong> Dashboard</h3>
@@ -275,33 +284,6 @@
 			});
 		}
 		
-		function updateNotification(notificationId) {
-			$.ajax({
-				url: `{{ url('emp/updatenotification') }}/${notificationId}`,
-				method: 'POST',
-				data: {
-					_token: '{{ csrf_token() }}'
-				},
-				success: function(response) {
-					if (response.success) {
-						// Notification updated successfully
-						fetchNotifications(); // Refresh notifications after update
-					} else {
-						console.error('Error updating notification:', response.message);
-					}
-				},
-				error: function(xhr) {
-					console.error('Error updating notification:', xhr.responseText);
-				}
-			});
-		}
-		
-		// Event delegation for dynamically generated notifications
-		$(document).on('click', '.notification-link', function(event) {
-			event.preventDefault(); // Prevent the default action for the link
-			var notificationId = $(this).data('id'); // Get the notification ID from data attribute
-			updateNotification(notificationId); // Call the update function with the ID
-		});
 		
 		// Initial fetch of notifications when the page loads
 		fetchNotifications();

@@ -10,6 +10,7 @@ use App\Http\Controllers\Controller;
 use App\Services\ETimeOfficeService;
 use Carbon\Carbon;
 use App\Models\Notification;
+use App\Models\Festival_leave;
 
 
 class EmployeeDashboardController extends Controller
@@ -102,25 +103,19 @@ class EmployeeDashboardController extends Controller
             return back()->with('success', 'Profile photo updated successfully.');
     }
 
-    public function notification(Request $request)
+    public function notification()
     {
         // Fetch unread notifications for the authenticated user
         $notifications = Notification::where('user_id', session('employee')->id)
-            ->where('status', 'unread')
             ->orderBy('created_at', 'desc')
             ->get();
 
         return response($notifications);
     }
 
-    public function updatenotification($id)
+    public function calendar()
     {
-        $data = Notification::find($id);
-        $data->status = 'Read';
-        $data->save();
-        return response()->json([
-            'success' => true,
-            'message' => 'Notification updated successfully.'
-        ]);
+        $data = Festival_leave::all();
+        return view('employee/calendar',compact('data'));
     }
 }

@@ -16,7 +16,11 @@ class EmployeeLeaveController extends Controller
     {
         $leaves = DB::select('SELECT name,la.id,start_date,end_date,reason,la.status FROM `leave` as la join leavetype on la.leave_type_id = leavetype.id WHERE la.user_id = '.session('employee')->id);
         $leavetype = LeaveType::all();
-        return view('employee/addleave', compact('leavetype', 'leaves'));
+        $appleave = Leave::where('status', 1,'user_id = '.session('employee')->id)->count();
+        $rejleave = Leave::where('status', 2,'user_id = '.session('employee')->id)->count();
+        $totalleave = 12;
+        $pendingleave = $totalleave - $appleave;
+        return view('employee/addleave', compact('leavetype', 'leaves','appleave', 'rejleave','totalleave','pendingleave'));
     }
 
     public function store(Request $request)
@@ -44,7 +48,7 @@ class EmployeeLeaveController extends Controller
             Notification::create([
                 'user_id' => 1, // admin id
                 'title' => 'New leave request',
-                'url' => 'admin/leavelist',
+                'url' => 'leave',
                 'message' => 'A new leave request has been made by '. $request->input('name')
             ]);
 

@@ -47,9 +47,11 @@
 /* Red checkbox */
 #red-checkbox + label {
     border-color: red; /* Default border color for red */
+    
 }
-#red-checkbox:checked + label {
+#red-checkbox {
     border-color: red;
+    background-color: red;
 }
 #red-checkbox:checked + label::before {
     background-color: red;
@@ -82,14 +84,14 @@
 
 /* Yellow checkbox */
 #yellow-checkbox + label {
-    border-color: yellow; /* Default border color for yellow */
+    border-color: #ffcc00; /* Default border color for yellow */
 }
 #yellow-checkbox:checked + label {
-    border-color: yellow;
+    border-color: #ffcc00;
 }
-#yellow-checkbox:checked + label::before {
-    background-color: yellow;
-    border-color: yellow;
+#ffcc00-checkbox:checked + label::before {
+    background-color: #ffcc00;
+    border-color: #ffcc00;
 }
 
 /* Golden checkbox */

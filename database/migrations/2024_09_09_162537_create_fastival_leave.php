@@ -11,17 +11,12 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('leave', function (Blueprint $table) {
+        Schema::create('fastival_leave', function (Blueprint $table) {
             $table->id();
-            $table->unsignedBigInteger('user_id');
-            $table->unsignedBigInteger('leave_type_id');
+            $table->string('name');
             $table->date('start_date');
             $table->date('end_date');
-            $table->string('reason');
-            $table->integer('status')->default(0); 
             $table->timestamps();
-            $table->foreign('user_id')->references('id')->on('users')->onDelete('cascade');
-            $table->foreign('leave_type_id')->references('id')->on('leavetype');  
         });
     }
 
@@ -30,6 +25,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('leave');
+        Schema::dropIfExists('fastival_leave');
     }
 };

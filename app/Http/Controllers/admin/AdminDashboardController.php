@@ -12,8 +12,7 @@ use Illuminate\Support\Facades\Validator;
 class AdminDashboardController extends Controller
 {
     public function index()
-    {
-        
+    {   
         $totalUsers = User::where('role','employee')->count();
         return view('admin.admindashboard',compact('totalUsers'));
     }
@@ -52,24 +51,9 @@ class AdminDashboardController extends Controller
     {
         // Fetch unread notifications for the authenticated user
         $notifications = Notification::where('user_id', session('user')->id)
-            ->where('status', 'unread')
             ->orderBy('created_at', 'desc')
             ->get();
 
         return response($notifications);
     }
-
-    public function updatenotification($id)
-    {
-        $data = Notification::find($id);
-        $data->status = 'Read';
-        $data->save();
-        return response()->json([
-            'success' => true,
-            'message' => 'Notification updated successfully.'
-        ]);
-    }
-
-    
-
 }

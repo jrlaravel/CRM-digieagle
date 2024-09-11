@@ -7,6 +7,7 @@ use App\Http\Controllers\Controller;
 use App\Models\LeaveType;
 use App\Models\Leave;
 use App\Models\User;
+use App\Models\Festival_leave;
 use App\Models\Notification;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Support\Facades\DB;
@@ -87,7 +88,7 @@ class LeaveController extends Controller
             Notification::create([
                 'user_id' => $leave->user_id,
                 'title' => 'Leave approved',
-                'url' => 'emp/leave',
+                'url' => 'leave',
                 'message' => 'Your leave has been approved.',
             ]);
         } else {
@@ -97,7 +98,7 @@ class LeaveController extends Controller
             Notification::create([
                 'user_id' => $leave->user_id,
                 'title' => 'Leave rejected',
-                'url' => 'emp/leave',
+                'url' => 'leave',
                 'message' => 'Your leave has been rejected.',
             ]);
         }
@@ -113,5 +114,53 @@ class LeaveController extends Controller
 
         return redirect()->back()->with(['success' => 'Leave status updated successfully']);
     }
+
+    public function festival_leave()
+    {
+        $festivalleaves = Festival_leave::all();
+        return view('admin/festival_leave', compact('festivalleaves'));
+    }
+
+    public function festival_leave_create(Request $request)
+    {
+        Festival_leave::create([
+            'name' => $request->name,
+            'start_date' => $request->startdate,
+            'end_date' => $request->enddate
+        ]);
+
+        return redirect()->back()->with('success', 'Festival Leave added successfully.');
+    }
+
+    public function festival_leave_delete($id)
+    {
+        $festivalLeave = Festival_leave::find($id);
+        $festivalLeave->delete();
+        return redirect()->back()->with(['success' => 'Festival Leave deleted successfully']);
+    }
+    public function festival_leave_update(Request $request)
+{
+    // Validate request
+    $request->validate([
+        'name' => 'required|string|max:255',
+        'startdate' => 'required|date',
+        'enddate' => 'required|date',
+    ]);
+
+    // Find the festival leave by ID and update the fields
+    $festivalLeave = Festival_leave::find($request->id);
+    if ($festivalLeave) {
+        $festivalLeave->name = $request->input('name');
+        $festivalLeave->start_date = $request->input('startdate');
+        $festivalLeave->end_date = $request->input('enddate');
+        $festivalLeave->save();
+
+        // Redirect with success message
+        return redirect()->back()->with('success', 'Festival leave updated successfully');
+    }
+
+    return redirect()->back()->with('error', 'Festival leave not found');
+}
+
 
 }

@@ -13,7 +13,7 @@ Artisan::command('custom:example', function () {
 Artisan::command('custom:schedule', function () {
 
     $schedule->command('send:birthday-reminder')->everyMinute();
-    
+    $schedule->command('notifications:delete-old')->cron('0 0 */10 * *');
     $schedule->command('send:birthday-mail')->everyMinute();
 
 });

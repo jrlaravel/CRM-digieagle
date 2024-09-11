@@ -18,6 +18,7 @@ return new class extends Migration
             $table->date('date');
             $table->foreign('user_id')->references('id')->on('users')->onDelete('cascade');
             $table->foreign('card_id')->references('id')->on('card')->onDelete('cascade');
+            $table->string('message');
             $table->timestamps();
         });
     }

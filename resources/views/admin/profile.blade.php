@@ -1,5 +1,5 @@
 @extends('layout/admin-sidebar')
-@section('content')
+s@section('content')
 <div class="container-fluid p-0">
     <style>
         input[type=number]::-webkit-outer-spin-button,

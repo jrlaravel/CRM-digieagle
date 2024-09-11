@@ -11,7 +11,9 @@ use App\Http\Controllers\employee\AttendanceController;
 use App\Http\Controllers\admin\AttendanceController as AdminAttendanceController;
 use App\Http\Controllers\admin\CardsController;
 use App\Http\Controllers\admin\LeaveController;
+use App\Http\Controllers\admin\ProjectController;
 use App\Http\Controllers\employee\EmployeeLeaveController;
+use App\Http\Controllers\employee\ProjectController as EmployeeProjectController;
 
 
 Route::get('/', [LoginController::class, 'index'])->name('emp/login'); 
@@ -30,6 +32,7 @@ Route::prefix('emp')->group(function () {
     Route::group(['middleware' => 'emp.auth'],function () {
         Route::get('logout', [LoginController::class, 'logout'])->name('emp/logout'); 
         Route::get('dashboard', [EmployeeDashboardController::class, 'index'])->name('emp/dashboard'); 
+        Route::get('calendar', [EmployeeDashboardController::class, 'calendar'])->name('emp/calendar'); 
         Route::get('profile', [EmployeeDashboardController::class, 'profile'])->name('emp/profile');
         Route::post('Updateprofile', [EmployeeDashboardController::class, 'updateProfile'])->name('emp/Updateprofile');
         Route::get('attendance', [EmployeeDashboardController::class, 'attendance'])->name('emp/attendance');
@@ -41,7 +44,7 @@ Route::prefix('emp')->group(function () {
         Route::get('leave/{id}', [EmployeeLeaveController::class, 'delete'])->name('emp/leave-delete');
         Route::get('getnotification',[EmployeeDashboardController::class, 'notification'])->name('emp/getnotification');
         Route::post('updatenotification/{id}',[EmployeeDashboardController::class, 'updatenotification'])->name('emp/updatenotification');
-
+        Route::get('projects',[EmployeeProjectController::class, 'index'])->name('emp/projects');
     });
 });
 
@@ -77,7 +80,6 @@ Route::prefix('admin')->group(function () {
         Route::get('status-designation/{id}/{status}', [DepartmentController::class, 'designationstatus'])->name('admin/status-designation');        
         Route::get('Calender',[EmployeeController::class, 'calender'])->name('admin/Calender');
         Route::get('getnotification',[AdminDashboardController::class, 'notification'])->name('admin/getnotification');
-        Route::post('updatenotification/{id}',[AdminDashboardController::class, 'updatenotification'])->name('admin/updatenotification');
         Route::get('mail', [EmployeeController::class, 'mail'])->name('admin/mail');
         Route::get('cards', [CardsController::class, 'index'])->name('admin/cards');
         Route::post('add-card', [CardsController::class, 'store'])->name('admin/add-card');
@@ -93,7 +95,19 @@ Route::prefix('admin')->group(function () {
         Route::get('leave', [LeaveController::class, 'leave'])->name('admin/leave');
         Route::get('leave-delete/{id}', [LeaveController::class, 'leavedelete'])->name('admin/leave-delete');
         Route::get('leave-update/{id}/{status}', [LeaveController::class, 'leaveupdate'])->name('admin/leave-update');
-
+        Route::get('project-type', [ProjectController::class, 'index'])->name('admin/project-type');
+        Route::post('add-project-type', [ProjectController::class, 'store'])->name('admin/add-project-type');
+        Route::get('delete-project-type/{id}', [ProjectController::class, 'delete'])->name('admin/delete-project-type');
+        Route::get('add-project-detail', [ProjectController::class, 'project_add'])->name('admin/add-project-detail');
+        Route::post('add-project-detail', [ProjectController::class, 'project_add_detail'])->name('admin/add-project-detail');
+        Route::get('list-project-detail', [ProjectController::class, 'project_list'])->name('admin/list-project-detail');
+        Route::get('delete-project-detail/{id}', [ProjectController::class, 'project_delete_detail'])->name('admin/delete-project-detail');
+        Route::post('/projects-detail-update', [ProjectController::class, 'update'])->name('admin/project-detail-update');
+        Route::post('/project-user-update', [ProjectController::class, 'updateAssignedUsers'])->name('admin/project-user-update');
+        Route::get('festival-leave',[LeaveController::class, 'festival_leave'])->name('admin/festival-leave');
+        Route::post('festival-leave-create',[LeaveController::class, 'festival_leave_create'])->name('admin/festival-leave-create');
+        Route::get('festival-leave-delete/{id}',[LeaveController::class, 'festival_leave_delete'])->name('admin/festival-leave-delete');
+        Route::post('festival-leave-update',[LeaveController::class, 'festival_leave_update'])->name('admin/festival-leave-update');
 
     });
 });

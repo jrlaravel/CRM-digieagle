@@ -83,7 +83,7 @@
 					
 					<li class="sidebar-item">
 						<a data-bs-target="#card" data-bs-toggle="collapse" class="sidebar-link collapsed">
-							<i class="fa fa-th-large"></i> <span class="align-middle">Cards</span>
+							<i class="fa fa-th-large"></i> <span class="align-middle">Card Management</span>
 						</a>
 						<ul id="card" class="sidebar-dropdown list-unstyled collapse " data-bs-parent="#sidebar">
 							<li class="sidebar-item"></li><a class='sidebar-link' href='{{route('admin/cards')}}'>Add Cards</a>
@@ -103,11 +103,28 @@
 							<li class="sidebar-item"></li><a class='sidebar-link' href='{{route('admin/leave')}}'>Leave List</a>
 						</ul>
 					</li>
+					<li class="sidebar-item">
+						<a data-bs-target="#project" data-bs-toggle="collapse" class="sidebar-link collapsed">
+							<i class="fa fa-project-diagram"></i> <span class="align-middle">Project Management</span>
+						</a>
+						<ul id="project" class="sidebar-dropdown list-unstyled collapse " data-bs-parent="#sidebar">
+							<li class="sidebar-item"></li><a class='sidebar-link' href='{{route('admin/project-type')}}'>Project Type</a>
+						</ul>
+						<ul id="project" class="sidebar-dropdown list-unstyled collapse " data-bs-parent="#sidebar">
+							<li class="sidebar-item"></li><a class='sidebar-link' href='{{route('admin/add-project-detail')}}'>Add Project</a>
+						</ul>
+						<ul id="project" class="sidebar-dropdown list-unstyled collapse " data-bs-parent="#sidebar">
+							<li class="sidebar-item"></li><a class='sidebar-link' href='{{route('admin/list-project-detail')}}'>Project List</a>
+						</ul>
+					</li>
 					<a data-bs-target="#dashboards" href="{{route('admin/attendance')}}"  class="sidebar-link">
 						<i class='far fa-calendar-alt'></i> <span class="align-middle">Attendance</span>
 					</a>
 					<a data-bs-target="#dashboards" href="{{route('admin/Calender')}}"  class="sidebar-link">
 						<i class="fa fa-birthday-cake" aria-hidden="true"></i><span class="align-middle">Calender</span>
+					</a>
+					<a data-bs-target="#dashboards" href="{{route('admin/festival-leave')}}"  class="sidebar-link">
+						<i class="fa fa-line-chart" aria-hidden="true"></i><span class="align-middle">Fastival Leave</span>
 					</a>
 				</ul>
 			</div>
@@ -118,6 +135,7 @@
 				<a class="sidebar-toggle js-sidebar-toggle">
 					<i class="hamburger align-self-center"></i>
 				</a>
+				@yield('menu')
 				<div class="navbar-collapse collapse">
 					<ul class="navbar-nav navbar-align">
 						<li class="nav-item dropdown">
@@ -317,33 +335,6 @@ function fetchNotifications() {
 	});
 }
 
-function updateNotification(notificationId) {
-	$.ajax({
-		url: `{{ url('admin/updatenotification') }}/${notificationId}`,
-		method: 'POST',
-		data: {
-			_token: '{{ csrf_token() }}'
-		},
-		success: function(response) {
-			if (response.success) {
-				// Notification updated successfully
-				fetchNotifications(); // Refresh notifications after update
-			} else {
-				console.error('Error updating notification:', response.message);
-			}
-		},
-		error: function(xhr) {
-			console.error('Error updating notification:', xhr.responseText);
-		}
-	});
-}
-
-// Event delegation for dynamically generated notifications
-$(document).on('click', '.notification-link', function(event) {
-	event.preventDefault(); // Prevent the default action for the link
-	var notificationId = $(this).data('id'); // Get the notification ID from data attribute
-	updateNotification(notificationId); // Call the update function with the ID
-});
 
 // Initial fetch of notifications when the page loads
 fetchNotifications();
