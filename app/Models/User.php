@@ -7,6 +7,9 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Contracts\Auth\CanResetPassword;
 use Illuminate\Notifications\Notifiable;
+use App\Models\Designation;
+use Illuminate\Database\Eloquent\Model;
+
 
 
 class User extends Authenticatable implements CanResetPassword
@@ -58,5 +61,10 @@ class User extends Authenticatable implements CanResetPassword
             'skills' => 'array',
             'birth_date' => 'date'
         ];
+    }
+
+    public function designation()
+    {
+        return $this->belongsTo(Designation::class, 'designation'); // Adjust 'designation_id' if your foreign key is different
     }
 }

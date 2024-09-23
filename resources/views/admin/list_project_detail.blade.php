@@ -168,7 +168,7 @@
               <input type="text" class="form-control" id="project_name" name="name" required>
             </div>
             <div class="mb-3">
-              <label for="description" class="form-label">Description</label> 
+              <label for="description" class="form-label">Description</label>   
               <textarea class="form-control" id="project_description" name="description" rows="3" required></textarea>
             </div>
             <div class="mb-3">

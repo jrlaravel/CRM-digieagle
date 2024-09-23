@@ -164,34 +164,34 @@
     </div>
 </div>
 
-<div class="row mb-2 mb-xl-3">
+<div class="row mb-2 mb-xl-3"> 
     <div class="col-auto d-none d-sm-block">
         <h3>Cards</h3>
-        <div class="color-checkbox">
+       <div class="color-checkbox">
             <input type="checkbox" name="red card" id="red-checkbox">
-            <label for="red-checkbox" class="red">Red</label>
+            <label for="red-checkbox" class="red">Red (<span class="count">0</span>)</label>
         </div>
     
         <div class="color-checkbox">
             <input type="checkbox" name="green card" id="green-checkbox">
-            <label for="green-checkbox" class="green">Green</label>
+            <label for="green-checkbox" class="green">Green (<span class="count">0</span>)</label>
         </div>
-    
+      
         <div class="color-checkbox">
             <input type="checkbox" name="black card" id="black-checkbox">
-            <label for="black-checkbox" class="black">Black</label>
+            <label for="black-checkbox" class="black">Black (<span class="count">0</span>)</label>
         </div>
     
         <div class="color-checkbox">
             <input type="checkbox" name="yellow card" id="yellow-checkbox">
-            <label for="yellow-checkbox" class="yellow">Yellow</label>
+            <label for="yellow-checkbox" class="yellow">Yellow (<span class="count">0</span>)</label>
         </div>
     
         <div class="color-checkbox">
             <input type="checkbox" name="golden card" id="golden-checkbox">
-            <label for="golden-checkbox" class="golden">Golden</label>
-        </div>
-        <div id="cards-container" class="row mt-3">
+            <label for="golden-checkbox" class="golden">Golden (<span class="count">0</span>)</label>
+        </div> 
+      <div id="cards-container" class="row mt-3">
             @foreach($cards as $card)
             <div class="col card-item" data-color="{{ strtolower($card->name) }}" style="display: inline-block;">
                 <div class="card" style="width: 16rem;">
@@ -209,48 +209,95 @@
 </div>
 
 <script>
-    document.addEventListener("DOMContentLoaded", function() {
-        const checkboxes = document.querySelectorAll('input[type="checkbox"]');
-        const cards = document.querySelectorAll('.card-item');
+   document.addEventListener("DOMContentLoaded", function() {
+    const checkboxes = document.querySelectorAll('input[type="checkbox"]');
+    const cards = document.querySelectorAll('.card-item');
+    const counts = {}; // Object to store counts for each color
 
-        // Add event listener to each checkbox
-        checkboxes.forEach(checkbox => {
-            checkbox.addEventListener('change', filterCards);
+    // Initialize counts object
+    checkboxes.forEach(checkbox => {
+        counts[checkbox.name] = 0;
+    });
+
+    // Function to update counts for each checkbox
+    function updateCounts() {
+        // Reset counts
+        Object.keys(counts).forEach(color => counts[color] = 0);
+
+        // Count cards for each color
+        cards.forEach(card => {
+            const cardColor = card.getAttribute('data-color').toLowerCase();
+            if (counts.hasOwnProperty(cardColor)) {
+                counts[cardColor]++;
+            }
         });
 
-        // Filter cards based on the checked checkboxes
-        function filterCards() {
-            // Get checked colors from checkbox IDs
-            const checkedColors = Array.from(checkboxes)
-                .filter(checkbox => checkbox.checked)
-                .map(checkbox => checkbox.name); // Extract color from checkbox id, e.g., "red-checkbox" => "red"
+        // Update counts in labels
+        checkboxes.forEach(checkbox => {
+            const color = checkbox.name;
+            const countSpan = document.querySelector(`label[for="${checkbox.id}"] .count`);
+            countSpan.textContent = counts[color] || 0;
+        });
+    }
 
-            console.log("Checked Colors: ", checkedColors); // Debugging line
+    // Filter cards based on checkbox selection
+    function filterCards() {
+        const checkedColors = Array.from(checkboxes)
+            .filter(checkbox => checkbox.checked)
+            .map(checkbox => checkbox.name);
 
-            // Show or hide cards based on the checked colors
-            cards.forEach(card => {
-                const cardColor = card.getAttribute('data-color').toLowerCase();
-                console.log("Card Color: ", cardColor); // Debugging line
+        let visibleCardCount = 0;
 
-                if (checkedColors.length === 0) {
-                    // Hide all cards when no checkboxes are checked
-                    card.style.display = 'none';
-                } else if (checkedColors.includes(cardColor)) {
-                    // Show card if its color is included in checkedColors
+        cards.forEach(card => {
+            const cardColor = card.getAttribute('data-color').toLowerCase();
+
+            if (checkedColors.length === 0) {
+                // Show first 4 cards if no checkboxes are checked
+                if (visibleCardCount < 4) {
                     card.style.display = 'inline-block';
+                    visibleCardCount++;
                 } else {
-                    // Hide card if its color is not included in checkedColors
                     card.style.display = 'none';
+                }
+            } else if (checkedColors.includes(cardColor)) {
+                // Show card if its color is included in checkedColors
+                card.style.display = 'inline-block';
+                visibleCardCount++;
+            } else {
+                // Hide card if its color is not included in checkedColors
+                card.style.display = 'none';
+            }
+        });
+
+        // Hide extra cards if more than 4 are visible
+        if (visibleCardCount > 4) {
+            cards.forEach(card => {
+                if (card.style.display === 'inline-block' && visibleCardCount > 4) {
+                    visibleCardCount--;
+                    if (visibleCardCount <= 4) {
+                        card.style.display = 'inline-block';
+                    } else {
+                        card.style.display = 'none';
+                    }
                 }
             });
         }
+    }
 
-        // Initial call to set the correct state of cards on page load
-        // Set a timeout to ensure it runs after the page has fully loaded
-        setTimeout(() => {
+    checkboxes.forEach(checkbox => {
+        checkbox.addEventListener('change', function() {
             filterCards();
-        }, 1); // Delay slightly to ensure page is fully rendered
+            updateCounts();
+        });
     });
+
+    // Initial update of counts and cards display
+    updateCounts();
+    setTimeout(() => {
+        filterCards();
+    }, 1);
+});
+
 </script>
 
 

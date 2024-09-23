@@ -117,6 +117,17 @@
 							<li class="sidebar-item"></li><a class='sidebar-link' href='{{route('admin/list-project-detail')}}'>Project List</a>
 						</ul>
 					</li>
+					<li class="sidebar-item">
+						<a data-bs-target="#lead" data-bs-toggle="collapse" class="sidebar-link collapsed">
+							<i class="fas fa-poll"></i> <span class="align-middle">Lead Management</span>
+						</a>
+						<ul id="lead" class="sidebar-dropdown list-unstyled collapse " data-bs-parent="#sidebar">
+							<li class="sidebar-item"></li><a class='sidebar-link' href='{{route('admin/lead')}}'>Add Lead</a>
+						</ul>
+						<ul id="lead" class="sidebar-dropdown list-unstyled collapse " data-bs-parent="#sidebar">
+							<li class="sidebar-item"></li><a class='sidebar-link' href='{{route('admin/lead-list')}}'>Lead List</a>
+						</ul>
+					</li>
 					<a data-bs-target="#dashboards" href="{{route('admin/attendance')}}"  class="sidebar-link">
 						<i class='far fa-calendar-alt'></i> <span class="align-middle">Attendance</span>
 					</a>

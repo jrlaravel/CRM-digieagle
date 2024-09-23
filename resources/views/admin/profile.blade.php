@@ -1,5 +1,5 @@
 @extends('layout/admin-sidebar')
-s@section('content')
+@section('content')
 <div class="container-fluid p-0">
     <style>
         input[type=number]::-webkit-outer-spin-button,
@@ -33,7 +33,7 @@ s@section('content')
                     <h5 class="card-title mb-0">Profile Details</h5>
                 </div>
                 <div class="card-body text-center">
-                    <img src="{{asset('storage/profile_photos').'/'.session('user')->profile_photo_path}}" class="img-fluid rounded-circle mb-2" width="128" height="128" />
+                    <img src="{{asset('storage/profile_photos').'/'.$data->profile_photo_path}}" class="img-fluid rounded-circle mb-2" width="128" height="128" />
                     <h5 class="card-title mb-0">{{$data->first_name}} {{$data->last_name}} </h5>
 
                     @if ($errors->any())

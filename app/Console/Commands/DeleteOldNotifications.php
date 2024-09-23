@@ -12,7 +12,7 @@ class DeleteOldNotifications extends Command
     protected $signature = 'notifications:delete-old';
 
     // Command description
-    protected $description = 'Delete notifications older than 10 days';
+    protected $description = 'Delete notifications older than 3 days';
 
     public function __construct()
     {
@@ -21,13 +21,11 @@ class DeleteOldNotifications extends Command
 
     public function handle()
     {
-        // Define the period to delete notifications older than 10 days
-        $deleteBefore = Carbon::now()->subDays(10);
+        $deleteBefore = Carbon::now()->subDays(3);
 
-        // Delete notifications older than 10 days
-        DB::table('notification')->where('created_at', '<', $deleteBefore)->delete();
+        DB::table('notifications')->where('created_at', '<', $deleteBefore)->delete();
 
         // Log the success message
-        $this->info('Notifications older than 10 days deleted successfully.');
+        $this->info('Notifications older than 3 days deleted successfully.');
     }
 }

@@ -12,6 +12,8 @@ use App\Http\Controllers\admin\AttendanceController as AdminAttendanceController
 use App\Http\Controllers\admin\CardsController;
 use App\Http\Controllers\admin\LeaveController;
 use App\Http\Controllers\admin\ProjectController;
+use App\Http\Controllers\admin\LeadController;
+use App\Http\Controllers\employee\EmpLeadController;
 use App\Http\Controllers\employee\EmployeeLeaveController;
 use App\Http\Controllers\employee\ProjectController as EmployeeProjectController;
 
@@ -20,14 +22,25 @@ Route::get('/', [LoginController::class, 'index'])->name('emp/login');
 Route::prefix('emp')->group(function () {
 
     Route::group(['middleware' => 'emp.guest'],function () {
-        Route::post('authenticate', [LoginController::class, 'authenticate'])->name('emp/authenticate'); 
-        // Route::get('/google/callback', [LoginController::class, 'loginWithGoogle'])->name('emp/login-with-google');
-        // Route::get('/loginwithgoogle', [LoginController::class, 'redirectToGoogle'])->name('emp/login-with-google-redirect');
+        Route::post('authenticate', [LoginController::class, 'authenticate'])->name('emp/authenticate');
         Route::get('/resetpassword', [LoginController::class, 'resetpassword'])->name('emp/resetpassword');
         Route::post('/varify-email', [LoginController::class, 'varifyemail'])->name('emp/varify-email');
         Route::get('/new-password/{token}', [LoginController::class, 'newpassword'])->name('emp/new-password');
         Route::post('/new-password', [LoginController::class, 'updatepassword'])->name('emp/reset-password');
     });
+
+    Route::group(['middleware' => ['emp.auth', 'bde.access']], function () {
+        Route::get('lead', [EmpLeadController::class, 'index'])->name('emp/lead');
+        Route::post('lead', [EmpLeadController::class, 'store'])->name('emp/add-lead');
+        Route::get('lead-list', [EmpLeadController::class, 'show'])->name('emp/lead-list');
+        Route::get('lead-delete/{id}', [EmpLeadController::class, 'delete'])->name('emp/lead-delete');
+        Route::post('lead-update', [EmpLeadController::class, 'update'])->name('emp/lead-update');
+        Route::get('lead-datail/{id}', [EmpLeadController::class, 'lead_datail'])->name('emp/lead-datail');
+        Route::post('add-followup', [EmpLeadController::class, 'createOrUpdateFollowup'])->name('emp/add-followup');
+        Route::get('delete-followup/{id}', [EmpLeadController::class, 'delete_followup'])->name('emp/delete-followup');
+        Route::post('update-followup', [EmpLeadController::class, 'createOrUpdateFollowup'])->name('emp/update-followup');
+    });
+    
 
     Route::group(['middleware' => 'emp.auth'],function () {
         Route::get('logout', [LoginController::class, 'logout'])->name('emp/logout'); 
@@ -108,7 +121,15 @@ Route::prefix('admin')->group(function () {
         Route::post('festival-leave-create',[LeaveController::class, 'festival_leave_create'])->name('admin/festival-leave-create');
         Route::get('festival-leave-delete/{id}',[LeaveController::class, 'festival_leave_delete'])->name('admin/festival-leave-delete');
         Route::post('festival-leave-update',[LeaveController::class, 'festival_leave_update'])->name('admin/festival-leave-update');
-
+        Route::get('lead',[LeadController::class, 'index'])->name('admin/lead');
+        Route::post('lead',[LeadController::class, 'store'])->name('admin/add-lead');
+        Route::get('lead-list',[LeadController::class, 'show'])->name('admin/lead-list');
+        Route::get('lead-delete/{id}',[LeadController::class, 'delete'])->name('admin/lead-delete');
+        Route::post('lead-update',[LeadController::class, 'update'])->name('admin/lead-update');
+        Route::get('lead-datail/{id}',[LeadController::class, 'lead_datail'])->name('admin/lead-datail');
+        Route::post('add-followup',[LeadController::class, 'createOrUpdateFollowup'])->name('admin/add-followup');
+        Route::get('delete-followup/{id}',[LeadController::class, 'delete_followup'])->name('admin/delete-followup');
+        Route::post('update-followup',[LeadController::class, 'createOrUpdateFollowup'])->name('admin/update-followup');
     });
 });
 

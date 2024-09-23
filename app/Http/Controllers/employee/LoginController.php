@@ -11,6 +11,7 @@ use Illuminate\Support\Facades\DB;
 use Carbon\Carbon;
 use App\Http\Controllers\Controller;
 use App\Models\User;
+use App\Models\Designation;
 use Illuminate\Support\Str;
 use Mail;
 
@@ -39,13 +40,16 @@ class LoginController extends Controller
             if ($user->role == 'employee' || $user->role == 'hr') {
 
                 session()->put('employee', $user);
-    
-                // Check if the user is HR and pass the appropriate flag to the view
-                // if ($user->role === 'hr') {
-                //     session()->put('hrPrivileges', true);
-                // } else {
-                //     session()->put('hrPrivileges', false);
-                // }
+
+                $designation = Designation::find($user->designation);           
+              
+                // Check if the designation is 'BDE'
+                if ($designation && $designation->name == 'BDE') {
+                    session()->put('has_bde_features', true); // Store flag in session
+                } else {
+                    session()->put('has_bde_features', false);
+                }
+               
                 return redirect()->route('emp/dashboard');
             } else {
 

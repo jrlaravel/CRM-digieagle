@@ -59,6 +59,18 @@
 							<i class="align-middle" data-feather="sliders"></i> <span class="align-middle">Dashboard</span>
 						</a>
 
+						@if(session('has_bde_features'))
+						<li class="sidebar-item">
+							<a data-bs-target="#lead" data-bs-toggle="collapse" class="sidebar-link collapsed">
+								<i class="fas fa-poll"></i> <span class="align-middle">Lead Management</span>
+							</a>
+							<ul id="lead" class="sidebar-dropdown list-unstyled collapse " data-bs-parent="#sidebar">
+								<li class="sidebar-item"><a class="sidebar-link" href="{{route('emp/lead')}}">Add Lead</a></li>
+								<li class="sidebar-item"><a class="sidebar-link" href="{{route('emp/lead-list')}}">Lead List</a></li>
+							</ul>
+						</li>
+						@endif
+
 						<a href="{{route('emp/attendance')}}"  class="sidebar-link">
 							<i class='far fa-calendar-alt'></i> <span class="align-middle">Attendance</span>
 						</a>
