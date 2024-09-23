@@ -103,7 +103,7 @@
             <p style="margin-top: 15px">We hope this brings you motivation and joy! Thank you for being part of our team.</p>
         </div>
         <div class="email-footer">
-            <p>&copy; 2024 Your Company. All rights reserved.</p>
+            <p>&copy; 2024 Digieagleinc .  All rights reserved.</p>
         </div>
     </div>
 </body>

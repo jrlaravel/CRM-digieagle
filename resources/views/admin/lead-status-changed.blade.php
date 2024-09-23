@@ -92,15 +92,11 @@
             <p><strong>New Status:</strong> {{ $newStatus }}</p>
             <p><strong>Follow-up Message:</strong> {{ $followupMessage }}</p>
             <p><strong>Company Name:</strong> {{ $companyName }}</p>
-
-            <!-- Optional action button -->
-            <a href="#" class="button">View Lead Details</a>
         </div>
 
         <!-- Footer -->
         <div class="footer">
-            <p>Thank you for using our service!</p>
-            <p>If you have any questions, please contact us at support@example.com.</p>
+           <p>2024 Digieagleinc .  All rights reserved.</p>
         </div>
     </div>
 </body>

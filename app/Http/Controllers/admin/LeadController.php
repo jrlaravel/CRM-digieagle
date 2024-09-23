@@ -52,7 +52,7 @@ class LeadController extends Controller
                 'address' => $request->input('address'),
             ]);
             
-            return redirect()->back()->with('success', 'Lead created successfully.');
+            return redirect()->route('admin/lead-list')->with('success', 'Lead created successfully.');
         } 
         else {
             // Validation failed, redirect back with errors and input
@@ -199,7 +199,7 @@ public function delete_followup($id)
     $data->status = $status;
     $data->save();
     $followup->delete();
-    return redirect()->back()->with('success', 'Follow-up has been deleted successfully.');
+    return redirect()->route('admin/lead-list');
 }
 
 }

@@ -46,7 +46,7 @@ class EmployeeController extends Controller
     
     if ($validator->passes()) {
         $skills = $request->input('skills', []);
-        
+                                                                                                                                      
         if (is_string($skills)) {
             $skillsArray = array_map('trim', explode(',', $skills));
         } elseif (is_array($skills)) {
