@@ -58,6 +58,7 @@
 <div class="container-fluid p-0">
     <div class="mb-3">
         <h1 class="h3 d-inline align-middle">Projects</h1> 
+        <a href="{{route('admin/add-project-detail')}}" class="btn btn-primary float-end mt-n1"><i class="fas fa-plus"></i> New project</a>
     </div> 
 </div>
 
@@ -147,7 +148,6 @@
         @endforeach
     </div>
 </div>
-
 </div>
 
 

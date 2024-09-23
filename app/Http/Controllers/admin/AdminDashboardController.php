@@ -37,8 +37,6 @@ class AdminDashboardController extends Controller
                 $file = $request->file('profile_photo');
                 $filename = time() . '.' . $file->getClientOriginalExtension();
                 $path = $file->storeAs('profile_photos', $filename, 'public');
-
-                // Save $filename to the user's profile in the database, if applicable
                 $user =  User::find(session('user')->id);
                 $user->profile_photo_path = $filename;
                 $user->save();
