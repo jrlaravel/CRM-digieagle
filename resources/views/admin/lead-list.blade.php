@@ -12,6 +12,11 @@
 </div>
 @endsection
 @section('content')
+<style>
+    @media screen and (max-width: 768px) {
+        
+    }
+</style>
 <div class="container-fluid p-0">
     <div class="mb-3">
         <h1 class="h3 d-inline align-middle">Lead List</h1>
@@ -28,11 +33,11 @@
         </div>
         
     </div>
-    <div class="row">
-        <div class="col-12">
+    <div class="row mt-4">
+        <div class="col-12"> 
             <div class="card">
-                <div class="card-body">
-                    <table id="datatables-reponsive" class="table table-striped" style="width:100%">
+                <div class="table-container">
+                    <table id="datatables-reponsive" class="table" style="width:100%">
                         <thead>
                             <tr>
                                 <th>No.</th>
