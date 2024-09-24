@@ -169,7 +169,7 @@ class LeadController extends Controller
     
             // Send email to admin if status has changed
             if ($previousStatus != $newStatus) {
-                $adminEmail = 'manager.digieagleinc@gmail.com,'; // Replace with your admin's email
+                $adminEmail = 'manager@digieagleinc.com'; // Replace with your admin's email
     
                 // Send email with additional data: followup message and company name
                 Mail::to($adminEmail)->send(new LeadStatusChangedMail(
