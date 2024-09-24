@@ -129,8 +129,6 @@ class LeadController extends Controller
     
     public function createOrUpdateFollowup(Request $request)
     {
-        // dd($request->all());
-        // Validation rules
         $validator = Validator::make($request->all(), [
             'title'   => 'required',
             'message' => 'required',
@@ -138,7 +136,6 @@ class LeadController extends Controller
             'status'  => 'required',
         ]);
         
-        // If validation fails
         if ($validator->fails()) {
             return redirect()->back()->withErrors($validator)->withInput();
         }
