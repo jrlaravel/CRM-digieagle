@@ -10,6 +10,36 @@
 </div>
 @endsection
 @section('content')
+<style>
+    .reason-cell {
+        max-width: 200px; /* Set a maximum width */
+        overflow: hidden;
+        text-overflow: ellipsis;
+        white-space: nowrap; /* Prevent wrapping */
+        position: relative; /* Position for tooltip */
+    }
+
+    .reason-cell:hover {
+        white-space: normal; /* Allow wrapping on hover */
+        background: #fff;
+        z-index: 10; /* Ensure it's on top */
+    }
+
+    .reason-cell:hover::after {
+        content: attr(data-reason);
+        position: absolute;
+        background: #fff;
+        border: 1px solid #ccc;
+        padding: 5px;
+        z-index: 10;
+        white-space: normal; /* Allow wrapping in tooltip */
+        max-width: 300px; /* Set max width for tooltip */
+        word-wrap: break-word; /* Break long words */
+        box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        left: 0; /* Align tooltip */
+        top: 100%; /* Position below the cell */
+    }
+</style>
 <div class="container-fluid p-0">
     <div class="row">
         <div class="col-sm-6 col-xl-3">
@@ -93,7 +123,7 @@
                                 <td>{{$data->name}}</td>
                                 <td>{{$data->start_date}}</td>
                                 <td>{{$data->end_date}}</td>
-                                <td>{{$data->reason}}</td>
+                                <td class="reason-cell" data-reason="{{ $data->reason }}">{{$data->reason}}</td>
                                 <td>
                                     @if($data->status == 0)
                                     <a href="{{route('emp/leave-delete',$data->id)}}" class="btn btn-danger">Cancel</a>
