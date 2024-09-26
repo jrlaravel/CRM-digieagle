@@ -15,7 +15,6 @@
 <div class="container-fluid p-0">
     <div class="mb-3">
         <h1 class="h3 d-inline align-middle">Leave Type List</h1> 
-        <button type="button" class="btn btn-primary float-end" data-bs-toggle="modal" data-bs-target="#defaultModalSuccess">Add</button>    
     </div>
     <div class="row">
         <div class="col-12">

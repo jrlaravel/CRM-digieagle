@@ -197,7 +197,7 @@ public function delete_followup($id)
     $data->status = $status;
     $data->save();
     $followup->delete();
-    return redirect()->route('admin/lead-list');
+    return redirect()->back();
 }
 
 }

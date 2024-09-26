@@ -11,6 +11,8 @@ use Carbon\Carbon;
 
 class AttendanceController extends Controller
 {
+    private $eTimeOfficeService;
+    
     public function __construct(ETimeOfficeService $eTimeOfficeService)
     {
         $this->eTimeOfficeService = $eTimeOfficeService;
