@@ -151,6 +151,11 @@
                     <textarea class="form-control" id="reason" name="reason" placeholder="Reason" required>
                         </textarea>
                 </div>
+                <div class="mb-3">
+                    <label for="reason" class="form-label">Other</label>
+                    <textarea class="form-control" id="other" name="other" placeholder="Other" required>
+                        </textarea>
+                </div>
                 <div class="modal-footer">
                     <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
                     <button type="submit" class="btn btn-primary">Save</button>

@@ -14,9 +14,11 @@ class Leave extends Model
     protected $fillable = [
         'user_id',
         'leave_type_id',
+        'apply_date',
         'start_date',
         'end_date',
         'reason',
+        'other',
         'status'
     ];
 }
