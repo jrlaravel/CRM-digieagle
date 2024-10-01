@@ -127,6 +127,20 @@
                                 </div>
                                 <div class="row">
                                     <div class="mb-3 col-md-4">
+                                        <label class="form-label" for="inputAddress">Instagram</label>
+                                        <input type="text" class="form-control" id="inputAddress" value="{{$lead->inslink}}" disabled >
+                                    </div>
+                                    <div class="mb-3 col-md-4">
+                                        <label class="form-label" for="inputCity">Facebook</label>
+                                        <input type="text" class="form-control" value="{{$lead->facebooklink}}" disabled >
+                                    </div>
+                                    <div class="mb-3 col-md-4">
+                                        <label class="form-label" for="inputState">Website</label>
+                                        <input type="text" class="form-control" value="{{$lead->weblink}}" disabled>
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="mb-3 col-md-4">
                                         <label class="form-label" for="inputAddress">Address</label>
                                         <input type="text" class="form-control" id="inputAddress" value="{{$lead->address}}" disabled placeholder="1234 Main St">
                                     </div>

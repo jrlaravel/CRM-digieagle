@@ -40,14 +40,14 @@
                 <div class="row">
                     <div class="mb-3 col-md-6">
                         <label class="form-label" for="inputAddress">First Name</label>
-                        <input type="text" class="form-control @error('fname') is-invalid @enderror" name="fname" id="fname" value="{{old('fname')}}" placeholder="First name">
+                        <input type="text" class="form-control @error('fname') is-invalid @enderror" name="fname" id="fname" required value="{{old('fname')}}" placeholder="First name">
                         @error('fname')
                         <p class="invalid-feedback">{{$message}}</p>
                         @enderror
                     </div>
                     <div class="mb-3 col-md-6">
                         <label class="form-label" for="inputPassword4">Last Name</label>
-                        <input type="text" class="form-control @error('lname') is-invalid @enderror" name="lname" id="lname" value="{{old('lname')}}" placeholder="Last name">
+                        <input type="text" class="form-control @error('lname') is-invalid @enderror" name="lname" id="lname" required value="{{old('lname')}}" placeholder="Last name">
                         @error('lname')
                         <p class="invalid-feedback">{{$message}}</p>
                         @enderror
@@ -125,6 +125,25 @@
                     </div>
                 </div>
             
+                <div class="row">
+                    <div class="mb-3 col-md-4">
+                        <label class="form-label" for="city">Instagram Link:</label>
+                        <input type="text" class="form-control" id="inslink" name="inslink" placeholder="Instagram" value="{{ old('city') }}" >
+                       
+                    </div>
+                
+                    <div class="mb-3 col-md-4">
+                        <label class="form-label" for="state">Facebook Link:</label>
+                        <input type="text" class="form-control" id="facebooklink" name="facebooklink" placeholder="Facebook" value="{{ old('state') }}" >
+                       
+                    </div>
+
+                    <div class="mb-3 col-md-4">
+                        <label class="form-label" for="state">Website Link:</label>
+                        <input type="text" class="form-control" id="weblink" name="weblink" placeholder="Website" value="{{ old('state') }}" >
+                      
+                    </div>
+                </div>
                 {{-- Status --}}
                 <div class="mb-3">
                     <label class="form-label" for="status">Status:</label>

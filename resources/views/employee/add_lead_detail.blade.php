@@ -116,6 +116,25 @@
                         @enderror
                     </div>
                 </div>
+                <div class="row">
+                    <div class="mb-3 col-md-4">
+                        <label class="form-label" for="city">Instagram Link:</label>
+                        <input type="text" class="form-control" id="inslink" name="inslink" placeholder="Instagram" value="{{ old('city') }}" >
+                       
+                    </div>
+                
+                    <div class="mb-3 col-md-4">
+                        <label class="form-label" for="state">Facebook Link:</label>
+                        <input type="text" class="form-control" id="facebooklink" name="facebooklink" placeholder="Facebook" value="{{ old('state') }}" >
+                       
+                    </div>
+
+                    <div class="mb-3 col-md-4">
+                        <label class="form-label" for="state">Website Link:</label>
+                        <input type="text" class="form-control" id="weblink" name="weblink" placeholder="Website" value="{{ old('state') }}" >
+                      
+                    </div>
+                </div>
             
                 {{-- Status --}}
                 <div class="mb-3">

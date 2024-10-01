@@ -48,9 +48,12 @@ class EmpLeadController extends Controller
                 'state' => $request->input('state'),
                 'status' => $request->input('status'),
                 'address' => $request->input('address'),
+                'inslink' => $request->input('inslink'), // Instagram link
+                'facebooklink' => $request->input('facebooklink'), // Facebook link
+                'weblink' => $request->input('weblink'), // Website link
             ]);
             
-            return redirect()->back()->with('success', 'Lead created successfully.');
+            return redirect()->route('emp/lead-list')->with('success', 'Lead created successfully.');
         } 
         else {
             // Validation failed, redirect back with errors and input
@@ -101,6 +104,9 @@ class EmpLeadController extends Controller
             'state' => $request->input('state'),
             'address' => $request->input('address'),
             'status' => $request->input('status'),
+            'inslink' => $request->input('instagram'), // Instagram link
+            'facebooklink' => $request->input('facebook'), // Facebook link
+            'weblink' => $request->input('website'), // Website link
         ]);
 
         // Redirect back with success message

@@ -37,7 +37,6 @@ class LeadController extends Controller
         ]);
         
         if ($validator->passes()) {
-            // dd($request->all());
             Lead::create([
                 'first_name' => $request->input('fname'),
                 'last_name' => $request->input('lname'),
@@ -50,6 +49,9 @@ class LeadController extends Controller
                 'state' => $request->input('state'),
                 'status' => $request->input('status'),
                 'address' => $request->input('address'),
+                'inslink' => $request->input('inslink'), // Instagram link
+                'facebooklink' => $request->input('facebooklink'), // Facebook link
+                'weblink' => $request->input('weblink'), // Website link
             ]);
             
             return redirect()->route('admin/lead-list')->with('success', 'Lead created successfully.');
@@ -103,6 +105,9 @@ class LeadController extends Controller
             'state' => $request->input('state'),
             'address' => $request->input('address'),
             'status' => $request->input('status'),
+            'inslink' => $request->input('instagram'), // Instagram link
+            'facebooklink' => $request->input('facebook'), // Facebook link
+            'weblink' => $request->input('website'), // Website link
         ]);
 
         // Redirect back with success message

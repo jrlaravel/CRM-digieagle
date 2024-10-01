@@ -91,7 +91,10 @@
                                             data-city="{{ $lead->city }}"
                                             data-state="{{ $lead->state }}"
                                             data-address="{{ $lead->address }}"
-                                            data-status="{{ $lead->status }}">
+                                            data-status="{{ $lead->status }}"
+                                            data-inslink="{{ $lead->inslink }}"       
+                                            data-facebooklink="{{ $lead->facebooklink }}" 
+                                            data-weblink="{{ $lead->weblink }}">
                                         Edit
                                     </button>
                                     <a href="{{route('admin/lead-delete', $lead->id)}}" class="btn btn-danger">Delete</a>
@@ -154,6 +157,23 @@
                 </div>
 
                 <div class="row">
+                    <div class="mb-3 col-md-4">
+                        <label for="email" class="form-label">Instagram</label>
+                        <input type="text" class="form-control" id="instagram" name="instagram">
+                    </div>
+    
+                    <div class="mb-3 col-md-4">
+                        <label for="phone" class="form-label">Facebook</label>
+                        <input type="text" class="form-control" id="facebook" name="facebook">
+                    </div>
+
+                    <div class="mb-3 col-md-4">
+                        <label for="phone" class="form-label">Website</label>
+                        <input type="text" class="form-control" id="website" name="website">
+                    </div>
+                </div>
+
+                <div class="row">
                     <div class="mb-3 col-md-6">
                         <label for="city" class="form-label">City</label>
                         <input type="text" class="form-control" id="city" name="city">
@@ -172,7 +192,7 @@
 
                 <div class="mb-3">
                     <label for="status" class="form-label">Status</label>
-                    <select id="status-filter" name="status" class="form-select">
+                    <select id="status-filter" name="status" required class="form-select">
                         <option value="">&#11044; All Status</option>
                         <option value="Not interested" class="text-danger"> &#11044; Not interested</option>
                         <option value="Prospect" class="text-warning"> &#11044; Prospect</option>
@@ -207,6 +227,9 @@
         let state = $(this).data('state');
         let address = $(this).data('address');
         let status = $(this).data('status');
+        let insLink = $(this).data('inslink'); // Instagram link
+        let facebookLink = $(this).data('facebooklink'); // Facebook link
+        let webLink = $(this).data('weblink'); // Website link
     
         // Set modal input values
         $('#lead-id').val(leadId);
@@ -219,7 +242,10 @@
         $('#city').val(city);
         $('#state').val(state);
         $('#address').val(address);
-        $('#status').val(status);
+        $('#status-filter').val(status);
+        $('#instagram').val(insLink); // Set Instagram link
+        $('#facebook').val(facebookLink); // Set Facebook link
+        $('#website').val(webLink); // Set Website link
     
         // Show the modal
         $('#editLeadModal').modal('show');

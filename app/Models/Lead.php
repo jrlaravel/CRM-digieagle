@@ -21,6 +21,9 @@ class Lead extends Model
         'status',
         'address',
         'city',
-        'state'
+        'state',
+        'inslink',
+        'facebooklink',
+        'weblink'
     ];
 }

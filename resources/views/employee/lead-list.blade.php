@@ -200,6 +200,9 @@
         let state = $(this).data('state');
         let address = $(this).data('address');
         let status = $(this).data('status');
+        let insLink = $(this).data('inslink'); // Instagram link
+        let facebookLink = $(this).data('facebooklink'); // Facebook link
+        let webLink = $(this).data('weblink'); // Website link
     
         // Set modal input values
         $('#lead-id').val(leadId);
@@ -212,7 +215,10 @@
         $('#city').val(city);
         $('#state').val(state);
         $('#address').val(address);
-        $('#status').val(status);
+        $('#status-filter').val(status);
+        $('#instagram').val(insLink); // Set Instagram link
+        $('#facebook').val(facebookLink); // Set Facebook link
+        $('#website').val(webLink); // Set Website link
     
         // Show the modal
         $('#editLeadModal').modal('show');
