@@ -17,6 +17,7 @@ class Leave extends Model
         'apply_date',
         'start_date',
         'end_date',
+        'total_days',
         'reason',
         'other',
         'status'

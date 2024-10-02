@@ -73,6 +73,9 @@
             <p>Your leave request has been processed.</p>
             <div class="status-box">
                 <p>Your leave from <strong>{{ $startDate }}</strong> to <strong>{{ $endDate }}</strong> has been <strong>{{ $leaveStatus }}</strong>.</p>
+                @if ($leaveStatus == 'rejected' && isset($rejectionReason))
+                    <p><strong>Rejection Reason:</strong> {{ $rejectionReason }}</p>
+                @endif
             </div>
             <p>If you have any questions or concerns, please feel free to contact HR.</p>
             <p>Thank you!</p>

@@ -12,6 +12,7 @@ use App\Http\Controllers\admin\AttendanceController as AdminAttendanceController
 use App\Http\Controllers\admin\CardsController;
 use App\Http\Controllers\admin\LeaveController;
 use App\Http\Controllers\admin\ProjectController;
+use App\Http\Controllers\admin\TaskController;
 use App\Http\Controllers\admin\LeadController;
 use App\Http\Controllers\employee\EmpLeadController;
 use App\Http\Controllers\employee\EmployeeLeaveController;
@@ -107,7 +108,7 @@ Route::prefix('admin')->group(function () {
         Route::post('edit-leave-type', [LeaveController::class, 'store'])->name('admin/edit-leave-type');
         Route::get('leave', [LeaveController::class, 'leave'])->name('admin/leave');
         Route::get('leave-delete/{id}', [LeaveController::class, 'leavedelete'])->name('admin/leave-delete');
-        Route::get('leave-update/{id}/{status}', [LeaveController::class, 'leaveupdate'])->name('admin/leave-update');
+        Route::post('leave-update/{id}', [LeaveController::class, 'leaveupdate'])->name('admin/leave-update');
         Route::get('project-type', [ProjectController::class, 'index'])->name('admin/project-type');
         Route::post('add-project-type', [ProjectController::class, 'store'])->name('admin/add-project-type');
         Route::get('delete-project-type/{id}', [ProjectController::class, 'delete'])->name('admin/delete-project-type');
@@ -130,6 +131,7 @@ Route::prefix('admin')->group(function () {
         Route::post('add-followup',[LeadController::class, 'createOrUpdateFollowup'])->name('admin/add-followup');
         Route::get('delete-followup/{id}',[LeadController::class, 'delete_followup'])->name('admin/delete-followup');
         Route::post('update-followup',[LeadController::class, 'createOrUpdateFollowup'])->name('admin/update-followup');
+        Route::get('task/{id}',[TaskController::class, 'index'])->name('admin/task');
     });
 });
 

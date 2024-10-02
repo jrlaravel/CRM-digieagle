@@ -63,7 +63,7 @@ class LeaveController extends Controller
 
    public function leave()
    {
-        $leaves = DB::select('SELECT first_name,last_name,start_date,end_date,la.id,leavetype.name,la.reason,la.status FROM `leave` as la join leavetype on leavetype.id = la.leave_type_id join users on la.user_id = users.id');
+        $leaves = DB::select('SELECT first_name,last_name,start_date,end_date,total_days,la.id,leavetype.name,la.reason,la.status FROM `leave` as la join leavetype on leavetype.id = la.leave_type_id join users on la.user_id = users.id');
         return view('admin/leavelist',compact('leaves'));
    }
 
@@ -74,46 +74,52 @@ class LeaveController extends Controller
         return redirect()->back()->with(['success' => 'Leave deleted successfully']);
    }
 
-  
-
-    public function leaveupdate($id, $status)
-    {
-        $leave = Leave::find($id);
-        $statusText = '';
-
-        if ($status == 1) {
-            $statusText = 'approved';
-            $status = 1;
-
-            Notification::create([
-                'user_id' => $leave->user_id,
-                'title' => 'Leave approved',
-                'url' => 'leave',
-                'message' => 'Your leave has been approved.',
-            ]);
-        } else {
-            $statusText = 'rejected';
-            $status = 2;
-
-            Notification::create([
-                'user_id' => $leave->user_id,
-                'title' => 'Leave rejected',
-                'url' => 'leave',
-                'message' => 'Your leave has been rejected.',
-            ]);
-        }
-
-        // Update leave status
-        $leave->status = $status;
-        $leave->save();
-
-        $user  = User::find($leave->user_id);
-
-        // Send email to employee
-        Mail::to($user->email)->send(new LeaveStatusMail($leave, $statusText, $user));
-
-        return redirect()->back()->with(['success' => 'Leave status updated successfully']);
-    }
+   public function leaveupdate(Request $request, $id)
+   {
+       $leave = Leave::find($id);
+       $statusText = '';
+   
+       // Retrieve status from the request
+       $status = $request->input('status');
+   
+       if ($status == 1) {
+           // Approve the leave
+           $statusText = 'approved';
+           $leave->status = 1;
+   
+           Notification::create([
+               'user_id' => $leave->user_id,
+               'title' => 'Leave approved',
+               'url' => 'leave',
+               'message' => 'Your leave has been approved.',
+           ]);
+       } else {
+           // Reject the leave
+           $statusText = 'rejected';
+           $leave->status = 2;
+   
+           // Get the rejection reason from the request
+           $rejectionReason = $request->input('rejection_reason');
+   
+           Notification::create([
+               'user_id' => $leave->user_id,
+               'title' => 'Leave rejected',
+               'url' => 'leave',
+               'message' => 'Your leave has been rejected. Reason: ' . $rejectionReason,
+           ]);
+       }
+   
+       // Update leave status
+       $leave->save();
+   
+       $user  = User::find($leave->user_id);
+   
+       // Send email to employee, passing the rejection reason if applicable
+       Mail::to($user->email)->send(new LeaveStatusMail($leave, $statusText, $user, $status == 2 ? $rejectionReason : null));
+   
+       return redirect()->back()->with(['success' => 'Leave status updated successfully']);
+   }
+   
 
     public function festival_leave()
     {

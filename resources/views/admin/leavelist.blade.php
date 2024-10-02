@@ -58,6 +58,7 @@
                                 <th>Leave Type</th>
                                 <th>From</th>
                                 <th>To</th>
+                                <th>total_days</th>
                                 <th style="width: 40%">Reason</th>
                                 <th>Status</th>
                                 <th>Action</th>
@@ -71,6 +72,7 @@
                                 <td>{{ $leave->name }}</td>
                                 <td>{{ $leave->start_date }}</td>
                                 <td>{{ $leave->end_date }}</td>
+                                <td>{{ $leave->total_days }}</td>
                                 <td class="reason-cell" data-reason="{{ $leave->reason }}">{{ $leave->reason }}</td>
                                 <td>
                                     @if($leave->status == 0)
@@ -83,11 +85,42 @@
                                 </td>
                                 <td>
                                     @if($leave->status == 0)
-                                    <a href="{{ route('admin/leave-update', [$leave->id, 1]) }}" class="btn btn-success">Approve</a>
-                                    <a href="{{ route('admin/leave-update', [$leave->id, 2]) }}" class="btn btn-danger">Reject</a>&nbsp;&nbsp;
+                                        <form action="{{ route('admin/leave-update', $leave->id) }}" method="POST" style="display:inline;">
+                                            @csrf
+                                            <input type="hidden" name="status" value="1"> <!-- Approve -->
+                                            <button type="submit" class="btn btn-success">Approve</button>
+                                        </form>
+                                
+                                        <!-- Reject Button to Open Modal -->
+                                        <a href="#" class="btn btn-danger" data-bs-toggle="modal" data-bs-target="#rejectModal{{ $leave->id }}">Reject</a>
+                                
+                                        <!-- Modal -->
+                                        <div class="modal fade" id="rejectModal{{ $leave->id }}" tabindex="-1" aria-labelledby="rejectModalLabel{{ $leave->id }}" aria-hidden="true">
+                                            <div class="modal-dialog">
+                                                <div class="modal-content">
+                                                    <div class="modal-header">
+                                                        <h5 class="modal-title" id="rejectModalLabel{{ $leave->id }}">Reject Leave</h5>
+                                                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                                                    </div>
+                                                    <div class="modal-body">
+                                                        <form action="{{ route('admin/leave-update', $leave->id) }}" method="POST">
+                                                            @csrf
+                                                            <input type="hidden" name="status" value="2"> <!-- Reject -->
+                                                            <div class="mb-3">
+                                                                <label for="rejection_reason" class="form-label">Enter Rejection Reason</label>
+                                                                <input type="text" name="rejection_reason" class="form-control" id="rejection_reason" required>
+                                                            </div>
+                                                            <button type="submit" class="btn btn-danger">Reject Leave</button>
+                                                        </form>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                
+                                        &nbsp;&nbsp;
                                     @endif
                                     <a href="{{ route('admin/leave-delete', $leave->id) }}"><i class="fa fa-trash" aria-hidden="true" style="color: red;"></i></a>
-                                </td>
+                                </td>  
                             </tr>
                             @endforeach
                         </tbody>    
@@ -97,4 +130,24 @@
         </div>
     </div>  
 </div>
+
+<script>
+  
+    document.addEventListener('DOMContentLoaded', function () {
+        var rejectionReasonModal = document.getElementById('rejectionReasonModal');
+
+        rejectionReasonModal.addEventListener('show.bs.modal', function (event) {
+            var button = event.relatedTarget; // Button that triggered the modal
+            var leaveId = button.getAttribute('data-id'); // Extract the leave ID
+
+            // Update the form action to include the leave ID
+            var actionUrl = "{{ url('leave-update') }}"; // Update this to match your route
+            document.getElementById('rejectionReasonForm').setAttribute('action', actionUrl + '/' + leaveId + '/2');
+            document.getElementById('leave_id').value = leaveId; // Optionally store leave ID in a hidden input
+        });
+    });
+
+console.log(typeof jQuery);
+</script>
+
 @endsection

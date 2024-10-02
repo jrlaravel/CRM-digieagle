@@ -19,12 +19,13 @@ class EmployeeLeaveController extends Controller
 {
     public function index()
     {
-        $leaves = DB::select('SELECT name,la.id,start_date,end_date,reason,la.status FROM `leave` as la join leavetype on la.leave_type_id = leavetype.id WHERE la.user_id = '.session('employee')->id);
+        $leaves = DB::select('SELECT name,la.id,start_date,end_date,reason,la.status,total_days FROM `leave` as la join leavetype on la.leave_type_id = leavetype.id WHERE la.user_id = '.session('employee')->id);
         $leavetype = LeaveType::all();
-        $appleave = Leave::where('status', 1,'user_id = '.session('employee')->id)->count();
-        $rejleave = Leave::where('status', 2,'user_id = '.session('employee')->id)->count();
+        $appleave = Leave::where('status', 1)->where('user_id', session('employee')->id)->count();
+        $rejleave = Leave::where('status', 2)->where('user_id', session('employee')->id)->count();   
         $totalleave = 12;
         $pendingleave = $totalleave - $appleave;
+
         return view('employee/addleave', compact('leavetype', 'leaves','appleave', 'rejleave','totalleave','pendingleave'));
     }
 
@@ -41,12 +42,17 @@ class EmployeeLeaveController extends Controller
     
         if ($validator->passes()) { 
             // Create the leave request
+            $startDate = Carbon::parse($request->from);
+            $endDate = Carbon::parse($request->to);
+            $totalDays = $startDate->diffInDays($endDate) + 1; 
+
             Leave::create([
                 'leave_type_id' => $request->leave,
                 'user_id' => $request->id,
                 'apply_date' => Carbon::now()->format('Y-m-d'),
                 'start_date' => $request->from,
                 'end_date' => $request->to,
+                'total_days' => $totalDays,
                 'reason' => $request->reason,
                 'other' => $request->other,
                 'status' => '0'
@@ -60,22 +66,22 @@ class EmployeeLeaveController extends Controller
             //     'message' => 'A new leave request has been made by ' . $request->input('name')
             // ]);
             
-            $user = User::find($request->id);
-            $designation = Designation::find($user->designation);
-            // Send mail to HR
-            $leaveDetails = [
-                'name' => $request->input('name'),
-                'start_date' => $request->from,
-                'end_date' => $request->to,
-                'reason' => $request->reason,
-                'other' => $request->other,
-                'first_name' => $user->first_name,
-                'last_name' => $user->last_name,
-                'designation' => $designation->name
-            ];
+            // $user = User::find($request->id);
+            // $designation = Designation::find($user->designation);
+            // // Send mail to HR
+            // $leaveDetails = [
+            //     'name' => $request->input('name'),
+            //     'start_date' => $request->from,
+            //     'end_date' => $request->to,
+            //     'reason' => $request->reason,
+            //     'other' => $request->other,
+            //     'first_name' => $user->first_name,
+            //     'last_name' => $user->last_name,
+            //     'designation' => $designation->name
+            // ];
     
-            Mail::to('hr.digieagleinc@gmail.com') // Replace with HR's email address
-                ->send(new LeaveRequestMail($leaveDetails));
+            // Mail::to('hr.digieagleinc@gmail.com') // Replace with HR's email address
+            //     ->send(new LeaveRequestMail($leaveDetails));
     
             // Redirect back with success message
             return redirect()->back()->with('success', 'Leave request submitted successfully and HR has been notified.');

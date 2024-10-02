@@ -111,6 +111,7 @@
                                 <th>Leave type</th>
                                 <th>From</th>
                                 <th>To</th>
+                                <th>Total Days</th>
                                 <th>Reason</th>
                                 <th>Action</th>
                                 <th>Status</th>
@@ -123,6 +124,7 @@
                                 <td>{{$data->name}}</td>
                                 <td>{{$data->start_date}}</td>
                                 <td>{{$data->end_date}}</td>
+                                <td>{{$data->total_days}}</td>
                                 <td class="reason-cell" data-reason="{{ $data->reason }}">{{$data->reason}}</td>
                                 <td>
                                     @if($data->status == 0)
@@ -209,6 +211,11 @@
     $(document).ready(function() {
     $('#leaveType').change(function() {
         var selectedLeave = $('#leaveType option:selected').data('name');
+        
+        // Clear any previous restrictions when changing leave type
+        $('#from').removeAttr('min');
+        $('#to').removeAttr('min');
+        
         // If Casual Leave is selected
         if (selectedLeave === 'Casual Leave') {
             var today = new Date();
@@ -218,7 +225,7 @@
             var minDate = new Date(today);
             minDate.setDate(minDate.getDate() + 4);
 
-            // Disable previous dates in the 'from' date input
+            // Set the min attribute for the 'from' and 'to' date inputs
             $('#from').attr('min', minDate.toISOString().split('T')[0]);
             $('#to').attr('min', minDate.toISOString().split('T')[0]);
         }

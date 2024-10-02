@@ -9,33 +9,28 @@ use Illuminate\Queue\SerializesModels;
 
 class LeaveStatusMail extends Mailable
 {
-    use Queueable, SerializesModels;
-
     public $leave;
     public $statusText;
     public $user;
+    public $rejectionReason;
 
-    /**
-     * Create a new message instance.
-     */
-    public function __construct($leave, $statusText, $user)
+    public function __construct($leave, $statusText, $user, $rejectionReason = null)
     {
         $this->leave = $leave;
         $this->statusText = $statusText;
         $this->user = $user;
+        $this->rejectionReason = $rejectionReason;
     }
 
-    /**
-     * Build the message.
-     */
     public function build()
     {
         return $this->view('admin/leave-status')
                     ->with([
-                        'employeeName' => $this->user->first_name,
+                        'employeeName' => $this->user->name,
+                        'startDate' => $this->leave->start_date,
+                        'endDate' => $this->leave->end_date,
                         'leaveStatus' => $this->statusText,
-                        'startDate' => \Carbon\Carbon::parse($this->leave->start_date)->toFormattedDateString(),
-                        'endDate' => \Carbon\Carbon::parse($this->leave->end_date)->toFormattedDateString(),
+                        'rejectionReason' => $this->rejectionReason, // Pass reason to view
                     ]);
     }
 }
