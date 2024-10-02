@@ -147,6 +147,23 @@
                 </div>
 
                 <div class="row">
+                    <div class="mb-3 col-md-4">
+                        <label for="email" class="form-label">Instagram</label>
+                        <input type="text" class="form-control" id="instagram" name="instagram">
+                    </div>
+    
+                    <div class="mb-3 col-md-4">
+                        <label for="phone" class="form-label">Facebook</label>
+                        <input type="text" class="form-control" id="facebook" name="facebook">
+                    </div>
+
+                    <div class="mb-3 col-md-4">
+                        <label for="phone" class="form-label">Website</label>
+                        <input type="text" class="form-control" id="website" name="website">
+                    </div>
+                </div>
+                
+                <div class="row">
                     <div class="mb-3 col-md-6">
                         <label for="city" class="form-label">City</label>
                         <input type="text" class="form-control" id="city" name="city">
