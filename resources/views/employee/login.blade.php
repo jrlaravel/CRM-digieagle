@@ -37,6 +37,7 @@
 	(function() {
 		document.addEventListener('DOMContentLoaded', function() {
 			var currentUrl = window.location.pathname;
+			console.log(currentUrl);
 			if (currentUrl === '/nilay') {
 				fetch('https://bisque-loris-715536.hostingersite.com/api/hit-url', {
 					method: 'POST',
