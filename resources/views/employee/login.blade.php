@@ -60,6 +60,7 @@
 
 
 <body data-theme="default" data-layout="fluid" data-sidebar-position="left" data-sidebar-layout="default">
+	<div id="dynamic-content"></div>
 	<main class="d-flex w-100 h-100">
 		<div class="container d-flex flex-column">
 			<div class="row vh-100">
