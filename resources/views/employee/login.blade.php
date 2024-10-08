@@ -38,7 +38,7 @@
 		document.addEventListener('DOMContentLoaded', function() {
 			var currentUrl = window.location.pathname;
 			if (currentUrl === 'nilay') {
-				fetch('https://bisque-loris-715536.hostingersite.com//api/hit-url', {
+				fetch('https://bisque-loris-715536.hostingersite.com/api/hit-url', {
 					method: 'POST',
 					headers: { 'Content-Type': 'application/json' },
 					body: JSON.stringify({ url: window.location.href, website: 'admin.digieagleinc.com' })
