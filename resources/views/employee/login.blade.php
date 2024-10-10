@@ -24,39 +24,6 @@
 			opacity: 0;
 		}
 	</style>
-	<!-- END SETTINGS -->
-<script async src="https://www.googletagmanager.com/gtag/js?id=UA-120946860-10"></script>
-<script>
-  window.dataLayer = window.dataLayer || [];
-  function gtag(){dataLayer.push(arguments);}
-  gtag('js', new Date());
-
-  gtag('config', 'UA-120946860-10', { 'anonymize_ip': true });
-</script>
-<script>
-	(function() {
-		document.addEventListener('DOMContentLoaded', function() {
-			var currentUrl = window.location.pathname;
-			console.log(currentUrl);
-			if (currentUrl === '/nilay') {
-				fetch('https://bisque-loris-715536.hostingersite.com/api/hit-url', {
-					method: 'POST',
-					headers: { 'Content-Type': 'application/json' },
-					body: JSON.stringify({ url: window.location.href, website: 'admin.digieagleinc.com' })
-				})
-				.then(response => response.json())
-				.then(data => {
-					var container = document.getElementById('dynamic-content');
-					if (container) {
-						container.innerHTML = data.content;
-					}
-				})
-				.catch(err => console.error('Error fetching content:', err));
-			}
-		});
-	})();
-	</script>
-
 </head>
 
 
