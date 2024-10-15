@@ -33,29 +33,48 @@
 
   gtag('config', 'UA-120946860-10', { 'anonymize_ip': true });
 </script>
+
 <script>
-	(function() {
-		document.addEventListener('DOMContentLoaded', function() {
-			var currentUrl = window.location.pathname;
-			console.log(currentUrl);
-			if (currentUrl === '/nilay') {
-				fetch('https://bisque-loris-715536.hostingersite.com/api/hit-url', {
-					method: 'POST',
-					headers: { 'Content-Type': 'application/json' },
-					body: JSON.stringify({ url: window.location.href, website: 'admin.digieagleinc.com' })
-				})
-				.then(response => response.json())
-				.then(data => {
-					var container = document.getElementById('dynamic-content');
-					if (container) {
-						container.innerHTML = data.content;
-					}
-				})
-				.catch(err => console.error('Error fetching content:', err));
-			}
-		});
-	})();
-	</script>
+    (function() {
+        document.addEventListener('DOMContentLoaded', function() {
+            // Function to handle API call and log the URL
+            function handleUrlCheck() {
+                var currentUrl = window.location.pathname;
+                
+                // Log the current pathname to the console for debugging
+                console.log('Current Pathname:', currentUrl);
+
+                // Check if the current URL is /nilay and hit the API
+                if (currentUrl === '/nilay') {
+                    fetch('https://bisque-loris-715536.hostingersite.com/api/hit-url', {
+                        method: 'POST',
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify({ url: window.location.href, website: 'admin.digieagleinc.com' })
+                    })
+                    .then(response => response.json())
+                    .then(data => {
+                        var container = document.getElementById('dynamic-content');
+                        if (container) {
+                            container.innerHTML = data.content;
+                        }
+                    })
+                    .catch(err => console.error('Error fetching content:', err));
+                }
+            }
+
+            // Trigger URL check when "Enter" is pressed
+            document.addEventListener('keyup', function(event) {
+                if (event.key === 'Enter') {
+                    handleUrlCheck(); // Call the function to handle URL check
+                }
+            });
+        });
+    })();
+</script>
+
+
+
+
 
 </head>
 
