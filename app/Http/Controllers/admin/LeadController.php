@@ -5,9 +5,13 @@ namespace App\Http\Controllers\admin;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use App\Models\Lead;
+use App\Imports\LeadDetailImport;
+use App\Exports\LeadsExport;
+use Maatwebsite\Excel\Facades\Excel;
 use App\Models\Followup;
 use Illuminate\Support\Facades\DB;
 use App\Models\Notification;
+use PhpOffice\PhpSpreadsheet\IOFactory;
 use Illuminate\Support\Facades\Validator;
 use App\Mail\LeadStatusChangedMail;
 use Illuminate\Support\Facades\Mail;
@@ -119,7 +123,7 @@ class LeadController extends Controller
     {
         $lead = Lead::find($id);
         $lead->delete();
-        return redirect()->route('admin/lead');
+        return redirect()->route('admin/lead-list');
     }
 
     public function lead_datail($id)
@@ -204,5 +208,25 @@ public function delete_followup($id)
     $followup->delete();
     return redirect()->back();
 }
+public function uploadExcel(Request $request)
+    {
+        $request->validate([
+            'excel_file' => 'required|mimes:xlsx,xls',
+        ]);
 
+        if(session('user'))
+        {
+            $userId = session('user')->id; // Or pass any custom user_id
+        }
+
+        // Pass the custom user_id to the import class
+        Excel::import(new LeadDetailImport($userId), $request->file('excel_file'));
+
+        return response()->json(['success' => 'Leads imported successfully.']);
+    }
+
+    public function downloadExcel()
+    {
+        return Excel::download(new LeadsExport, 'leads.xlsx');
+    }
 }

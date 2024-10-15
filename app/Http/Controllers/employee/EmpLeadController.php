@@ -9,6 +9,9 @@ use App\Models\Followup;
 use Illuminate\Support\Facades\DB;
 use App\Models\Notification;
 use Illuminate\Support\Facades\Validator;
+use App\Imports\LeadDetailImport;
+use App\Exports\LeadsExport;
+use Maatwebsite\Excel\Facades\Excel;
 
 class EmpLeadController extends Controller
 {
@@ -185,5 +188,27 @@ public function delete_followup($id)
     $followup->delete();
     return redirect()->back()->with('success', 'Follow-up has been deleted successfully.');
 }
+
+public function uploadExcel(Request $request)
+    {
+        $request->validate([
+            'excel_file' => 'required|mimes:xlsx,xls',
+        ]);
+
+        if(session('employee'))
+        {
+            $userId = session('employee')->id; // Or pass any custom user_id
+        }
+
+        // Pass the custom user_id to the import class
+        Excel::import(new LeadDetailImport($userId), $request->file('excel_file'));
+
+        return response()->json(['success' => 'Leads imported successfully.']);
+    }
+
+    public function downloadExcel()
+    {
+        return Excel::download(new LeadsExport, 'leads.xlsx');
+    }
 
 }

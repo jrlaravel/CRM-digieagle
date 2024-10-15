@@ -12,6 +12,7 @@
 </div>
 @endsection
 @section('content')
+<meta name="csrf-token" content="{{ csrf_token() }}">
 <style>
     @media screen and (max-width: 768px) {
         
@@ -20,7 +21,9 @@
 <div class="container-fluid p-0">
     <div class="mb-3">
         <h1 class="h3 d-inline align-middle">Lead List</h1>
-        <button id="download-excel" class="btn btn-success float-end">Download Excel</button>
+        <button id="download-excel" class="btn btn-success float-end" style="margin-left: 10px">Download Excel</button>
+         <input type="file" id="excel-file" name="excel_file" class="form-control d-none" accept=".xlsx, .xls">
+        <button id="upload-excel" class="btn btn-success float-end">Upload Excel</button>
         <div class="float-end me-2">
             <select id="status-filter" class="form-select">
                 <option value="">&#11044; All Status</option>
@@ -227,11 +230,10 @@
         let state = $(this).data('state');
         let address = $(this).data('address');
         let status = $(this).data('status');
-        let insLink = $(this).data('inslink'); // Instagram link
-        let facebookLink = $(this).data('facebooklink'); // Facebook link
-        let webLink = $(this).data('weblink'); // Website link
+        let insLink = $(this).data('inslink'); 
+        let facebookLink = $(this).data('facebooklink');
+        let webLink = $(this).data('weblink'); 
     
-        // Set modal input values
         $('#lead-id').val(leadId);
         $('#first_name').val(firstName);
         $('#last_name').val(lastName);
@@ -243,58 +245,18 @@
         $('#state').val(state);
         $('#address').val(address);
         $('#status-filter').val(status);
-        $('#instagram').val(insLink); // Set Instagram link
-        $('#facebook').val(facebookLink); // Set Facebook link
-        $('#website').val(webLink); // Set Website link
+        $('#instagram').val(insLink); 
+        $('#facebook').val(facebookLink);
+        $('#website').val(webLink); 
     
-        // Show the modal
         $('#editLeadModal').modal('show');
     });
 
-    document.getElementById('download-excel').addEventListener('click', function() {
-        // Create a new workbook and worksheet
-        var wb = new ExcelJS.Workbook();
-        var ws = wb.addWorksheet('Lead Data');
-
-        // Select the table element
-        var originalTable = document.getElementById('datatables-reponsive');
-        
-        // Get the header row and data rows
-        var headerRow = originalTable.querySelector('thead tr');
-        var dataRows = originalTable.querySelectorAll('tbody tr');
-        
-        // Extract headers
-        var headers = Array.from(headerRow.querySelectorAll('th'))
-                            .map(th => th.textContent.trim());
-        
-        // Remove the last header (Action column)
-        headers.pop();
-
-        // Add headers to worksheet
-        ws.addRow(headers);
-        ws.getRow(1).font = { bold: true };
-
-        // Add data rows to worksheet
-        dataRows.forEach(function(tr) {
-            var cells = Array.from(tr.querySelectorAll('td'))
-                             .map(td => td.textContent.trim());
-            
-            // Remove the last cell (Action column)
-            cells.pop();
-            
-            // Add the row to the worksheet
-            ws.addRow(cells);
-        });
-
-        // Save to file
-        wb.xlsx.writeBuffer().then(function(buffer) {
-            var blob = new Blob([buffer], { type: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet' });
-            var link = document.createElement('a');
-            link.href = URL.createObjectURL(blob);
-            link.download = 'leads-data.xlsx';
-            link.click();
-        });
+    $('#download-excel').on('click', function() {
+        // Trigger the download by redirecting to the route
+        window.location.href = '{{ route('admin/downloadexcel') }}';
     });
+
 
     document.getElementById('status-filter').addEventListener('change', function() {
         var selectedStatus = this.value.toLowerCase();
@@ -303,7 +265,6 @@
         rows.forEach(function(row) {
             var rowStatus = row.getAttribute('data-status').toLowerCase();
 
-            // Show "Not interested" leads only if selected
             if (selectedStatus === "" || rowStatus === selectedStatus) {
                 row.style.display = "";
             } else {
@@ -312,15 +273,57 @@
         });
     });
 
-    // Hide "Not interested" rows on page load
     window.addEventListener('DOMContentLoaded', function() {
         var rows = document.querySelectorAll('#datatables-reponsive tbody tr');
         rows.forEach(function(row) {
             if (row.getAttribute('data-status').toLowerCase() === 'not interested') {
-                row.style.display = 'none'; // Hide by default
+                row.style.display = 'none'; 
             }
         });
     });
+       
+    $(document).ready(function() {  
+
+        var csrfToken = $('meta[name="csrf-token"]').attr('content');
+
+        // Handle the button click to trigger file input
+        $('#upload-excel').on('click', function() {
+            $('#excel-file').trigger('click'); // Use trigger to open the file dialog
+        });
+
+        // Handle the file selection
+        $('#excel-file').on('change', function() {
+            if (this.files && this.files[0]) {
+                var fileData = new FormData();
+                var file = this.files[0];
+                fileData.append('excel_file', file);
+
+                $.ajax({
+                    url: '{{ route('admin/uploadexcel') }}', // Adjust this to your route
+                    type: 'POST',
+                    data: fileData,
+                    headers: {
+                        'X-CSRF-TOKEN': csrfToken  // Include the CSRF token in the headers
+                    },  
+                    contentType: false,
+                    processData: false,
+                    success: function(response) {
+                        $('#message').html('<div class="alert alert-success">' + response.message + '</div>');
+                    },
+                    error: function(xhr) {
+                        var errors = xhr.responseJSON.errors;
+                        var errorMessage = '<div class="alert alert-danger">';
+                        for (var key in errors) {
+                            errorMessage += errors[key][0] + '<br>';
+                        }
+                        errorMessage += '</div>';
+                        $('#message').html(errorMessage);
+                    }
+                });
+            }
+    });
+});
+
 </script>
 
 @endsection

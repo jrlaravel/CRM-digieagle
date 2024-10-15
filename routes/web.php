@@ -40,6 +40,8 @@ Route::prefix('emp')->group(function () {
         Route::post('add-followup', [EmpLeadController::class, 'createOrUpdateFollowup'])->name('emp/add-followup');
         Route::get('delete-followup/{id}', [EmpLeadController::class, 'delete_followup'])->name('emp/delete-followup');
         Route::post('update-followup', [EmpLeadController::class, 'createOrUpdateFollowup'])->name('emp/update-followup');
+        Route::post('/upload-excel', [EmpLeadController::class, 'uploadExcel'])->name('emp/uploadexcel');
+        Route::get('download-excel', [EmpLeadController::class, 'downloadExcel'])->name('emp/downloadexcel');
     });
     
 
@@ -124,6 +126,8 @@ Route::prefix('admin')->group(function () {
         Route::post('festival-leave-update',[LeaveController::class, 'festival_leave_update'])->name('admin/festival-leave-update');
         Route::get('lead',[LeadController::class, 'index'])->name('admin/lead');
         Route::post('lead',[LeadController::class, 'store'])->name('admin/add-lead');
+        Route::post('/upload-excel', [LeadController::class, 'uploadExcel'])->name('admin/uploadexcel');
+        Route::get('download-excel', [LeadController::class, 'downloadExcel'])->name('admin/downloadexcel');
         Route::get('lead-list',[LeadController::class, 'show'])->name('admin/lead-list');
         Route::get('lead-delete/{id}',[LeadController::class, 'delete'])->name('admin/lead-delete');
         Route::post('lead-update',[LeadController::class, 'update'])->name('admin/lead-update');
