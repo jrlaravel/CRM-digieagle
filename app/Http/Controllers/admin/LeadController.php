@@ -74,6 +74,7 @@ class LeadController extends Controller
 
     public function update(Request $request)
     {
+        // return $request->all();
         // Validation rules
         $validator = Validator::make($request->all(), [
             'id' => 'required',
@@ -222,7 +223,7 @@ public function uploadExcel(Request $request)
         // Pass the custom user_id to the import class
         Excel::import(new LeadDetailImport($userId), $request->file('excel_file'));
 
-        return response()->json(['success' => 'Leads imported successfully.']);
+        return response()->json(['message' => 'Leads imported successfully.']);
     }
 
     public function downloadExcel()

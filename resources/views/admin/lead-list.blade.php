@@ -75,7 +75,7 @@
                                         <span class="badge bg-info">Lead</span>
                                     @elseif($lead->status == 'hot lead')
                                         <span class="badge bg-primary">Hot Lead</span>
-                                        @elseif($lead->status == 'Client')
+                                    @elseif($lead->status == 'client')
                                         <span class="badge bg-success">Client</span>
                                         @else
                                         <span class="badge bg-danger">Not interested</span>
@@ -212,6 +212,26 @@
 </div>
 </div>
 
+<!-- Success Modal -->
+<div class="modal fade" id="successModal" tabindex="-1" role="dialog" aria-labelledby="successModalLabel" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" id="successModalLabel">Success</h5>
+          <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+          </button>
+        </div>
+        <div class="modal-body">
+          Your file has been successfully uploaded!
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-success" data-dismiss="modal">Close</button>
+        </div>
+      </div>
+    </div>
+  </div>
+  
 <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.16.2/xlsx.full.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/exceljs@latest/dist/exceljs.min.js"></script>
 
@@ -286,12 +306,10 @@
 
         var csrfToken = $('meta[name="csrf-token"]').attr('content');
 
-        // Handle the button click to trigger file input
-        $('#upload-excel').on('click', function() {
-            $('#excel-file').trigger('click'); // Use trigger to open the file dialog
+        $('#upload-excel').on('click', function() { 
+            $('#excel-file').trigger('click'); 
         });
 
-        // Handle the file selection
         $('#excel-file').on('change', function() {
             if (this.files && this.files[0]) {
                 var fileData = new FormData();
@@ -299,16 +317,23 @@
                 fileData.append('excel_file', file);
 
                 $.ajax({
-                    url: '{{ route('admin/uploadexcel') }}', // Adjust this to your route
+                    url: '{{ route('admin/uploadexcel') }}', 
                     type: 'POST',
                     data: fileData,
                     headers: {
-                        'X-CSRF-TOKEN': csrfToken  // Include the CSRF token in the headers
+                        'X-CSRF-TOKEN': csrfToken  
                     },  
                     contentType: false,
                     processData: false,
                     success: function(response) {
-                        $('#message').html('<div class="alert alert-success">' + response.message + '</div>');
+                        console.log(response);
+                        
+                        $('#successModal').modal('show');
+                        
+                    
+                        setTimeout(function() {
+                            location.reload();
+                        }, 2000);
                     },
                     error: function(xhr) {
                         var errors = xhr.responseJSON.errors;
@@ -321,7 +346,10 @@
                     }
                 });
             }
-    });
+        });
+
+$('#successModal').on('hidden.bs.modal', function () {
+    location.reload();  
 });
 
 </script>

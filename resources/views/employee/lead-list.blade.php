@@ -201,6 +201,24 @@
     </div>
 </div>
 </div>
+<div class="modal fade" id="successModal" tabindex="-1" role="dialog" aria-labelledby="successModalLabel" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" id="successModalLabel">Success</h5>
+          <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+          </button>
+        </div>
+        <div class="modal-body">
+          Your file has been successfully uploaded!
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-success" data-dismiss="modal">Close</button>
+        </div>
+      </div>
+    </div>
+  </div>
 
 <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.16.2/xlsx.full.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/exceljs@latest/dist/exceljs.min.js"></script>
@@ -292,16 +310,22 @@ $('#excel-file').on('change', function() {
         fileData.append('excel_file', file);
 
         $.ajax({
-            url: '{{ route('emp/uploadexcel') }}', // Adjust this to your route
+            url: '{{ route('emp/uploadexcel') }}', 
             type: 'POST',
             data: fileData,
             headers: {
-                'X-CSRF-TOKEN': csrfToken  // Include the CSRF token in the headers
+                'X-CSRF-TOKEN': csrfToken  
             },  
             contentType: false,
             processData: false,
             success: function(response) {
-                $('#message').html('<div class="alert alert-success">' + response.message + '</div>');
+                console.log(response);
+              
+                $('#successModal').modal('show');
+                
+                setTimeout(function() {
+                    location.reload();
+                }, 2000);
             },
             error: function(xhr) {
                 var errors = xhr.responseJSON.errors;
@@ -314,6 +338,10 @@ $('#excel-file').on('change', function() {
             }
         });
     }
+});
+
+$('#successModal').on('hidden.bs.modal', function () {
+    location.reload(); 
 });
 });
 </script>

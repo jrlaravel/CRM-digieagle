@@ -10,7 +10,6 @@ class LeadDetailImport implements ToModel, WithHeadingRow
 {
     protected $userId;
 
-    // Add a constructor to accept a custom user_id
     public function __construct($userId)
     {
         $this->userId = $userId;
@@ -18,18 +17,39 @@ class LeadDetailImport implements ToModel, WithHeadingRow
 
     public function model(array $row)
     {
-        return new Lead([
-            'first_name'   => $row['first_name'],   // Ensure these match your Excel column headers
-            'last_name'    => $row['last_name'],    
-            'company_name' => $row['company_name'], 
-            'description'  => $row['description'],   
-            'user_id'      => $this->userId,        // Set custom user_id here
-            'email'        => $row['email'],         
-            'phone'        => $row['phone'],         
-            'city'         => $row['city'],          
-            'state'        => $row['state'],         
-            'address'      => $row['address'],       
-            'status'       => $row['status'],        
-        ]);
+        // Check if a lead with this email already exists
+        $lead = Lead::where('email', $row['email'])->first();
+
+        if ($lead) {
+            // If lead exists, update the record
+            $lead->update([
+                'first_name'   => $row['first_name'],
+                'last_name'    => $row['last_name'],
+                'company_name' => $row['company_name'],
+                'description'  => $row['description'],
+                'user_id'      => $this->userId,    // Custom user_id passed
+                'phone'        => $row['phone'],
+                'city'         => $row['city'],
+                'state'        => $row['state'],
+                'status'       => $row['status'],
+                'address'      => $row['address'],
+            ]);
+            return null; // Return null to avoid inserting a new record
+        } else {
+            // Insert new record if not found
+            return new Lead([
+                'first_name'   => $row['first_name'],
+                'last_name'    => $row['last_name'],
+                'company_name' => $row['company_name'],
+                'description'  => $row['description'],
+                'user_id'      => $this->userId,    // Custom user_id passed
+                'email'        => $row['email'],
+                'phone'        => $row['phone'],
+                'city'         => $row['city'],
+                'state'        => $row['state'],
+                'status'       => $row['status'],
+                'address'      => $row['address'],
+            ]);
+        }
     }
 }
