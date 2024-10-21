@@ -186,12 +186,23 @@
                                     <label class="form-label" for="message">Update Message</label>
                                     <input type="text" name="message" class="form-control" id="message">
                                 </div>
-                            
+
+                                <div class="mb-3">
+                                    <label class="form-label" for="message">Call Reminder</label>
+                                    <input type="checkbox" name="callreminder" id="callreminder">
+                                </div>
+                                
+                                <div class="mb-3" id="callDateContainer" style="display: none;">
+                                    <label class="form-label" for="dateInput">Call Date</label>
+                                    <input type="date" name="call_date" id="call-dateInput" class="form-control">
+                                </div>
+                                
                                 <div class="mb-3">
                                     <label for="status">Status</label>
                                     <div class="select-container">
                                         <select id="status-filter" name="status" class="form-select">
                                             <option value="">&#11044; All Status</option>
+                                            <option value="No Response" class="text-secondary">&#11044; No Response</option>
                                             <option value="Not interested" class="text-danger"> &#11044; Not interested</option>
                                             <option value="Prospect" class="text-warning"> &#11044; Prospect</option>
                                             <option value="lead" class="text-info"> &#11044; Lead</option>
@@ -200,24 +211,23 @@
                                         </select>   
                                     </div>
                                 </div>
-                            
                                 <button type="submit" class="btn btn-primary">Save changes</button>
                             </form>
-                            
-
                         </div>
                     </div>
                 </div>
+
                 <div class="tab-pane fade" id="activity" role="tabpanel">
                     <div class="card">
                         <div class="card-body">
                             <h5 class="card-title">Follow-up Details</h5>
-    
+                
                             <ul class="timeline mt-4 mb-0">
                                 @foreach($followups as $data)
                                 <li class="timeline-item">
                                     <a href="#" class="edit-followup" 
                                        data-id="{{ $data->id }}" 
+                                       data-call-date="{{ $data->call_date }}"
                                        data-title="{{ $data->title }}"
                                        data-date="{{ $data->date }}"
                                        data-message="{{ $data->message }}"
@@ -225,24 +235,33 @@
                                        <strong>{{ $data->title }}</strong>
                                     </a>
                                     <span class="float-end text-muted text-sm">{{ $data->date }}</span>
-                                    <p style="margin-bottom: 2rem !important">{{ $data->message }}<a href="{{route('admin/delete-followup',$data->id)}}" class="btn btn-danger btn-sm float-end">
-                                        <i class="fas fa-trash-alt fa-xs"></i> <!-- Font Awesome trash icon -->
-                                    </a></p>
-                                    <!-- Delete Button -->
-                                    
+                                    @if(!empty($data->call_date)) <!-- Check if call_date is not empty -->
+                                        <span class="badge bg-info text-white">Call Date: {{ \Carbon\Carbon::parse($data->call_date)->format('M d, Y') }}</span> <!-- Display call date -->
+                                    @endif
+                                    <p style="margin-bottom: 2rem !important">
+                                        {{ $data->message }}
+                                        <a href="{{ route('admin/delete-followup', $data->id) }}" class="btn btn-danger btn-sm float-end">
+                                            <i class="fas fa-trash-alt fa-xs"></i> <!-- Font Awesome trash icon -->
+                                        </a>
+                                    </p>
                                 </li>
                                 @endforeach
                             </ul>
-                            
                         </div>
                     </div>
-                </div>
+                </div>                
             </div>
         </div>
     </div>
 
 </div>
 <script>
+
+     document.getElementById('callreminder').addEventListener('change', function() {
+        const callDateContainer = document.getElementById('callDateContainer');
+        callDateContainer.style.display = this.checked ? 'block' : 'none';
+    });
+
     const today = new Date().toISOString().split('T')[0];
     document.getElementById('dateInput').setAttribute('min', today);
 
@@ -257,6 +276,7 @@
             var date = this.getAttribute('data-date');
             var message = this.getAttribute('data-message');
             var status = this.getAttribute('data-status');
+            var calldate = this.getAttribute('data-call-date');
             
             // Populate the form fields with the extracted data
             document.getElementById('id').value = id;
@@ -265,10 +285,10 @@
             document.getElementById('message').value = message;
             
             // Set the selected value for the status dropdown
-            var statusDropdown = document.getElementById('status');
+            var statusDropdown = document.getElementById('status-filter'); // Ensure this matches your select ID
             statusDropdown.value = status;
 
-            // If the dropdown value is not being set, you can also try setting the selected option manually:
+            // If the dropdown value is not being set, set the selected option manually:
             if (!statusDropdown.value) {
                 var options = statusDropdown.options;
                 for (var i = 0; i < options.length; i++) {
@@ -277,6 +297,20 @@
                         break;
                     }
                 }
+            }
+
+            // Check the Call Reminder checkbox if calldate is not null
+            var callReminderCheckbox = document.getElementById('callreminder');
+            callReminderCheckbox.checked = calldate !== null && calldate !== ''; // Check the checkbox if calldate is not empty
+
+            // Populate the call date input only if calldate is provided
+            var callDateInput = document.getElementById('call-dateInput');
+            if (calldate) {
+                callDateInput.value = calldate; // Set call date input to calldate
+                callDateInput.closest('.mb-3').style.display = 'block'; // Show call date input if there is a value
+            } else {
+                callDateInput.value = ''; // Clear the field if no calldate
+                callDateInput.closest('.mb-3').style.display = 'none'; // Hide call date input if there is no value
             }
 
             // Optionally, activate the tab
@@ -288,6 +322,5 @@
         });
     });
 });
-
 </script>
 @endsection

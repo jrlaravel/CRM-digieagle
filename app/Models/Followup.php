@@ -15,6 +15,7 @@ class Followup extends Model
         'message',
         'lead_id',
         'date',
+        'call_date',
         'previous_status',
     ];
 }

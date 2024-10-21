@@ -7,14 +7,22 @@ use Illuminate\Http\Request;
 use App\Models\User;
 use App\Models\Notification;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\DB;
+use Yajra\DataTables\DataTables;
 use Illuminate\Support\Facades\Validator;
 
 class AdminDashboardController extends Controller
 {
     public function index()
     {   
+        $follow_ups = DB::table('follow_up')
+        ->join('lead_detail', 'lead_detail.id', '=', 'follow_up.lead_id')
+        ->select('lead_detail.first_name', 'lead_detail.id as lead_id', 'lead_detail.status','follow_up.id as follow_id', 'lead_detail.company_name', 'lead_detail.phone', 'lead_detail.last_name', 'follow_up.call_date')
+        ->where(DB::raw('DATE(follow_up.call_date)'), '=', DB::raw('CURDATE()')) // Use CURDATE() for today's date
+        ->get();
+
         $totalUsers = User::where('role','employee')->count();
-        return view('admin.admindashboard',compact('totalUsers'));
+        return view('admin.admindashboard',compact('totalUsers','follow_ups'));
     }
 
     public function adminProfile(){
@@ -54,4 +62,4 @@ class AdminDashboardController extends Controller
 
         return response($notifications);
     }
-}
+}    

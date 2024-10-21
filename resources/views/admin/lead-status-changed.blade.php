@@ -92,11 +92,14 @@
             <p><strong>New Status:</strong> {{ $newStatus }}</p>
             <p><strong>Follow-up Message:</strong> {{ $followupMessage }}</p>
             <p><strong>Company Name:</strong> {{ $companyName }}</p>
+            @if(!empty($callDate)) <!-- Check if call_date is not empty -->
+                <p><strong>Call Date:</strong> {{ \Carbon\Carbon::parse($callDate)->format('M d, Y') }}</p> <!-- Format the call date -->
+            @endif
         </div>
 
         <!-- Footer -->
         <div class="footer">
-           <p>2024 Digieagleinc .  All rights reserved.</p>
+           <p>2024 Digieagleinc. All rights reserved.</p>
         </div>
     </div>
 </body>

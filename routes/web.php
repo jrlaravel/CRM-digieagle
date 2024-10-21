@@ -74,6 +74,7 @@ Route::prefix('admin')->group(function () {
 
     Route::group(['middleware' => 'admin.auth'],function () {
         Route::get('dashboard', [AdminDashboardController::class, 'index'])->name('admin/dashboard'); 
+        Route::get('get_follow_up', [AdminDashboardController::class, 'get_follow_up'])->name('admin/get_follow_up'); 
         Route::get('profile', [AdminDashboardController::class, 'adminProfile'])->name('admin/profile'); 
         Route::post('profilephoto', [AdminDashboardController::class, 'profilePhoto'])->name('admin/profilephoto'); 
         Route::get('attendance', [AdminAttendanceController::class, 'index'])->name('admin/attendance');

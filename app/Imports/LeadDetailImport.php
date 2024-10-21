@@ -26,6 +26,7 @@ class LeadDetailImport implements ToModel, WithHeadingRow
                 'first_name'   => $row['first_name'],
                 'last_name'    => $row['last_name'],
                 'company_name' => $row['company_name'],
+                'lead_source' => $row['lead_source'],
                 'description'  => $row['description'],
                 'user_id'      => $this->userId,    // Custom user_id passed
                 'phone'        => $row['phone'],
@@ -41,6 +42,7 @@ class LeadDetailImport implements ToModel, WithHeadingRow
                 'first_name'   => $row['first_name'],
                 'last_name'    => $row['last_name'],
                 'company_name' => $row['company_name'],
+                'lead_source' => $row['lead_source'],
                 'description'  => $row['description'],
                 'user_id'      => $this->userId,    // Custom user_id passed
                 'email'        => $row['email'],

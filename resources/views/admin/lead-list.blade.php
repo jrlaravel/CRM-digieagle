@@ -27,6 +27,7 @@
         <div class="float-end me-2">
             <select id="status-filter" class="form-select">
                 <option value="">&#11044; All Status</option>
+                <option value="No Response" class="text-secondary">&#11044; No Response</option>
                 <option value="Not interested" class="text-danger"> &#11044; Not interested</option>
                 <option value="Prospect" class="text-warning"> &#11044; Prospect</option>
                 <option value="lead" class="text-info"> &#11044; Lead</option>
@@ -34,7 +35,9 @@
                 <option value="client" class="text-success"> &#11044; Client</option>
             </select>
         </div>
-        
+        <div class="float-end me-2">
+            <input type="text" id="searchInput" placeholder="Search" class="form-control" onkeyup="filterTable()">
+        </div>        
     </div>
     <div class="row mt-4">
         <div class="col-12"> 
@@ -47,6 +50,7 @@
                                 <th>Name</th>
                                 <th>Company name</th>
                                 <th>Description</th>
+                                <th>Source</th>
                                 <th>Email</th>
                                 <th>Phone</th>
                                 <th>City</th>
@@ -63,6 +67,7 @@
                                 <td><a href="{{route('admin/lead-datail',$lead->id)}}">{{ $lead->first_name }} {{ $lead->last_name }}</a></td>
                                 <td>{{ $lead->company_name }}</td>
                                 <td>{{ $lead->description }}</td>
+                                <td>{{ $lead->lead_source}}</td>
                                 <td>{{ $lead->email }}</td>
                                 <td>{{ $lead->phone }}</td>
                                 <td>{{ $lead->city }}</td>
@@ -77,6 +82,8 @@
                                         <span class="badge bg-primary">Hot Lead</span>
                                     @elseif($lead->status == 'client')
                                         <span class="badge bg-success">Client</span>
+                                    @elseif($lead->status == 'No Response')
+                                    <span class="badge bg-secondary">No Response</span>
                                         @else
                                         <span class="badge bg-danger">Not interested</span>
 
@@ -88,6 +95,7 @@
                                             data-first_name="{{ $lead->first_name }}"
                                             data-last_name="{{ $lead->last_name }}"
                                             data-company_name="{{ $lead->company_name }}"
+                                            data-lead_source = "{{ $lead->lead_source }}"
                                             data-description="{{ $lead->description }}"
                                             data-email="{{ $lead->email }}"
                                             data-phone="{{ $lead->phone }}"
@@ -142,9 +150,16 @@
                     <input type="text" class="form-control" id="company_name" name="company_name">
                 </div>
 
-                <div class="mb-3">
-                    <label for="description" class="form-label">Description</label>
-                    <input type="text" class="form-control" id="description" name="description">
+                <div class="row">
+                    <div class="mb-3 col-md-6">
+                        <label for="description" class="form-label">Description</label>
+                        <input type="text" class="form-control" id="description" name="description">
+                    </div>
+
+                    <div class="mb-3 col-md-6">
+                        <label for="description" class="form-label">Lead Source</label>
+                        <input type="text" class="form-control" id="lead_source" name="lead_source">
+                    </div>
                 </div>
 
                 <div class="row">
@@ -197,6 +212,7 @@
                     <label for="status" class="form-label">Status</label>
                     <select id="status-filter" name="status" required class="form-select">
                         <option value="">&#11044; All Status</option>
+                        <option value="No Response" class="text-secondary">&#11044; No Response</option>
                         <option value="Not interested" class="text-danger"> &#11044; Not interested</option>
                         <option value="Prospect" class="text-warning"> &#11044; Prospect</option>
                         <option value="lead" class="text-info"> &#11044; Lead</option>
@@ -244,6 +260,7 @@
         let lastName = $(this).data('last_name');
         let companyName = $(this).data('company_name');
         let description = $(this).data('description');
+        let lead_source = $(this).data('lead_source');
         let email = $(this).data('email');
         let phone = $(this).data('phone');
         let city = $(this).data('city');
@@ -259,6 +276,7 @@
         $('#last_name').val(lastName);
         $('#company_name').val(companyName);
         $('#description').val(description);
+        $('#lead_source').val(lead_source);  // Assuming lead_source is the same as description for now.
         $('#email').val(email);
         $('#phone').val(phone);
         $('#city').val(city);
@@ -353,6 +371,33 @@
 $('#successModal').on('hidden.bs.modal', function () {
     location.reload();  
 });
+
+function filterTable() {
+    // Get the input value
+    var input = document.getElementById("searchInput");
+    var filter = input.value.toLowerCase(); // Convert input to lowercase
+    var table = document.getElementById("datatables-reponsive");
+    var tr = table.getElementsByTagName("tr"); // Get all table rows
+
+    // Loop through all table rows (except the first row which contains the headers)
+    for (var i = 1; i < tr.length; i++) {
+        var tdName = tr[i].getElementsByTagName("td")[1]; // Name column
+        var tdLeadSource = tr[i].getElementsByTagName("td")[4]; // Lead Source column
+
+        if (tdName || tdLeadSource) {
+            var nameValue = tdName.textContent || tdName.innerText; // Get the text content of the Name column
+            var leadSourceValue = tdLeadSource.textContent || tdLeadSource.innerText; // Get the text content of the Lead Source column
+
+            // Check if the filter text is found in any of these fields
+            if (nameValue.toLowerCase().indexOf(filter) > -1 || 
+                leadSourceValue.toLowerCase().indexOf(filter) > -1) {
+                tr[i].style.display = ""; // Show the row if match found
+            } else {
+                tr[i].style.display = "none"; // Hide the row if no match
+            }
+        }
+    }
+}
 
 </script>
 

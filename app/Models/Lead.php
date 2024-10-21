@@ -14,6 +14,7 @@ class Lead extends Model
         'first_name',
         'last_name',
         'company_name',
+        'lead_source',
         'description',
         'user_id',
         'email',

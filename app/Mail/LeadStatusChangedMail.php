@@ -16,20 +16,23 @@ class LeadStatusChangedMail extends Mailable
     public $newStatus;
     public $followupMessage;
     public $companyName;
+    public $callDate; 
 
     /**
      * Create a new message instance.
      *
      * @return void
      */
-    public function __construct($lead, $previousStatus, $newStatus, $followupMessage, $companyName)
+    public function __construct($lead, $previousStatus, $newStatus, $followupMessage, $companyName, $callDate = null)
     {
         $this->lead = $lead;
         $this->previousStatus = $previousStatus;
         $this->newStatus = $newStatus;
         $this->followupMessage = $followupMessage;
         $this->companyName = $companyName;
+        $this->callDate = $callDate; // Store call_date
     }
+    
 
     /**
      * Build the message.

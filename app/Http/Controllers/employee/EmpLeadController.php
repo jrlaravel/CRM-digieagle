@@ -12,6 +12,8 @@ use Illuminate\Support\Facades\Validator;
 use App\Imports\LeadDetailImport;
 use App\Exports\LeadsExport;
 use Maatwebsite\Excel\Facades\Excel;
+use App\Mail\LeadStatusChangedMail;
+use Illuminate\Support\Facades\Mail;
 
 class EmpLeadController extends Controller
 {
@@ -44,6 +46,7 @@ class EmpLeadController extends Controller
                 'last_name' => $request->input('lname'),
                 'company_name' => $request->input('company_name'),
                 'description' => $request->input('description'),
+                'lead_source' => $request->input('lead_source'), //
                 'user_id' => $request->input('user_id'),
                 'email' => $request->input('email'),
                 'phone' => $request->input('phone'),
@@ -110,6 +113,7 @@ class EmpLeadController extends Controller
             'inslink' => $request->input('instagram'), // Instagram link
             'facebooklink' => $request->input('facebook'), // Facebook link
             'weblink' => $request->input('website'), // Website link
+            'lead_source' => $request->input('lead_source'), //
         ]);
 
         // Redirect back with success message
@@ -140,6 +144,7 @@ class EmpLeadController extends Controller
             'message' => 'required',
             'date'    => 'required',
             'status'  => 'required',
+            'call_date' => 'nullable|date', 
         ]);
     
         // If validation fails
@@ -154,6 +159,8 @@ class EmpLeadController extends Controller
         }
         
         $previousStatus = $lead->status;
+        $companyName = $lead->company_name; 
+        $callDate = $request->call_date; 
         
         // Update or create the followup record
         $followup = Followup::updateOrCreate(
@@ -164,13 +171,29 @@ class EmpLeadController extends Controller
                 'message'         => $request->input('message'),
                 'date'            => $request->input('date'),
                 'previous_status' => $previousStatus,
+                'call_date'       => $request->input('call_date'), 
             ]
         );
     
         // Update the lead's status if follow-up is successfully created or updated
+       
         if ($followup) {
-            $lead->status = $request->status; 
+            $newStatus = $request->status;
+            $lead->status = $newStatus;
             $lead->save();
+    
+            $adminEmails = ['nilay.chotaliya119538@marwadiuniversity.ac.in'];
+            
+            if ($previousStatus != $newStatus) {
+                Mail::to($adminEmails)->send(new LeadStatusChangedMail(
+                    $lead, 
+                    $previousStatus, 
+                    $newStatus, 
+                    $followup->message, 
+                    $companyName,
+                    $callDate
+                ));
+            }
         }
     
         // Return success response

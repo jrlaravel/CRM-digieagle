@@ -56,6 +56,7 @@ class LeadController extends Controller
                 'inslink' => $request->input('inslink'), // Instagram link
                 'facebooklink' => $request->input('facebooklink'), // Facebook link
                 'weblink' => $request->input('weblink'), // Website link
+                'lead_source' => $request->input('lead_source'), //
             ]);
             
             return redirect()->route('admin/lead-list')->with('success', 'Lead created successfully.');
@@ -113,6 +114,7 @@ class LeadController extends Controller
             'inslink' => $request->input('instagram'), // Instagram link
             'facebooklink' => $request->input('facebook'), // Facebook link
             'weblink' => $request->input('website'), // Website link
+            'lead_source' => $request->input('lead_source'), //
         ]);
 
         // Redirect back with success message
@@ -134,61 +136,57 @@ class LeadController extends Controller
         return view('admin/lead-detail', compact('lead', 'followups'));  
     }
 
-
-
-    
     public function createOrUpdateFollowup(Request $request)
     {
         $validator = Validator::make($request->all(), [
             'title'   => 'required',
             'message' => 'required',
-            'date'    => 'required',
+            'date'    => 'required|date', 
             'status'  => 'required',
+            'call_date' => 'nullable|date', 
         ]);
         
         if ($validator->fails()) {
             return redirect()->back()->withErrors($validator)->withInput();
         }
         
-        // Fetch the lead and previous status
         $lead = Lead::find($request->lead_id);
         if (!$lead) {
             return redirect()->back()->with('error', 'Lead not found.');
         }
+        // return $request->all();
         
         $previousStatus = $lead->status;
-        $companyName = $lead->company_name; // Assuming 'company_name' is a field in the Lead model
+        $companyName = $lead->company_name; 
+        $callDate = $request->call_date; 
         
-        // Update or create the followup record
         $followup = Followup::updateOrCreate(
-            ['id' => $request->id], // Match by 'id' to update, or create a new one
+            ['id' => $request->id], 
             [
                 'title'           => $request->input('title'),
                 'lead_id'         => $request->input('lead_id'),
                 'message'         => $request->input('message'),
                 'date'            => $request->input('date'),
                 'previous_status' => $previousStatus,
+                'call_date'       => $request->input('call_date'), 
             ]
         );
     
-        // Update the lead's status if follow-up is successfully created or updated
         if ($followup) {
             $newStatus = $request->status;
             $lead->status = $newStatus;
             $lead->save();
     
-            $adminEmails = ['manager@digieagleinc.com', 'ceo@digieagleinc.com'];
-            // Send email to admin if status has changed
+            $adminEmails = ['nilay.chotaliya119538@marwadiuniversity.ac.in'];
+            
             if ($previousStatus != $newStatus) {
-                $adminEmail = $adminEmails; // Replace with your admin's email
-    
-                // Send email with additional data: followup message and company name
-                Mail::to($adminEmail)->send(new LeadStatusChangedMail(
+                Mail::to($adminEmails)->send(new LeadStatusChangedMail(
                     $lead, 
                     $previousStatus, 
                     $newStatus, 
                     $followup->message, 
-                    $companyName
+                    $companyName,
+                    $callDate
                 ));
             }
         }
@@ -196,8 +194,7 @@ class LeadController extends Controller
         // Return success response
         return redirect()->back()->with('success', 'Follow-up has been successfully ' . ($request->has('id') ? 'updated' : 'added') . '.');
     }
-    
-    
+        
 
 public function delete_followup($id)
 {

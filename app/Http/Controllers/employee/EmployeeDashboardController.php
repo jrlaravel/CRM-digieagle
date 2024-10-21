@@ -34,6 +34,16 @@ class EmployeeDashboardController extends Controller
         $presentDaysCount = $collection->where('Status', 'P')->count();
         $absentDaysCount = $collection->where('Status', 'A')->count();
 
+        if(session('has_bde_features')){
+            $follow_ups = DB::table('follow_up')
+            ->join('lead_detail', 'lead_detail.id', '=', 'follow_up.lead_id')
+            ->select('lead_detail.first_name', 'lead_detail.id as lead_id', 'lead_detail.status','follow_up.id as follow_id', 'lead_detail.company_name', 'lead_detail.phone', 'lead_detail.last_name', 'follow_up.call_date')
+            ->where(DB::raw('DATE(follow_up.call_date)'), '=', DB::raw('CURDATE()')) // Use CURDATE() for today's date
+            ->get();
+            $cards = DB::select('SELECT card.name,card.image,ac.message,ac.date FROM `assign_card` as ac join card on ac.card_id = card.id WHERE ac.user_id = '.session('employee')->id);
+            return view('employee.employeedashboard',compact('presentDaysCount', 'absentDaysCount','cards','follow_ups'));
+        }
+
         $cards = DB::select('SELECT card.name,card.image,ac.message,ac.date FROM `assign_card` as ac join card on ac.card_id = card.id WHERE ac.user_id = '.session('employee')->id);
         return view('employee.employeedashboard',compact('presentDaysCount', 'absentDaysCount','cards'));
     }

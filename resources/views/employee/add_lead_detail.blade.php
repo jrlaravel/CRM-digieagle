@@ -55,28 +55,25 @@
                     @enderror
                 </div>
 
-                <div class="mb-3">
-                    <label class="form-label" for="company_name">Description</label>
-                    <input type="text" class="form-control @error('description') is-invalid @enderror" id="description" name="description" placeholder="description" value="{{ old('description') }}" required>
-                    @error('description')
-                    <p class="invalid-feedback">{{ $message }}</p>
-                    @enderror
+                <div class="row">
+                    <div class="mb-3 col-md-6">
+                        <label class="form-label" for="company_name">Description</label>
+                        <input type="text" class="form-control @error('description') is-invalid @enderror" id="description" name="description" placeholder="description" value="{{ old('description') }}" required>
+                        @error('description')
+                        <p class="invalid-feedback">{{ $message }}</p>
+                        @enderror
+                    </div>
+                    <div class="mb-3 col-md-6">
+                        <label class="form-label" for="lead_source">Lead Source</label>
+                        <input type="text" class="form-control @error('lead_source') is-invalid @enderror" id="lead_source" name="lead_source" placeholder="lead_source" value="{{ old('lead_source') }}" required>
+                        @error('lead_source')
+                        <p class="invalid-feedback">{{ $message }}</p>
+                        @enderror
+                    </div>
                 </div>
             
-                {{-- Assigned User --}}
-                <div class="mb-3">
-                    <label class="form-label" for="user_id">Assigned User:</label>
-                    <select id="user_id" name="user_id" class="form-control @error('user_id') is-invalid @enderror" required>
-                        <option value="">Select User</option>
-                        @foreach($user as $data)
-                        <option value="{{ $data->id }}">{{ $data->first_name }} {{$data->last_name}}</option>
-                        @endforeach
-                    </select>
-                    @error('user_id')
-                    <p class="invalid-feedback">{{ $message }}</p>
-                    @enderror
-                </div>
-            
+                    <input type="text" name="user_id" hidden value="{{ session('employee')->id }}">
+
                 {{-- Email --}}
                 <div class="row">
                 <div class="mb-3 col-md-6">
@@ -146,6 +143,7 @@
                         <option value="lead" {{ old('status') == 'lead' ? 'selected' : '' }} class="text-info">Lead</option>
                         <option value="hot lead" {{ old('status') == 'hot lead' ? 'selected' : '' }} class="text-primary">Hot Lead</option>
                         <option value="client" {{ old('status') == 'client' ? 'selected' : '' }} class="text-success">Client</option>
+                        <option value="No Response" {{ old('status') == 'No Response' ? 'selected' : '' }} class="text-secondary">No Response</option>
                     </select>
                     @error('status')    
                     <p class="invalid-feedback">{{ $message }}</p>
