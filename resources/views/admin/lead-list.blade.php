@@ -74,17 +74,17 @@
                                 <td>{{ $lead->state }}</td>
                                 <td>{{ $lead->address }}</td>
                                 <td>
-                                    @if($lead->status == 'Prospect')
+                                    @if(strtolower($lead->status) == 'prospect')
                                         <span class="badge bg-warning">Prospect</span>
-                                    @elseif($lead->status == 'lead')
+                                    @elseif(strtolower($lead->status) == 'lead')
                                         <span class="badge bg-info">Lead</span>
-                                    @elseif($lead->status == 'hot lead')
+                                    @elseif(strtolower($lead->status) == 'hot lead')
                                         <span class="badge bg-primary">Hot Lead</span>
-                                    @elseif($lead->status == 'client')
+                                    @elseif(strtolower($lead->status) == 'client')
                                         <span class="badge bg-success">Client</span>
-                                    @elseif($lead->status == 'No Response')
-                                    <span class="badge bg-secondary">No Response</span>
-                                        @else
+                                    @elseif(strtolower($lead->status) == 'no response')
+                                        <span class="badge bg-secondary">No Response</span>
+                                    @else
                                         <span class="badge bg-danger">Not interested</span>
                                     @endif
                                 </td>
