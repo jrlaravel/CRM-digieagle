@@ -86,7 +86,6 @@
                                     <span class="badge bg-secondary">No Response</span>
                                         @else
                                         <span class="badge bg-danger">Not interested</span>
-
                                     @endif
                                 </td>
                                 <td>
