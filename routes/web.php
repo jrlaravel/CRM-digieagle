@@ -18,6 +18,7 @@ use App\Http\Controllers\employee\EmpLeadController;
 use App\Http\Controllers\employee\EmployeeLeaveController;
 use App\Http\Controllers\employee\ProjectController as EmployeeProjectController;
 use App\Http\Controllers\employee\HRleaveController;
+use App\Http\Controllers\employee\HREmployeeController;
 
 
 Route::get('/', [LoginController::class, 'index'])->name('emp/login'); 
@@ -53,6 +54,13 @@ Route::prefix('emp')->group(function () {
         Route::get('leave-list', [HRleaveController::class, 'leave'])->name('emp/leave-list');
         Route::get('leave-delete/{id}', [HRleaveController::class, 'leavedelete'])->name('emp/leave-delete');
         Route::post('leave-update/{id}', [HRleaveController::class, 'leaveupdate'])->name('emp/leave-update');
+        Route::get('add-emp', [HREmployeeController::class, 'index'])->name('emp/add-emp'); 
+        Route::get('get-designations', [EmployeeController::class, 'getDesignations'])->name('emp/get-designations');
+        Route::post('add-emp-data', [HREmployeeController::class, 'store'])->name('emp/add-emp-data'); 
+        Route::get('list-emp', [HREmployeeController::class, 'show'])->name('emp/list-emp'); 
+        Route::get('delete-emp-data/{id}', [HREmployeeController::class, 'delete'])->name('emp/delete-emp-data'); 
+        Route::get('edit-emp-data/{id}', [HREmployeeController::class, 'edit'])->name('emp/edit-emp-data'); 
+        Route::post('update-emp-data', [HREmployeeController::class, 'update'])->name('emp/update-emp-data');
     });
     
     

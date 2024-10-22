@@ -90,6 +90,16 @@
 							<li class="sidebar-item"><a class='sidebar-link {{ request()->routeIs('emp/leave') ? 'active' : '' }}' href='{{ route('emp/leave-list') }}'>Leave List</a></li>
 						</ul>
 					</li>
+
+					<li class="sidebar-item">
+						<a data-bs-target="#pages" data-bs-toggle="collapse" class="sidebar-link {{ request()->routeIs('emp/add-emp') || request()->routeIs('emp/list-emp') ? 'active' : 'collapsed' }}">
+							<i class="fa fa-user-circle {{ request()->routeIs('emp/add-emp') || request()->routeIs('emp/list-emp') ? 'text-white' : '' }}" aria-hidden="true"></i> <span class="align-middle">Employee Management</span>
+						</a>
+						<ul id="pages" class="sidebar-dropdown list-unstyled collapse" data-bs-parent="#sidebar">
+							<li class="sidebar-item"><a class='sidebar-link {{ request()->routeIs('emp/add-emp') ? 'active' : '' }}' href='{{ route('emp/add-emp') }}'>Add Employee</a></li>
+							<li class="sidebar-item"><a class='sidebar-link {{ request()->routeIs('emp/list-emp') ? 'active' : '' }}' href='{{ route('emp/list-emp') }}'>List Employee</a></li>
+						</ul>
+					</li>
 					@endif	
 		
 					<a href="{{ route('emp/attendance') }}" class="sidebar-link {{ request()->routeIs('emp/attendance') ? 'active' : '' }}">
