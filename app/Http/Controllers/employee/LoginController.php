@@ -6,14 +6,13 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
-use Illuminate\Support\Facades\Password;
 use Illuminate\Support\Facades\DB;
 use Carbon\Carbon;
 use App\Http\Controllers\Controller;
 use App\Models\User;
 use App\Models\Designation;
 use Illuminate\Support\Str;
-use Mail;
+use Illuminate\Support\Facades\Mail;
 
 
 class LoginController extends Controller
@@ -26,38 +25,42 @@ class LoginController extends Controller
     {
         $validator = Validator::make($request->all(), [
             'username' => 'required',
-            'password' => 'required'
+            'password' => 'required',
         ]);
     
         if ($validator->fails()) {
-
             return redirect()->route('emp/login')->withInput()->withErrors($validator);
         }
     
         if (Auth::guard('web')->attempt(['username' => $request->username, 'password' => $request->password])) {
             $user = Auth::guard('web')->user();
     
+            // Check if the user's role is either employee or HR
             if ($user->role == 'employee' || $user->role == 'hr') {
 
                 session()->put('employee', $user);
-
-                $designation = Designation::find($user->designation);           
-              
-                // Check if the designation is 'BDE'
+    
+                $designation = Designation::find($user->designation);
+    
                 if ($designation && $designation->name == 'BDE') {
-                    session()->put('has_bde_features', true); // Store flag in session
+                    session()->put('has_bde_features', true); 
                 } else {
                     session()->put('has_bde_features', false);
                 }
-               
+    
+                // Check if the user is HR and store HR-related session data if needed
+                if ($user->role == 'hr') {
+                    session()->put('has_hr_features', true); 
+                } else {
+                    session()->put('has_hr_features', false);
+                }
+    
                 return redirect()->route('emp/dashboard');
             } else {
-
                 Auth::guard('web')->logout();
                 return redirect()->route('emp/login')->withInput()->with(['error' => 'You are not authorized to access this area']);
             }
         } else {
-
             return redirect()->route('emp/login')->withInput()->with(['error' => 'Invalid credentials']);
         }
     }

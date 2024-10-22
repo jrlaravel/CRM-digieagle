@@ -18,6 +18,7 @@ return Application::configure(basePath: dirname(__DIR__))
             'emp.guest' => \App\Http\Middleware\Employeeredirect::class,
             'emp.auth' => \App\Http\Middleware\EmployeeAuthenticate::class,
             'bde.access' => \App\Http\Middleware\HasBdeFeatures::class,
+            'check.hr' => \App\Http\Middleware\CheckHR::class,
         ]);
 
      

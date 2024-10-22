@@ -66,24 +66,23 @@ class EmployeeLeaveController extends Controller
             //     'message' => 'A new leave request has been made by ' . $request->input('name')
             // ]);
             
-            // $user = User::find($request->id);
-            // $designation = Designation::find($user->designation);
-            // // Send mail to HR
-            // $leaveDetails = [
-            //     'name' => $request->input('name'),
-            //     'start_date' => $request->from,
-            //     'end_date' => $request->to,
-            //     'reason' => $request->reason,
-            //     'other' => $request->other,
-            //     'first_name' => $user->first_name,
-            //     'last_name' => $user->last_name,
-            //     'designation' => $designation->name
-            // ];
+            $user = User::find($request->id);
+            $designation = Designation::find($user->designation);
+            // Send mail to HR
+            $leaveDetails = [
+                'name' => $request->input('name'),
+                'start_date' => $request->from,
+                'end_date' => $request->to,
+                'reason' => $request->reason,
+                'other' => $request->other,
+                'first_name' => $user->first_name,
+                'last_name' => $user->last_name,
+                'designation' => $designation->name
+            ];
     
-            // Mail::to('hr.digieagleinc@gmail.com') // Replace with HR's email address
-            //     ->send(new LeaveRequestMail($leaveDetails));
+            Mail::to('hr.digieagleinc@gmail.com') // Replace with HR's email address
+                ->send(new LeaveRequestMail($leaveDetails));
     
-            // Redirect back with success message
             return redirect()->back()->with('success', 'Leave request submitted successfully and HR has been notified.');
     
         } else {

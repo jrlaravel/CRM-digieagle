@@ -21,6 +21,11 @@
 		body {
 			opacity: 0;
 		}
+		.sidebar-link.active {
+			/* border: 1px solid #ffffff3a;	 */
+			background-color: transparent; /* Change to your desired highlight color */
+			color: white; /* Adjust text color if necessary */
+		}
 	</style>
 	<!-- END SETTINGS -->
 <script async src="https://www.googletagmanager.com/gtag/js?id=UA-120946860-10"></script>
@@ -39,7 +44,7 @@
 			<div class="sidebar-content js-simplebar">
 				<a class='sidebar-brand'>
 					<span class="sidebar-brand-text align-middle">
-						<img src="{{asset('storage/logo/logo.png')}}" width="70%" height="70%" alt="logo">
+						<img src="{{ asset('storage/img/logo/logo.png') }}" width="70%" height="70%" alt="logo">
 					</span>
 					<svg class="sidebar-brand-icon align-middle" width="32px" height="32px" viewBox="0 0 24 24" fill="none" stroke="#FFFFFF" stroke-width="1.5"
 						stroke-linecap="square" stroke-linejoin="miter" color="#FFFFFF" style="margin-left: -3px">
@@ -48,48 +53,64 @@
 						<path d="M20 16L12 20L4 16"></path>
 					</svg>
 				</a>
-
+		
 				<div class="sidebar-user">
 					@yield('profile')
 				</div>
-
+		
 				<ul class="sidebar-nav">
-				
-						<a href="{{route('emp/dashboard')}}"  class="sidebar-link">
-							<i class="align-middle" data-feather="sliders"></i> <span class="align-middle">Dashboard</span>
+					<a href="{{ route('emp/dashboard') }}" class="sidebar-link {{ request()->routeIs('emp/dashboard') ? 'active' : '' }}">
+						<i class="align-middle" data-feather="sliders"></i> <span class="align-middle">Dashboard</span>
+					</a>
+		
+					@if(session('has_bde_features'))
+					<li class="sidebar-item">
+						<a data-bs-target="#lead" data-bs-toggle="collapse" class="sidebar-link {{ request()->routeIs('emp/lead') || request()->routeIs('emp/lead-list') ? 'active' : 'collapsed' }}">
+							<i class="fas fa-poll {{ request()->routeIs('emp/lead') || request()->routeIs('emp/lead-list') ? 'text-white' : '' }}"></i> 
+							<span class="align-middle">Lead Management</span>
 						</a>
+						<ul id="lead" class="sidebar-dropdown list-unstyled collapse {{ request()->routeIs('emp/lead') || request()->routeIs('emp/lead-list') ? 'show' : '' }}" data-bs-parent="#sidebar">
+							<li class="sidebar-item">
+								<a class="sidebar-link {{ request()->routeIs('emp/lead') ? 'active' : '' }}" href="{{ route('emp/lead') }}">Add Lead</a>
+							</li>
+							<li class="sidebar-item">
+								<a class="sidebar-link {{ request()->routeIs('emp/lead-list') ? 'active' : '' }}" href="{{ route('emp/lead-list') }}">Lead List</a>
+							</li>
+						</ul>
+					</li>
+					@endif
 
-						@if(session('has_bde_features'))
-						<li class="sidebar-item">
-							<a data-bs-target="#lead" data-bs-toggle="collapse" class="sidebar-link collapsed">
-								<i class="fas fa-poll"></i> <span class="align-middle">Lead Management</span>
-							</a>
-							<ul id="lead" class="sidebar-dropdown list-unstyled collapse " data-bs-parent="#sidebar">
-								<li class="sidebar-item"><a class="sidebar-link" href="{{route('emp/lead')}}">Add Lead</a></li>
-								<li class="sidebar-item"><a class="sidebar-link" href="{{route('emp/lead-list')}}">Lead List</a></li>
-							</ul>
-						</li>
-						@endif
-
-						<a href="{{route('emp/attendance')}}"  class="sidebar-link">
-							<i class='far fa-calendar-alt'></i> <span class="align-middle">Attendance</span>
+					@if(session('has_hr_features'))
+					<li class="sidebar-item">
+						<a data-bs-target="#leave" data-bs-toggle="collapse" class="sidebar-link {{ request()->routeIs('emp/leave-type') || request()->routeIs('emp/leave-list') ? 'active' : 'collapsed' }}">
+							<i class="fa fa-line-chart {{ request()->routeIs('emp/leave-type') || request()->routeIs('emp/leave-list') ? 'text-white' : '' }}"></i> <span class="align-middle">Leave Management</span>
 						</a>
-
-						<a href="{{route('emp/leave')}}"  class="sidebar-link">
-							<i class='far fa-calendar-alt'></i> <span class="align-middle">Leave Management</span>
-						</a>
-
-						<a href="{{route('emp/calendar')}}"  class="sidebar-link">
-							<i class='fa fa-calendar-alt'></i> <span class="align-middle">Calendar</span>
-						</a>
-
-						<a href="{{route('emp/projects')}}"  class="sidebar-link">
-							<i class='fa fa-project-diagram'></i> <span class="align-middle">Projects</span>
-						</a>
-						
+						<ul id="leave" class="sidebar-dropdown list-unstyled collapse" data-bs-parent="#sidebar">
+							<li class="sidebar-item"><a class='sidebar-link {{ request()->routeIs('emp/leave-type') ? 'active' : '' }}' href='{{ route('emp/leave-type') }}'>Leave Type</a></li>
+							<li class="sidebar-item"><a class='sidebar-link {{ request()->routeIs('emp/leave') ? 'active' : '' }}' href='{{ route('emp/leave-list') }}'>Leave List</a></li>
+						</ul>
+					</li>
+					@endif	
+		
+					<a href="{{ route('emp/attendance') }}" class="sidebar-link {{ request()->routeIs('emp/attendance') ? 'active' : '' }}">
+						<i class='far fa-calendar-alt {{ request()->routeIs('emp/attendance') ? 'text-white' : '' }}'></i> <span class="align-middle">Attendance</span>
+					</a>
+		
+					<a href="{{ route('emp/leave') }}" class="sidebar-link {{ request()->routeIs('emp/leave') ? 'active' : '' }}">
+						<i class='far fa-calendar-alt {{ request()->routeIs('emp/leave') ? 'text-white' : '' }}'></i> <span class="align-middle">Leave Management</span>
+					</a>
+		
+					<a href="{{ route('emp/calendar') }}" class="sidebar-link {{ request()->routeIs('emp/calendar') ? 'active' : '' }}">
+						<i class='fa fa-calendar-alt {{ request()->routeIs('emp/calendar') ? 'text-white' : '' }}'></i> <span class="align-middle">Calendar</span>
+					</a>
+		
+					<a href="{{ route('emp/projects') }}" class="sidebar-link {{ request()->routeIs('emp/projects') ? 'active' : '' }}">
+						<i class='fa fa-project-diagram {{ request()->routeIs('emp/projects') ? 'text-white' : '' }}'></i> <span class="align-middle">Projects</span>
+					</a>
 				</ul>
 			</div>
 		</nav>
+		
 
 		<div class="main">
 			<nav class="navbar navbar-expand navbar-light navbar-bg">

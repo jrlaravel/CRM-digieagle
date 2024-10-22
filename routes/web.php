@@ -17,6 +17,7 @@ use App\Http\Controllers\admin\LeadController;
 use App\Http\Controllers\employee\EmpLeadController;
 use App\Http\Controllers\employee\EmployeeLeaveController;
 use App\Http\Controllers\employee\ProjectController as EmployeeProjectController;
+use App\Http\Controllers\employee\HRleaveController;
 
 
 Route::get('/', [LoginController::class, 'index'])->name('emp/login'); 
@@ -43,6 +44,17 @@ Route::prefix('emp')->group(function () {
         Route::post('/upload-excel', [EmpLeadController::class, 'uploadExcel'])->name('emp/uploadexcel');
         Route::get('download-excel', [EmpLeadController::class, 'downloadExcel'])->name('emp/downloadexcel');
     });
+
+    Route::group(['middleware' => ['emp.auth', 'check.hr']], function () {
+        Route::get('leave-type', [HRleaveController::class, 'index'])->name('emp/leave-type');
+        Route::post('add-leavetype', [HRleaveController::class, 'store'])->name('emp/add-leavetype');
+        Route::get('delete-leave-type/{id}', [HRleaveController::class, 'delete'])->name('emp/delete-leave-type');
+        Route::post('edit-leave-type', [HRleaveController::class, 'store'])->name('emp/edit-leave-type');
+        Route::get('leave-list', [HRleaveController::class, 'leave'])->name('emp/leave-list');
+        Route::get('leave-delete/{id}', [HRleaveController::class, 'leavedelete'])->name('emp/leave-delete');
+        Route::post('leave-update/{id}', [HRleaveController::class, 'leaveupdate'])->name('emp/leave-update');
+    });
+    
     
 
     Route::group(['middleware' => 'emp.auth'],function () {

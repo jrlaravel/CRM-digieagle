@@ -18,6 +18,13 @@
 		body {
 			opacity: 0;
 		}
+
+		.sidebar-link.active {
+			/* border: 1px solid #ffffff3a;	 */
+			background-color: transparent; /* Change to your desired highlight color */
+			color: white; /* Adjust text color if necessary */
+		}
+
 	</style>
 	<!-- END SETTINGS -->
 <script async src="https://www.googletagmanager.com/gtag/js?id=UA-120946860-10"></script>
@@ -45,101 +52,97 @@
 						<path d="M20 16L12 20L4 16"></path>
 					</svg>
 				</a>
-
+		
 				<div class="sidebar-user">
 					@yield('profile')
 				</div>
-
+		
 				<ul class="sidebar-nav">
-				
-						<a data-bs-target="#dashboards" href="{{route('admin/dashboard')}}"  class="sidebar-link">
-							<i class="align-middle" data-feather="sliders"></i> <span class="align-middle">Dashboard</span>
-						</a>
-
+					<a data-bs-target="#dashboards" href="{{ route('admin/dashboard') }}" class="sidebar-link {{ request()->routeIs('admin/dashboard') ? 'active' : '' }}">
+						<i class="align-middle" data-feather="sliders"></i> <span class="align-middle">Dashboard</span>
+					</a>
+		
 					<li class="sidebar-item">
-						<a data-bs-target="#pages" data-bs-toggle="collapse" class="sidebar-link collapsed">
-							<i class="fa fa-user-circle" aria-hidden="true"></i> <span class="align-middle">Employee Management	</span>
+						<a data-bs-target="#pages" data-bs-toggle="collapse" class="sidebar-link {{ request()->routeIs('admin/add-emp') || request()->routeIs('admin/list-emp') ? 'active' : 'collapsed' }}">
+							<i class="fa fa-user-circle {{ request()->routeIs('admin/add-emp') || request()->routeIs('admin/list-emp') ? 'text-white' : '' }}" aria-hidden="true"></i> <span class="align-middle">Employee Management</span>
 						</a>
-						<ul id="pages" class="sidebar-dropdown list-unstyled collapse " data-bs-parent="#sidebar">
-							<li class="sidebar-item"><a class='sidebar-link' href='{{route('admin/add-emp')}}'>Add Employee</a></li>
-						</ul>
-						<ul id="pages" class="sidebar-dropdown list-unstyled collapse " data-bs-parent="#sidebar">
-							<li class="sidebar-item"><a class='sidebar-link' href='{{route('admin/list-emp')}}'>List Employee</a></li>
+						<ul id="pages" class="sidebar-dropdown list-unstyled collapse" data-bs-parent="#sidebar">
+							<li class="sidebar-item"><a class='sidebar-link {{ request()->routeIs('admin/add-emp') ? 'active' : '' }}' href='{{ route('admin/add-emp') }}'>Add Employee</a></li>
+							<li class="sidebar-item"><a class='sidebar-link {{ request()->routeIs('admin/list-emp') ? 'active' : '' }}' href='{{ route('admin/list-emp') }}'>List Employee</a></li>
 						</ul>
 					</li>
-
+		
 					<li class="sidebar-item">
-						<a data-bs-target="#page" data-bs-toggle="collapse" class="sidebar-link collapsed">
-							<i class="fa fa-briefcase"></i> <span class="align-middle">Department Management</span>
+						<a data-bs-target="#page" data-bs-toggle="collapse" class="sidebar-link {{ request()->routeIs('admin/department') || request()->routeIs('admin/designation') ? 'active' : 'collapsed' }}">
+							<i class="fa fa-briefcase {{ request()->routeIs('admin/department') || request()->routeIs('admin/designation') ? 'text-white' : '' }}"></i> <span class="align-middle">Department Management</span>
 						</a>
-						<ul id="page" class="sidebar-dropdown list-unstyled collapse " data-bs-parent="#sidebar">
-							<li class="sidebar-item"></li><a class='sidebar-link' href='{{route('admin/department')}}'>Department</a>
-						</ul>
-						<ul id="page" class="sidebar-dropdown list-unstyled collapse " data-bs-parent="#sidebar">
-							<li class="sidebar-item"><a class='sidebar-link' href='{{route('admin/designation')}}'>Designation</a></li>
+						<ul id="page" class="sidebar-dropdown list-unstyled collapse" data-bs-parent="#sidebar">
+							<li class="sidebar-item"><a class='sidebar-link {{ request()->routeIs('admin/department') ? 'active' : '' }}' href='{{ route('admin/department') }}'>Department</a></li>
+							<li class="sidebar-item"><a class='sidebar-link {{ request()->routeIs('admin/designation') ? 'active' : '' }}' href='{{ route('admin/designation') }}'>Designation</a></li>
 						</ul>
 					</li>
-
+		
+					<li class="sidebar-item">
+						<a data-bs-target="#card" data-bs-toggle="collapse" class="sidebar-link {{ request()->routeIs('admin/cards') || request()->routeIs('admin/assign-card') ? 'active' : 'collapsed' }}">
+							<i class="fa fa-th-large {{ request()->routeIs('admin/cards') || request()->routeIs('admin/assign-card') ? 'text-white' : '' }}"></i> <span class="align-middle">Card Management</span>
+						</a>
+						<ul id="card" class="sidebar-dropdown list-unstyled collapse" data-bs-parent="#sidebar">
+							<li class="sidebar-item">
+								<a class='sidebar-link {{ request()->routeIs('admin/cards') ? 'active' : '' }}' href='{{ route('admin/cards') }}'>Add Cards</a>
+							</li>
+							<li class="sidebar-item">
+								<a class='sidebar-link {{ request()->routeIs('admin/assign-card') ? 'active' : '' }}' href='{{ route('admin/assign-card') }}'>Assign Card</a>
+							</li>
+						</ul>
+					</li>
 					
+		
 					<li class="sidebar-item">
-						<a data-bs-target="#card" data-bs-toggle="collapse" class="sidebar-link collapsed">
-							<i class="fa fa-th-large"></i> <span class="align-middle">Card Management</span>
+						<a data-bs-target="#leave" data-bs-toggle="collapse" class="sidebar-link {{ request()->routeIs('admin/leave-type') || request()->routeIs('admin/leave') ? 'active' : 'collapsed' }}">
+							<i class="fa fa-line-chart {{ request()->routeIs('admin/leave-type') || request()->routeIs('admin/leave') ? 'text-white' : '' }}"></i> <span class="align-middle">Leave Management</span>
 						</a>
-						<ul id="card" class="sidebar-dropdown list-unstyled collapse " data-bs-parent="#sidebar">
-							<li class="sidebar-item"></li><a class='sidebar-link' href='{{route('admin/cards')}}'>Add Cards</a>
-						</ul>
-						<ul id="card" class="sidebar-dropdown list-unstyled collapse " data-bs-parent="#sidebar">
-							<li class="sidebar-item"><a class='sidebar-link' href='{{route('admin/assign-card')}}'>Assign Card</a></li>
+						<ul id="leave" class="sidebar-dropdown list-unstyled collapse" data-bs-parent="#sidebar">
+							<li class="sidebar-item"><a class='sidebar-link {{ request()->routeIs('admin/leave-type') ? 'active' : '' }}' href='{{ route('admin/leave-type') }}'>Leave Type</a></li>
+							<li class="sidebar-item"><a class='sidebar-link {{ request()->routeIs('admin/leave') ? 'active' : '' }}' href='{{ route('admin/leave') }}'>Leave List</a></li>
 						</ul>
 					</li>
+		
 					<li class="sidebar-item">
-						<a data-bs-target="#leave" data-bs-toggle="collapse" class="sidebar-link collapsed">
-							<i class="fa fa-line-chart"></i> <span class="align-middle">Leave Management</span>
+						<a data-bs-target="#project" data-bs-toggle="collapse" class="sidebar-link {{ request()->routeIs('admin/project-type') || request()->routeIs('admin/add-project-detail') || request()->routeIs('admin/list-project-detail')  ? 'active' : 'collapsed' }}">
+							<i class="fa fa-project-diagram {{ request()->routeIs('admin/project-type') || request()->routeIs('admin/add-project-detail') || request()->routeIs('admin/list-project-detail')  ? 'text-white' : '' }}"></i> <span class="align-middle">Project Management</span>
 						</a>
-						<ul id="leave" class="sidebar-dropdown list-unstyled collapse " data-bs-parent="#sidebar">
-							<li class="sidebar-item"></li><a class='sidebar-link' href='{{route('admin/leave-type')}}'>Leave Type</a>
-						</ul>
-						<ul id="leave" class="sidebar-dropdown list-unstyled collapse " data-bs-parent="#sidebar">
-							<li class="sidebar-item"></li><a class='sidebar-link' href='{{route('admin/leave')}}'>Leave List</a>
+						<ul id="project" class="sidebar-dropdown list-unstyled collapse" data-bs-parent="#sidebar">
+							<li class="sidebar-item"><a class='sidebar-link {{ request()->routeIs('admin/project-type') ? 'active' : '' }}' href='{{ route('admin/project-type') }}'>Project Type</a></li>
+							<li class="sidebar-item"><a class='sidebar-link {{ request()->routeIs('admin/add-project-detail') ? 'active' : '' }}' href='{{ route('admin/add-project-detail') }}'>Add Project</a></li>
+							<li class="sidebar-item"><a class='sidebar-link {{ request()->routeIs('admin/list-project-detail') ? 'active' : '' }}' href='{{ route('admin/list-project-detail') }}'>Project List</a></li>
 						</ul>
 					</li>
+		
 					<li class="sidebar-item">
-						<a data-bs-target="#project" data-bs-toggle="collapse" class="sidebar-link collapsed">
-							<i class="fa fa-project-diagram"></i> <span class="align-middle">Project Management</span>
+						<a data-bs-target="#lead" data-bs-toggle="collapse" class="sidebar-link {{ request()->routeIs('admin/lead') || request()->routeIs('admin/ead-list') ? 'active' : 'collapsed' }}">
+							<i class="fas fa-poll {{ request()->routeIs('admin/lead') || request()->routeIs('admin/ead-list') ? 'text-white' : '' }}"></i> <span class="align-middle">Lead Management</span>
 						</a>
-						<ul id="project" class="sidebar-dropdown list-unstyled collapse " data-bs-parent="#sidebar">
-							<li class="sidebar-item"></li><a class='sidebar-link' href='{{route('admin/project-type')}}'>Project Type</a>
-						</ul>
-						<ul id="project" class="sidebar-dropdown list-unstyled collapse " data-bs-parent="#sidebar">
-							<li class="sidebar-item"></li><a class='sidebar-link' href='{{route('admin/add-project-detail')}}'>Add Project</a>
-						</ul>
-						<ul id="project" class="sidebar-dropdown list-unstyled collapse " data-bs-parent="#sidebar">
-							<li class="sidebar-item"></li><a class='sidebar-link' href='{{route('admin/list-project-detail')}}'>Project List</a>
+						<ul id="lead" class="sidebar-dropdown list-unstyled collapse" data-bs-parent="#sidebar">
+							<li class="sidebar-item"><a class='sidebar-link {{ request()->routeIs('admin/lead') ? 'active' : '' }}' href='{{ route('admin/lead') }}'>Add Lead</a></li>
+							<li class="sidebar-item"><a class='sidebar-link {{ request()->routeIs('admin/lead-list') ? 'active' : '' }}' href='{{ route('admin/lead-list') }}'>Lead List</a></li>
 						</ul>
 					</li>
-					<li class="sidebar-item">
-						<a data-bs-target="#lead" data-bs-toggle="collapse" class="sidebar-link collapsed">
-							<i class="fas fa-poll"></i> <span class="align-middle">Lead Management</span>
-						</a>
-						<ul id="lead" class="sidebar-dropdown list-unstyled collapse " data-bs-parent="#sidebar">
-							<li class="sidebar-item"></li><a class='sidebar-link' href='{{route('admin/lead')}}'>Add Lead</a>
-						</ul>
-						<ul id="lead" class="sidebar-dropdown list-unstyled collapse " data-bs-parent="#sidebar">
-							<li class="sidebar-item"></li><a class='sidebar-link' href='{{route('admin/lead-list')}}'>Lead List</a>
-						</ul>
-					</li>
-					<a data-bs-target="#dashboards" href="{{route('admin/attendance')}}"  class="sidebar-link">
-						<i class='far fa-calendar-alt'></i> <span class="align-middle">Attendance</span>
+		
+					<a data-bs-target="#dashboards" href="{{ route('admin/attendance') }}" class="sidebar-link {{ request()->routeIs('admin/attendance') ? 'active' : '' }}">
+						<i class='far fa-calendar-alt {{ request()->routeIs('admin/attendance') ? 'text-white' : '' }}'></i> <span class="align-middle">Attendance</span>
 					</a>
-					<a data-bs-target="#dashboards" href="{{route('admin/Calender')}}"  class="sidebar-link">
-						<i class="fa fa-birthday-cake" aria-hidden="true"></i><span class="align-middle">Calender</span>
+		
+					<a data-bs-target="#dashboards" href="{{ route('admin/Calender') }}" class="sidebar-link {{ request()->routeIs('admin/Calender') ? 'active' : '' }}">
+						<i class="fa fa-birthday-cake {{ request()->routeIs('admin/Calender') ? 'text-white' : '' }}" aria-hidden="true"></i><span class="align-middle">Calendar</span>
 					</a>
-					<a data-bs-target="#dashboards" href="{{route('admin/festival-leave')}}"  class="sidebar-link">
-						<i class="fa fa-line-chart" aria-hidden="true"></i><span class="align-middle">Fastival Leave</span>
+		
+					<a data-bs-target="#dashboards" href="{{ route('admin/festival-leave') }}" class="sidebar-link {{ request()->routeIs('admin/festival-leave') ? 'active' : '' }}">
+						<i class="fa fa-line-chart {{ request()->routeIs('admin/festival-leave') ? 'text-white' : '' }}" aria-hidden="true"></i><span class="align-middle">Festival Leave</span>
 					</a>
 				</ul>
 			</div>
 		</nav>
+		
 						
 		<div class="main">
 			<nav class="navbar navbar-expand navbar-light navbar-bg">
