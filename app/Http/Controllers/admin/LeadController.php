@@ -177,7 +177,7 @@ class LeadController extends Controller
             $lead->status = $newStatus;
             $lead->save();
     
-            $adminEmails = ['nilay.chotaliya119538@marwadiuniversity.ac.in'];
+            $adminEmails = ['manager.digieagleinc@gmail.com','ceo.digieagleinc@gmail.com'];
             
             if ($previousStatus != $newStatus) {
                 Mail::to($adminEmails)->send(new LeadStatusChangedMail(
