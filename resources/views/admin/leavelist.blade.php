@@ -50,81 +50,83 @@
         <div class="col-12">
             <div class="card">
                 <div class="card-body">
-                    <table id="datatables-reponsive" class="table table-striped" style="width:100%">
-                        <thead>
-                            <tr>
-                                <th>No.</th>
-                                <th>Employee Name</th>
-                                <th>Leave Type</th>
-                                <th>From</th>
-                                <th>To</th>
-                                <th>total_days</th>
-                                <th style="width: 40%">Reason</th>
-                                <th>Status</th>
-                                <th>Action</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            @foreach($leaves as $key => $leave)
-                            <tr>
-                                <td>{{ $key + 1 }}</td>
-                                <td>{{ $leave->first_name }} {{ $leave->last_name }}</td>
-                                <td>{{ $leave->name }}</td>
-                                <td>{{ $leave->start_date }}</td>
-                                <td>{{ $leave->end_date }}</td>
-                                <td>{{ $leave->total_days }}</td>
-                                <td class="reason-cell" data-reason="{{ $leave->reason }}">{{ $leave->reason }}</td>
-                                <td>
-                                    @if($leave->status == 0)
-                                    <span class="badge bg-warning">Pending</span>
-                                    @elseif($leave->status == 1)
-                                    <span class="badge bg-success">Approved</span>
-                                    @else
-                                    <span class="badge bg-danger">Rejected</span>
-                                    @endif
-                                </td>
-                                <td>
-                                    @if($leave->status == 0)
-                                        <form action="{{ route('admin/leave-update', $leave->id) }}" method="POST" style="display:inline;">
-                                            @csrf
-                                            <input type="hidden" name="status" value="1"> <!-- Approve -->
-                                            <button type="submit" class="btn btn-success">Approve</button>
-                                        </form>
-                                
-                                        <!-- Reject Button to Open Modal -->
-                                        <a href="#" class="btn btn-danger" data-bs-toggle="modal" data-bs-target="#rejectModal{{ $leave->id }}">Reject</a>
-                                
-                                        <!-- Modal -->
-                                        <div class="modal fade" id="rejectModal{{ $leave->id }}" tabindex="-1" aria-labelledby="rejectModalLabel{{ $leave->id }}" aria-hidden="true">
-                                            <div class="modal-dialog">
-                                                <div class="modal-content">
-                                                    <div class="modal-header">
-                                                        <h5 class="modal-title" id="rejectModalLabel{{ $leave->id }}">Reject Leave</h5>
-                                                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                                                    </div>
-                                                    <div class="modal-body">
-                                                        <form action="{{ route('admin/leave-update', $leave->id) }}" method="POST">
-                                                            @csrf
-                                                            <input type="hidden" name="status" value="2"> <!-- Reject -->
-                                                            <div class="mb-3">
-                                                                <label for="rejection_reason" class="form-label">Enter Rejection Reason</label>
-                                                                <input type="text" name="rejection_reason" class="form-control" id="rejection_reason" required>
-                                                            </div>
-                                                            <button type="submit" class="btn btn-danger">Reject Leave</button>
-                                                        </form>
+                    <div class="table-responsive">
+                        <table id="datatables-reponsive" class="table table-striped" style="width:100%">
+                            <thead>
+                                <tr>
+                                    <th>No.</th>
+                                    <th>Employee Name</th>
+                                    <th>Leave Type</th>
+                                    <th>From</th>
+                                    <th>To</th>
+                                    <th>total_days</th>
+                                    <th style="width: 40%">Reason</th>
+                                    <th>Status</th>
+                                    <th>Action</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                @foreach($leaves as $key => $leave)
+                                <tr>
+                                    <td>{{ $key + 1 }}</td>
+                                    <td>{{ $leave->first_name }} {{ $leave->last_name }}</td>
+                                    <td>{{ $leave->name }}</td>
+                                    <td>{{ $leave->start_date }}</td>
+                                    <td>{{ $leave->end_date }}</td>
+                                    <td>{{ $leave->total_days }}</td>
+                                    <td class="reason-cell" data-reason="{{ $leave->reason }}">{{ $leave->reason }}</td>
+                                    <td>
+                                        @if($leave->status == 0)
+                                        <span class="badge bg-warning">Pending</span>
+                                        @elseif($leave->status == 1)
+                                        <span class="badge bg-success">Approved</span>
+                                        @else
+                                        <span class="badge bg-danger">Rejected</span>
+                                        @endif
+                                    </td>
+                                    <td>
+                                        @if($leave->status == 0)
+                                            <form action="{{ route('admin/leave-update', $leave->id) }}" method="POST" style="display:inline;">
+                                                @csrf
+                                                <input type="hidden" name="status" value="1"> <!-- Approve -->
+                                                <button type="submit" class="btn btn-success">Approve</button>
+                                            </form>
+                                    
+                                            <!-- Reject Button to Open Modal -->
+                                            <a href="#" class="btn btn-danger" data-bs-toggle="modal" data-bs-target="#rejectModal{{ $leave->id }}">Reject</a>
+                                    
+                                            <!-- Modal -->
+                                            <div class="modal fade" id="rejectModal{{ $leave->id }}" tabindex="-1" aria-labelledby="rejectModalLabel{{ $leave->id }}" aria-hidden="true">
+                                                <div class="modal-dialog">
+                                                    <div class="modal-content">
+                                                        <div class="modal-header">
+                                                            <h5 class="modal-title" id="rejectModalLabel{{ $leave->id }}">Reject Leave</h5>
+                                                            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                                                        </div>
+                                                        <div class="modal-body">
+                                                            <form action="{{ route('admin/leave-update', $leave->id) }}" method="POST">
+                                                                @csrf
+                                                                <input type="hidden" name="status" value="2"> <!-- Reject -->
+                                                                <div class="mb-3">
+                                                                    <label for="rejection_reason" class="form-label">Enter Rejection Reason</label>
+                                                                    <input type="text" name="rejection_reason" class="form-control" id="rejection_reason" required>
+                                                                </div>
+                                                                <button type="submit" class="btn btn-danger">Reject Leave</button>
+                                                            </form>
+                                                        </div>
                                                     </div>
                                                 </div>
                                             </div>
-                                        </div>
-                                
-                                        &nbsp;&nbsp;
-                                    @endif
-                                    <a href="{{ route('admin/leave-delete', $leave->id) }}"><i class="fa fa-trash" aria-hidden="true" style="color: red;"></i></a>
-                                </td>  
-                            </tr>
-                            @endforeach
-                        </tbody>    
-                    </table>
+                                    
+                                            &nbsp;&nbsp;
+                                        @endif
+                                        <a href="{{ route('admin/leave-delete', $leave->id) }}"><i class="fa fa-trash" aria-hidden="true" style="color: red;"></i></a>
+                                    </td>  
+                                </tr>
+                                @endforeach
+                            </tbody>    
+                        </table>
+                    </div>
                 </div>
             </div>
         </div>

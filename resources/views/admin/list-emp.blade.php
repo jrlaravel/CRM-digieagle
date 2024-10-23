@@ -38,64 +38,66 @@
         <div class="col-12">
             <div class="card">
                 <div class="card-body">
-                    <table id="datatables-reponsive" class="table table-striped" style="width:100%">
-                        <thead>
-                            <tr>
-                                <th>No.</th>
-                                <th>First Name</th>
-                                <th>Last Name</th>
-                                <th>Username</th>
-                                <th>Birth Date</th>
-                                <th>Department</th>
-                                <th>Designation</th>
-                                <th>Phone No.</th>
-                                <th>Address</th>
-                                <th>Email</th>
-                                <th>Action</th>
-                            </tr>
-                        </thead>
-                        <tbody>
+                    <div class="table-responsive">
+                        <table id="datatables-reponsive" class="table table-striped" style="width:100%">
+                            <thead>
+                                <tr>
+                                    <th>No.</th>
+                                    <th>First Name</th>
+                                    <th>Last Name</th>
+                                    <th>Username</th>
+                                    <th>Birth Date</th>
+                                    <th>Department</th>
+                                    <th>Designation</th>
+                                    <th>Phone No.</th>
+                                    <th>Address</th>
+                                    <th>Email</th>
+                                    <th>Action</th>
+                                </tr>
+                            </thead>
+                            <tbody>
 
-                            @php
-                                $counter = 1;
-                            @endphp
-                            @foreach($employees as $data) 
-                            <tr>
-                                <td>{{$counter}}</td>
-                                <td>{{$data->first_name}}</td>
-                                <td>{{$data->last_name}}</td>
-                                <td>{{$data->username}}</td>
-                                <td>{{$data->birth_date}}</td>
-                                <td>{{$data->depname}}</td>
-                                <td>{{$data->desname}}</td>
-                                <td>{{$data->phone}}</td>
-                                <td>{{$data->address}}</td>
-                                <td>{{$data->email}}</td>
-                                <td>
-                                    <div class="dropdown">
-                                        <button class="btn btn-primary dropdown-toggle" type="button" id="dropdownMenuButton" data-bs-toggle="dropdown" aria-expanded="false">
-                                            Actions
-                                        </button>
-                                        <ul class="dropdown-menu" aria-labelledby="dropdownMenuButton">
-                                            <li>
-                                                <a class="dropdown-item text-primary" href="#" data-bs-toggle="modal" data-bs-target="#defaultModalSuccess" onclick="openpostmethod({{ $data->uid }})">Edit</a>
-                                            </li>
-                                            <li>
-                                                <a class="dropdown-item text-danger" href="{{ route('admin/delete-emp-data', $data->uid) }}">Delete</a>
-                                            </li>
-                                            <li>
-                                                <a class="dropdown-item text-secondary" href="#">Inactive</a>
-                                            </li>
-                                        </ul>
-                                    </div>
-                                </td>
-                            </tr>
-                            @php
-                                $counter++;
-                            @endphp
-                            @endforeach
-                        </tbody>
-                    </table>
+                                @php
+                                    $counter = 1;
+                                @endphp
+                                @foreach($employees as $data) 
+                                <tr>
+                                    <td>{{$counter}}</td>
+                                    <td>{{$data->first_name}}</td>
+                                    <td>{{$data->last_name}}</td>
+                                    <td>{{$data->username}}</td>
+                                    <td>{{$data->birth_date}}</td>
+                                    <td>{{$data->depname}}</td>
+                                    <td>{{$data->desname}}</td>
+                                    <td>{{$data->phone}}</td>
+                                    <td>{{$data->address}}</td>
+                                    <td>{{$data->email}}</td>
+                                    <td>
+                                        <div class="dropdown">
+                                            <button class="btn btn-primary dropdown-toggle" type="button" id="dropdownMenuButton" data-bs-toggle="dropdown" aria-expanded="false">
+                                                Actions
+                                            </button>
+                                            <ul class="dropdown-menu" aria-labelledby="dropdownMenuButton">
+                                                <li>
+                                                    <a class="dropdown-item text-primary" href="#" data-bs-toggle="modal" data-bs-target="#defaultModalSuccess" onclick="openpostmethod({{ $data->uid }})">Edit</a>
+                                                </li>
+                                                <li>
+                                                    <a class="dropdown-item text-danger" href="{{ route('admin/delete-emp-data', $data->uid) }}">Delete</a>
+                                                </li>
+                                                <li>
+                                                    <a class="dropdown-item text-secondary" href="#">Inactive</a>
+                                                </li>
+                                            </ul>
+                                        </div>
+                                    </td>
+                                </tr>
+                                @php
+                                    $counter++;
+                                @endphp
+                                @endforeach
+                            </tbody>
+                        </table>
+                    </div>
                 </div>
             </div>
         </div>

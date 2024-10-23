@@ -12,99 +12,97 @@
 @section('content')
 <meta name="csrf-token" content="{{ csrf_token() }}">
 <div class="container-fluid p-0">
-    <div class="mb-3">
-        <h1 class="h3 d-inline align-middle">Lead List</h1>
-        <button id="download-excel" class="btn btn-success float-end" style="margin-left: 10px">Download Excel</button>
+    <div class="d-flex flex-column flex-md-row align-items-md-center">
+        <button id="download-excel" class="btn btn-success mb-2 mb-md-0 me-md-2">Download Excel</button>
         <input type="file" id="excel-file" name="excel_file" class="form-control d-none" accept=".xlsx, .xls">
-        <button id="upload-excel" class="btn btn-success float-end">Upload Excel</button>
-        <div class="float-end me-2">
-            <select id="status-filter" class="form-select">
-                <option value="">&#11044; All Status</option>
-                <option value="No Response" class="text-secondary">&#11044; No Response</option>
-                <option value="Not interested" class="text-danger"> &#11044; Not interested</option>
-                <option value="Prospect" class="text-warning"> &#11044; Prospect</option>
-                <option value="lead" class="text-info"> &#11044; Lead</option>
-                <option value="hot lead" class="text-primary"> &#11044; Hot Lead</option>
-                <option value="client" class="text-success"> &#11044; Client</option>
-            </select>
-        </div>
-        <div class="float-end me-2">
-            <input type="text" id="searchInput" placeholder="Search" class="form-control" onkeyup="filterTable()">
-        </div>  
+        <button id="upload-excel" class="btn btn-success mb-2 mb-md-0 me-md-2">Upload Excel</button>
+        <input type="text" id="searchInput" placeholder="Search" class="form-control me-md-2 mb-2 mb-md-0 w-100 w-md-auto" onkeyup="filterTable()">
+        <select id="status-filter" class="form-select w-100 w-md-auto">
+            <option value="">&#11044; All Status</option>
+            <option value="No Response" class="text-secondary">&#11044; No Response</option>
+            <option value="Not interested" class="text-danger"> &#11044; Not interested</option>
+            <option value="Prospect" class="text-warning"> &#11044; Prospect</option>
+            <option value="lead" class="text-info"> &#11044; Lead</option>
+            <option value="hot lead" class="text-primary"> &#11044; Hot Lead</option>
+            <option value="client" class="text-success"> &#11044; Client</option>
+        </select>
+    </div>
         
     </div>
     <div class="row">
         <div class="col-12">
             <div class="card">
                 <div class="card-body">
-                    <table id="datatables-reponsive" class="table table-striped" style="width:100%">
-                        <thead>
-                            <tr>
-                                <th>No.</th>
-                                <th>Name</th>
-                                <th>Company name</th>
-                                <th>Description</th>
-                                <th>Source</th>
-                                <th>Email</th>
-                                <th>Phone</th>
-                                <th>City</th>
-                                <th>State</th>
-                                <th>Address</th>
-                                <th>Status</th>
-                                <th>Action</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            @foreach ($data as $key => $lead)
-                            <tr data-status="{{ $lead->status }}">
-                                <td>{{ ++$key }}</td>
-                                <td><a href="{{route('emp/lead-datail',$lead->id)}}">{{ $lead->first_name }} {{ $lead->last_name }}</a></td>
-                                <td>{{ $lead->company_name }}</td>
-                                <td>{{ $lead->description }}</td>
-                                <td>{{ $lead->lead_source}}</td>
-                                <td>{{ $lead->email }}</td>
-                                <td>{{ $lead->phone }}</td>
-                                <td>{{ $lead->city }}</td>
-                                <td>{{ $lead->state }}</td>
-                                <td>{{ $lead->address }}</td>
-                                <td>
-                                    @if($lead->status == 'Prospect')
-                                        <span class="badge bg-warning">Prospect</span>
-                                    @elseif($lead->status == 'lead')
-                                        <span class="badge bg-info">Lead</span>
-                                    @elseif($lead->status == 'hot lead')
-                                        <span class="badge bg-primary">Hot Lead</span>
-                                        @elseif($lead->status == 'Client')
-                                        <span class="badge bg-success">Client</span>
-                                        @elseif($lead->status == 'No Response')
-                                        <span class="badge bg-secondary">No Response</span>
-                                        @else
-                                        <span class="badge bg-danger">Not interested</span>
+                    <div class="table-responsive">
+                        <table id="datatables-reponsive" class="table table-striped" style="width:100%">
+                            <thead>
+                                <tr>
+                                    <th>No.</th>
+                                    <th>Name</th>
+                                    <th>Company name</th>
+                                    <th>Description</th>
+                                    <th>Source</th>
+                                    <th>Email</th>
+                                    <th>Phone</th>
+                                    <th>City</th>
+                                    <th>State</th>
+                                    <th>Address</th>
+                                    <th>Status</th>
+                                    <th>Action</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                @foreach ($data as $key => $lead)
+                                <tr data-status="{{ $lead->status }}">
+                                    <td>{{ ++$key }}</td>
+                                    <td><a href="{{route('emp/lead-datail',$lead->id)}}">{{ $lead->first_name }} {{ $lead->last_name }}</a></td>
+                                    <td>{{ $lead->company_name }}</td>
+                                    <td>{{ $lead->description }}</td>
+                                    <td>{{ $lead->lead_source}}</td>
+                                    <td>{{ $lead->email }}</td>
+                                    <td>{{ $lead->phone }}</td>
+                                    <td>{{ $lead->city }}</td>
+                                    <td>{{ $lead->state }}</td>
+                                    <td>{{ $lead->address }}</td>
+                                    <td>
+                                        @if($lead->status == 'Prospect')
+                                            <span class="badge bg-warning">Prospect</span>
+                                        @elseif($lead->status == 'lead')
+                                            <span class="badge bg-info">Lead</span>
+                                        @elseif($lead->status == 'hot lead')
+                                            <span class="badge bg-primary">Hot Lead</span>
+                                            @elseif($lead->status == 'Client')
+                                            <span class="badge bg-success">Client</span>
+                                            @elseif($lead->status == 'No Response')
+                                            <span class="badge bg-secondary">No Response</span>
+                                            @else
+                                            <span class="badge bg-danger">Not interested</span>
 
-                                    @endif
-                                </td>
-                                <td>
-                                    <button class="btn btn-primary edit-lead" 
-                                            data-id="{{ $lead->id }}"
-                                            data-first_name="{{ $lead->first_name }}"
-                                            data-last_name="{{ $lead->last_name }}"
-                                            data-company_name="{{ $lead->company_name }}"
-                                            data-lead_source = "{{ $lead->lead_source }}"
-                                            data-description="{{ $lead->description }}"
-                                            data-email="{{ $lead->email }}"
-                                            data-phone="{{ $lead->phone }}"
-                                            data-city="{{ $lead->city }}"
-                                            data-state="{{ $lead->state }}"
-                                            data-address="{{ $lead->address }}"
-                                            data-status="{{ $lead->status }}">
-                                        Edit
-                                    </button>
-                                    <a href="{{route('emp/lead-delete', $lead->id)}}" class="btn btn-danger">Delete</a>
-                                </td>
-                            </tr>
-                            @endforeach
-                        </tbody>
-                    </table>
+                                        @endif
+                                    </td>
+                                    <td>
+                                        <button class="btn btn-primary edit-lead" 
+                                                data-id="{{ $lead->id }}"
+                                                data-first_name="{{ $lead->first_name }}"
+                                                data-last_name="{{ $lead->last_name }}"
+                                                data-company_name="{{ $lead->company_name }}"
+                                                data-lead_source = "{{ $lead->lead_source }}"
+                                                data-description="{{ $lead->description }}"
+                                                data-email="{{ $lead->email }}"
+                                                data-phone="{{ $lead->phone }}"
+                                                data-city="{{ $lead->city }}"
+                                                data-state="{{ $lead->state }}"
+                                                data-address="{{ $lead->address }}"
+                                                data-status="{{ $lead->status }}">
+                                            Edit
+                                        </button>
+                                        <a href="{{route('emp/lead-delete', $lead->id)}}" class="btn btn-danger">Delete</a>
+                                    </td>
+                                </tr>
+                                @endforeach
+                            </tbody>
+                        </table>
+                    </div>
                 </div>
             </div>
         </div>
