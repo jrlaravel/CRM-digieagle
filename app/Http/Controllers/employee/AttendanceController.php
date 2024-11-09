@@ -30,17 +30,4 @@ class AttendanceController extends Controller
         return response()->json($attendanceData);
     }
 
-    public function downloadPDF(Request $request)
-{
-    $data = $request->input('data'); // Get JSON data from the request
-    
-    // Optionally decode JSON to an array
-    $data = json_decode($data, true);
-
-    // Load the view with data
-    $pdf = Pdf::loadView('your-pdf-view', compact('data'));
-
-    // Download the generated PDF
-    return $pdf->download('data.pdf');
-}
 }

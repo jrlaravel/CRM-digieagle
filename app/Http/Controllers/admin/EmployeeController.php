@@ -11,6 +11,7 @@ use App\Models\User;
 use App\Models\Department;
 use App\Models\Designation;
 use App\Models\Notification;
+use App\Models\Festival_leave;
 
 class EmployeeController extends Controller
 {
@@ -145,7 +146,8 @@ class EmployeeController extends Controller
     public function calender(){
         $data = DB::select('SELECT concat(first_name) as name, DATE_FORMAT(birth_date, "%d-%m") AS start FROM users');
         $leave = DB::select('SELECT first_name,start_date,end_date,reason FROM `leave` as la join users on la.user_id = users.id WHERE status = 1');
-        return view('admin/calendar',compact('data','leave'));
+        $festivalleave = Festival_leave::all();
+        return view('admin/calendar',compact('data','leave','festivalleave'));
     }
 
     public function mail(){

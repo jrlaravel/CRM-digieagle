@@ -125,7 +125,8 @@ class EmployeeDashboardController extends Controller
 
     public function calendar()
     {
-        $data = Festival_leave::all();
-        return view('employee/calendar',compact('data'));
+        $leave = Festival_leave::all();
+        $data = DB::select('SELECT concat(first_name) as name, DATE_FORMAT(birth_date, "%d-%m") AS start FROM users');
+        return view('employee/calendar',compact('data','leave'));
     }
 }

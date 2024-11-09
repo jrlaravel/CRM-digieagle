@@ -98,12 +98,16 @@
 					
 		
 					<li class="sidebar-item">
-						<a data-bs-target="#leave" data-bs-toggle="collapse" class="sidebar-link {{ request()->routeIs('admin/leave-type') || request()->routeIs('admin/leave') ? 'active' : 'collapsed' }}">
+						<a data-bs-target="#leave" data-bs-toggle="collapse" class="sidebar-link {{ request()->routeIs('admin/leave-type')|| request()->routeIs('admin/festival-leave') || request()->routeIs('admin/leave') ? 'active' : 'collapsed' }}">
 							<i class="fa fa-line-chart {{ request()->routeIs('admin/leave-type') || request()->routeIs('admin/leave') ? 'text-white' : '' }}"></i> <span class="align-middle">Leave Management</span>
 						</a>
 						<ul id="leave" class="sidebar-dropdown list-unstyled collapse" data-bs-parent="#sidebar">
 							<li class="sidebar-item"><a class='sidebar-link {{ request()->routeIs('admin/leave-type') ? 'active' : '' }}' href='{{ route('admin/leave-type') }}'>Leave Type</a></li>
 							<li class="sidebar-item"><a class='sidebar-link {{ request()->routeIs('admin/leave') ? 'active' : '' }}' href='{{ route('admin/leave') }}'>Leave List</a></li>
+							<li class="sidebar-item">
+								<a href="{{ route('admin/festival-leave') }}" class="sidebar-link {{ request()->routeIs('admin/festival-leave') ? 'active' : '' }}">Festival Leave</a>
+							</li>
+							</a>	
 						</ul>
 					</li>
 		
@@ -136,9 +140,6 @@
 						<i class="fa fa-birthday-cake {{ request()->routeIs('admin/Calender') ? 'text-white' : '' }}" aria-hidden="true"></i><span class="align-middle">Calendar</span>
 					</a>
 		
-					<a data-bs-target="#dashboards" href="{{ route('admin/festival-leave') }}" class="sidebar-link {{ request()->routeIs('admin/festival-leave') ? 'active' : '' }}">
-						<i class="fa fa-line-chart {{ request()->routeIs('admin/festival-leave') ? 'text-white' : '' }}" aria-hidden="true"></i><span class="align-middle">Festival Leave</span>
-					</a>
 				</ul>
 			</div>
 		</nav>
