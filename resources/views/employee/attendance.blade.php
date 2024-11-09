@@ -41,8 +41,9 @@
     <div class="col-md-12">
         <div class="card">
             <div class="card-header">
-                <h5 class="card-title">Attendance Report</h5>
-                </div>
+                <h5 class="card-title float-start">Attendance Report</h5>
+                <button class="btn btn-primary float-end" id="download-button">Download</button>
+            </div>
             <div class="card-body">
                 <form id="inoutForm" method="POST" action="{{route('emp/inoutdata')}}">
                     @csrf  
@@ -61,8 +62,7 @@
                             <span class="text-muted">e.g "DD/MM/YYYY"</span>
                         </div>
                     </div>
-                    <button type="submit" class="btn btn-success">Generate</button>
-                    <button class="btn btn-primary float-end" id="download-button">Download</button>
+                    <button type="submit" class="btn btn-success float-end">Generate</button>
                 </form>
             </div>
         </div>
