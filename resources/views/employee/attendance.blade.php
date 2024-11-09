@@ -51,7 +51,7 @@
                         <div class="mb-3 col-md-6">
                             <label class="form-label" for="inputAddress">From date</label>
                             <input type="text" class="form-control" data-inputmask-alias="datetime"
-                            data-inputmask-inputformat="dd/mm/yyyy"  name="fdate" required id="fdate">
+                             data-inputmask-inputformat="dd/mm/yyyy"  name="fdate" required id="fdate">
                             <span class="text-muted">e.g "DD/MM/YYYY"</span>
                         </div>
                         <div class="mb-3 col-md-6">
@@ -82,7 +82,7 @@
                                 <th>OUT Time</th>
                                 <th class="text-danger">Early Out</th>
                                 <th>Worktime</th>
-                                <th class="text-danger">Overtime</th>
+                                <th class="text-success">Overtime</th>
                                 <th>Status</th>
                             </tr>
                         </thead>
@@ -92,8 +92,9 @@
  
                     
                 </div>
-                <div id="totalWorkHours" class="mt-4" style="display: none;">
-                    <h3>Total Work Hours in Date Range: <span id="workHours"></span></h3>
+                <div id="totalWorkHours" class="mt-4 row" style="display: none; margin-bottom: 20px">
+                    <h4 class="col-4" style="margin-left: 22rem">Total Work Hours: <span id="workHours"></span></h4>
+                    <h4 class="col-4">Total OT Hours: <span id="otHours"></span></h4>
                 </div>
             </div>
         </div>
@@ -102,11 +103,8 @@
 <!-- Load jQuery -->
 <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 
-<!-- Load jsPDF -->
-<script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
-
-<!-- Load html2canvas -->
-<script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.4.0/jspdf.umd.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf-autotable/3.5.13/jspdf.plugin.autotable.min.js"></script>
 
 <script>
     $(document).ready(function() {
@@ -134,7 +132,8 @@
                         return;
                     }
 
-                    var totalWorkMinutes = 0; // To store the total work minutes
+                    var totalWorkMinutes = 0;
+                    var totalOTMinutes = 0;
 
                     // Populate the table with fetched data
                     $.each(response['InOutPunchData'], function(index, item) {
@@ -146,21 +145,36 @@
                             '<td>' + item.OUTTime + '</td>' +
                             '<td class="text-danger">' + item.Erl_Out + '</td>' +
                             '<td>' + item.WorkTime + '</td>' +
-                            '<td class="text-danger">' + item.OverTime + '</td>' +
+                            '<td class="text-success">' + item.OverTime + '</td>' +
                             '<td>' + status + '</td>' +
                             '</tr>';
+
                         tableBody.append(row);
 
                         var workTime = item.WorkTime.split(':');
                         var workHours = parseInt(workTime[0]);
                         var workMinutes = parseInt(workTime[1]);
                         totalWorkMinutes += (workHours * 60) + workMinutes;
-                        $('#totalWorkHours').show();
+
+                        // Calculate total OT time
+                        var overtime = item.OverTime.split(':');
+                        var otHours = parseInt(overtime[0]);
+                        var otMinutes = parseInt(overtime[1]);
+                        totalOTMinutes += (otHours * 60) + otMinutes;
+
                     });
 
-                        var totalHours = Math.floor(totalWorkMinutes / 60);
-                        var remainingMinutes = totalWorkMinutes % 60;
-                        $('#workHours').text(totalHours + ' hrs ' + remainingMinutes + ' mins');
+                    $('#totalWorkHours').show();
+
+                    var totalWorkHours = Math.floor(totalWorkMinutes / 60);
+                    var remainingWorkMinutes = totalWorkMinutes % 60;
+                    $('#workHours').text(totalWorkHours + ' hrs ' + remainingWorkMinutes + ' mins');
+
+                    var totalOTHours = Math.floor(totalOTMinutes / 60);
+                    var remainingOTMinutes = totalOTMinutes % 60;
+                    $('#otHours').text(totalOTHours + ' hrs ' + remainingOTMinutes + ' mins');
+
+    
                 },
                 error: function(error) {
                     alert('An error occurred while fetching data.');
@@ -176,20 +190,95 @@
                 return;
             }
 
-            html2canvas(document.querySelector("#inOutPunchTable")).then(canvas => {
-                const { jsPDF } = window.jspdf;
-                var imgData = canvas.toDataURL("image/png");
-                var pdf = new jsPDF('p', 'pt', 'a4');
+            const { jsPDF } = window.jspdf;
+            const pdf = new jsPDF('p', 'pt', 'a4');
 
-                // Calculate width and height to maintain aspect ratio
-                var imgWidth = 560; // PDF width in pt units (8 inches x 72 dpi)
-                var imgHeight = canvas.height * imgWidth / canvas.width;
+            // Define the table headers and data
+            const headers = [];
+            const data = [];
+            let totalWorktimeMinutes = 0;
+            let totalOvertimeMinutes = 0;
 
-                pdf.addImage(imgData, 'PNG', 20, 20, imgWidth, imgHeight);
-                pdf.save("Attendance_Report.pdf");
+            // Get table headers
+            $('#inOutPunchTable thead tr th').each(function() {
+                headers.push($(this).text());
             });
+
+            // Get table body data and calculate totals for Worktime and Overtime
+            $('#inOutPunchTable tbody tr').each(function() {
+                const row = [];
+                $(this).find('td').each(function(index) {
+                    const cellText = $(this).text();
+                    row.push(cellText);
+
+                    // Assuming Worktime is in column 5 and Overtime is in column 6
+                    if (index === 5) { // Adjust the index if necessary
+                        totalWorktimeMinutes += convertTimeToMinutes(cellText);
+                    } else if (index === 6) { // Adjust the index if necessary
+                        totalOvertimeMinutes += convertTimeToMinutes(cellText);
+                    }
+                });
+                data.push(row);
+            });
+
+            // Convert minutes to HH:mm format for total time values
+            const totalWorktime = convertMinutesToHHMM(totalWorktimeMinutes);
+            const totalOvertime = convertMinutesToHHMM(totalOvertimeMinutes);
+
+            // Add title
+            pdf.setFontSize(18);
+            pdf.text('Attendance Report', 40, 30);
+
+            // Use autoTable to add the table with headers and data
+            pdf.autoTable({
+                head: [headers],
+                body: data,
+                startY: 50,
+                margin: { top: 50, left: 20, right: 20 },
+                theme: 'striped',
+                styles: {
+                    fontSize: 8,
+                    cellPadding: 3,
+                },
+                headStyles: {
+                    fillColor: [52, 58, 64],
+                    textColor: [255, 255, 255],
+                },
+                didDrawPage: function(data) {
+                    // Footer on each page
+                    const pageCount = pdf.internal.getNumberOfPages();
+                    pdf.setFontSize(10);
+                    pdf.text(`Page ${data.pageNumber} of ${pageCount}`, pdf.internal.pageSize.width - 40, pdf.internal.pageSize.height - 10);
+                },
+            });
+
+            // Add summary of total work hours and overtime at the end of the PDF
+            pdf.setFontSize(12);
+            pdf.text('Summary:', 40, pdf.lastAutoTable.finalY + 20);
+            pdf.text(`Total Worktime: ${totalWorktime}`, 40, pdf.lastAutoTable.finalY + 40 );
+            pdf.text(`Total Overtime: ${totalOvertime}`, 40, pdf.lastAutoTable.finalY + 60 );
+
+            // Save the PDF
+            pdf.save("Attendance_Report.pdf");
         });
-    });
+
+        // Function to convert time string (HH:mm) to minutes
+        function convertTimeToMinutes(time) {
+            if (!time || time === "00:00") return 0;
+            const [hours, minutes] = time.split(':').map(Number);
+            return hours * 60 + minutes;
+        }
+
+        // Function to convert minutes back to HH:mm format
+        function convertMinutesToHHMM(minutes) {
+            const hours = Math.floor(minutes / 60);
+            const mins = minutes % 60;
+            return `${hours.toString().padStart(2, '0')}:${mins.toString().padStart(2, '0')}`;
+        }
+
+
+});
+
 </script>
 
 

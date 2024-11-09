@@ -106,7 +106,7 @@
                 </div>
             </div>
         </div>
-    </div>
+    </div>  
 
 
 <div class="modal fade" id="editLeadModal" tabindex="-1" aria-labelledby="editLeadModalLabel" aria-hidden="true">

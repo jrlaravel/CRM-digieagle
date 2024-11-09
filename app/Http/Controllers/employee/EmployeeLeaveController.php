@@ -14,6 +14,7 @@ use App\Mail\LeaveRequestMail;
 use App\Models\Designation;
 use Illuminate\Support\Facades\Mail;
 use Carbon\Carbon;
+use Illuminate\Support\Facades\Storage;
 
 class EmployeeLeaveController extends Controller
 {
@@ -38,15 +39,18 @@ class EmployeeLeaveController extends Controller
             'to' => 'required',
             'from' => 'required',
             'reason' => 'required',
+            // 'report' => 'nullable|file|mimes:pdf|max:10240', // Validate PDF file and limit size to 10MB
         ]);
-    
+        
+        // Check if validation passes
         if ($validator->passes()) { 
-            // Create the leave request
+            // Parse the dates
             $startDate = Carbon::parse($request->from);
             $endDate = Carbon::parse($request->to);
             $totalDays = $startDate->diffInDays($endDate) + 1; 
-
-            Leave::create([
+            
+            // Prepare leave data
+            $leaveData = [
                 'leave_type_id' => $request->leave,
                 'user_id' => $request->id,
                 'apply_date' => Carbon::now()->format('Y-m-d'),
@@ -55,20 +59,25 @@ class EmployeeLeaveController extends Controller
                 'total_days' => $totalDays,
                 'reason' => $request->reason,
                 'other' => $request->other,
-                'status' => '0'
-            ]);
+                'status' => '0', // Pending status
+            ];
     
-            // Send notification to admin
-            // Notification::create([
-            //     'user_id' => 1, // admin id
-            //     'title' => 'New leave request',
-            //     'url' => 'leave',
-            //     'message' => 'A new leave request has been made by ' . $request->input('name')
-            // ]);
+            // Handle PDF file upload for Sick Leave
+            if ($request->hasFile('report')) {
+                // Store the uploaded file in 'sick_leave_reports' folder within the 'public' disk
+                $pdf = $request->file('report');
+                $pdfPath = $pdf->store('sick_leave_reports', 'public'); // Store file in the 'sick_leave_reports' folder
+                $leaveData['report'] = $pdfPath; // Save file path in the database
+            }
             
+            // Create the leave record
+            Leave::create($leaveData);
+    
+            // Send notification or email to HR (optional)
             $user = User::find($request->id);
             $designation = Designation::find($user->designation);
-            // Send mail to HR
+    
+            // Send mail to HR (optional)
             $leaveDetails = [
                 'name' => $request->input('name'),
                 'start_date' => $request->from,
@@ -80,21 +89,37 @@ class EmployeeLeaveController extends Controller
                 'designation' => $designation->name
             ];
     
-            Mail::to('hr.digieagleinc@gmail.com') // Replace with HR's email address
-                ->send(new LeaveRequestMail($leaveDetails));
-    
+            // Uncomment below to send email to HR
+            // Mail::to('hr@example.com')->send(new LeaveRequestMail($leaveDetails));
+            
+            // Redirect back with success message
             return redirect()->back()->with('success', 'Leave request submitted successfully and HR has been notified.');
-    
+        
         } else {
+            // If validation fails, redirect back with errors
             return redirect()->back()->withErrors($validator);
         }
     }
     
-
+    
     public function delete($id)
-   {
+    {
+        // Find the leave record by ID
         $leave = Leave::find($id);
+    
+        if ($leave && $leave->report) {
+            // Delete the file from the 'sick_leave_reports' folder in the public storage
+            $filePath = 'sick_leave_reports/' . $leave->report;
+            if (Storage::disk('public')->exists($filePath)) {
+                // Delete the file
+                Storage::disk('public')->delete($filePath);
+            }
+        }
+    
         $leave->delete();
+    
         return redirect()->back()->with(['success' => 'Leave deleted successfully']);
-   }
+    }
+    
+    
 }

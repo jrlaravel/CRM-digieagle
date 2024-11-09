@@ -40,6 +40,29 @@
         top: 100%; /* Position below the cell */
     }
 </style>
+
+<div class="modal fade" id="cancelConfirmationModal" tabindex="-1" role="dialog" aria-labelledby="cancelConfirmationModalLabel" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="cancelConfirmationModalLabel">Cancel Leave Confirmation</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                Are you sure you want to cancel this leave request?
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                <form id="cancelLeaveForm" action="" method="get">
+                    @csrf
+                    <button type="submit" class="btn btn-danger">Cancel Leave</button>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+
 <div class="container-fluid p-0">
     <div class="row">
         <div class="col-sm-6 col-xl-3">
@@ -128,8 +151,8 @@
                                 <td class="reason-cell" data-reason="{{ $data->reason }}">{{$data->reason}}</td>
                                 <td>
                                     @if($data->status == 0)
-                                    <a href="{{route('emp/leave-delete',$data->id)}}" class="btn btn-danger">Cancel</a>
-                                     @endif
+                                    <button type="button" class="btn btn-danger" data-bs-toggle="modal" data-bs-target="#cancelConfirmationModal" data-href="{{ route('emp/leave-delete', $data->id) }}">Cancel</button>
+                                        @endif
                                 </td>
                                 <td>
                                     @if($data->status == 0)
@@ -158,7 +181,7 @@
                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
             <div class="modal-body m-3">
-             <form action="{{route('emp/leave-store')}}" method="post">
+             <form action="{{route('emp/leave-store')}}" method="post" enctype="multipart/form-data">
                 @csrf
                 <input type="text" value="{{session('employee')->id}}" name="id" hidden>
                 <div class="mb-3">
@@ -180,14 +203,20 @@
                 </div>
                 <div class="mb-3">
                     <label for="reason" class="form-label">Reason</label>
-                    <textarea class="form-control" id="reason" name="reason" placeholder="Reason" required>
-                        </textarea>
+                    <input type="text" class="form-control" id="reason" name="reason" placeholder="Reason" required>
+                        </input>
                 </div>
                 <div class="mb-3">
                     <label for="reason" class="form-label">Other</label>
-                    <textarea class="form-control" id="other" name="other" placeholder="Other" required>
-                        </textarea>
+                    <input type="text"  class="form-control" id="other" name="other" placeholder="Other" required>
+                        </input>
                 </div>
+
+                <div class="mb-3" id="reportInput" style="display: none;">
+                    <label for="report" class="form-label">Upload Medical Report (PDF)</label>
+                    <input type="file" class="form-control" name="report" id="report" accept="application/pdf">
+                </div>
+                                
                 <div class="modal-footer">
                     <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
                     <button type="submit" class="btn btn-primary">Save</button>
@@ -200,13 +229,16 @@
 
 <script>
     document.addEventListener('DOMContentLoaded', function() {
-        // Get today's date in YYYY-MM-DD format
-        var today = new Date().toISOString().split('T')[0];
-
-        // Set the min attribute for the date input fields
-        document.getElementById('to').setAttribute('min', today);
-        document.getElementById('from').setAttribute('min', today);
+    $('#cancelConfirmationModal').on('show.bs.modal', function (event) {
+        var button = $(event.relatedTarget); // Button that triggered the modal
+        var url = button.data('href'); // Extract the leave delete URL from data-href attribute
+        
+        // Set the action URL for the cancel leave form
+        var form = $(this).find('#cancelLeaveForm');
+        form.attr('action', url); // Update the form action with the correct URL
     });
+});
+
 
     $(document).ready(function() {
     $('#leaveType').change(function() {
@@ -228,6 +260,17 @@
             // Set the min attribute for the 'from' and 'to' date inputs
             $('#from').attr('min', minDate.toISOString().split('T')[0]);
             $('#to').attr('min', minDate.toISOString().split('T')[0]);
+        }
+
+
+          // If Sick Leave is selected
+          if (selectedLeave === 'Sick Leave') {
+            $('#reportInput').show(); // Show the report input field
+            var today = new Date().toISOString().split('T')[0];
+
+            // Set the min attribute for the date input fields
+            document.getElementById('to').setAttribute('min', today);
+            document.getElementById('from').setAttribute('min', today);
         }
     });
 });

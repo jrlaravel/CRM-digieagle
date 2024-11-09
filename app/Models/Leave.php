@@ -20,6 +20,7 @@ class Leave extends Model
         'total_days',
         'reason',
         'other',
-        'status'
+        'status',
+        'report'
     ];
 }

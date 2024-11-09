@@ -61,7 +61,7 @@ class HRleaveController extends Controller
 
    public function leave()
    {
-        $leaves = DB::select('SELECT first_name,last_name,start_date,end_date,total_days,la.id,leavetype.name,la.reason,la.status FROM `leave` as la join leavetype on leavetype.id = la.leave_type_id join users on la.user_id = users.id');
+        $leaves = DB::select('SELECT first_name,last_name,start_date,end_date,total_days,la.id,leavetype.name,la.reason,la.status,la.report FROM `leave` as la join leavetype on leavetype.id = la.leave_type_id join users on la.user_id = users.id');
         return view('employee/leavelist',compact('leaves'));
    }
 

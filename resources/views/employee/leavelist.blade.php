@@ -2,7 +2,7 @@
 @section('profile')
 <div class="d-flex justify-content-center">
     <div class="flex-shrink-0">
-        <img src="{{ asset('storage/profile_photos') . '/' . session('employee')->profile_photo_path }}" class="avatar img-fluid rounded me-1" alt="Charles Hall" />
+        <img src="{{ asset('storage/profile_photos') . '/' . session('employee')->profile_photo_path }}" class="avatar img-fluid rounded me-1"  />
     </div>
     <div class="flex-grow-1 ps-2">
         <p class="text-white">{{ session('employee')->first_name }}</p>
@@ -60,9 +60,10 @@
                                     <th>From</th>
                                     <th>To</th>
                                     <th>total_days</th>
-                                    <th style="width: 40%">Reason</th>
+                                    <th style="width: 35%">Reason</th>
                                     <th>Status</th>
                                     <th>Action</th>
+                                    <th>Download Report</th>
                                 </tr>
                             </thead>
                             <tbody>
@@ -86,14 +87,26 @@
                                     </td>
                                     <td>
                                         @if($leave->status == 0)
-                                            <form action="{{ route('emp/leave-update', $leave->id) }}" method="POST" style="display:inline;">
-                                                @csrf
-                                                <input type="hidden" name="status" value="1"> <!-- Approve -->
-                                                <button type="submit" class="btn btn-success">Approve</button>
-                                            </form>
-                                    
-                                            <!-- Reject Button to Open Modal -->
-                                            <a href="#" class="btn btn-danger" data-bs-toggle="modal" data-bs-target="#rejectModal{{ $leave->id }}">Reject</a>
+                                        <div class="dropdown mt-4">
+                                            <button class="btn btn-primary dropdown-toggle" type="button" id="dropdownMenuButton" data-bs-toggle="dropdown" aria-expanded="false">
+                                                Actions
+                                            </button>
+                                            <ul class="dropdown-menu" aria-labelledby="dropdownMenuButton">
+                                                <li>
+                                                    <form action="{{ route('emp/leave-update', $leave->id) }}" method="POST" style="display:inline;">
+                                                        @csrf
+                                                        <input type="hidden" name="status" value="1"> <!-- Approve -->
+                                                        <button type="submit" class="dropdown-item text-success">Approve</button>
+                                                    </form>
+                                                </li>
+                                                <li>
+                                                    <a href="#" class="dropdown-item text-danger" data-bs-toggle="modal" data-bs-target="#rejectModal{{ $leave->id }}">Reject</a>
+                                                </li>
+                                                <li>
+                                                    <a href="{{ route('emp/leave-delete', $leave->id) }}" class="dropdown-item text-danger">Cancel</a>
+                                                </li>
+                                            </ul>
+                                        </div>
                                     
                                             <!-- Modal -->
                                             <div class="modal fade" id="rejectModal{{ $leave->id }}" tabindex="-1" aria-labelledby="rejectModalLabel{{ $leave->id }}" aria-hidden="true">
@@ -117,11 +130,17 @@
                                                     </div>
                                                 </div>
                                             </div>
-                                    
-                                            &nbsp;&nbsp;
                                         @endif
-                                        <a href="{{ route('emp/leave-delete', $leave->id) }}"><i class="fa fa-trash" aria-hidden="true" style="color: red;"></i></a>
                                     </td>  
+                                    <td>
+                                        @if($leave->report)
+                                            <div class="mt-2">
+                                                <a href="{{ asset('storage/' . $leave->report) }}" class="btn btn-info" download>Download Report</a>
+                                            </div>
+                                        @else
+                                            <p>No Report Available</p>
+                                        @endif
+                                    </td>
                                 </tr>
                                 @endforeach
                             </tbody>    
@@ -148,8 +167,6 @@
             document.getElementById('leave_id').value = leaveId; // Optionally store leave ID in a hidden input
         });
     });
-
-console.log(typeof jQuery);
 </script>
 
 @endsection

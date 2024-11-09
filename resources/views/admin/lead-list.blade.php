@@ -2,7 +2,7 @@
 @section('profile')
 <div class="d-flex justify-content-center">
     <div class="flex-shrink-0">
-        <img src="{{asset('storage/profile_photos').'/'.session('user')->profile_photo_path}}" class="avatar img-fluid rounded me-1" alt="Charles Hall" />
+        <img src="{{asset('storage/profile_photos').'/'.session('user')->profile_photo_path}}" class="avatar img-fluid rounded me-1"  />
     </div>
     <div class="flex-grow-1 ps-2">
         
@@ -56,6 +56,7 @@
                                     <th>City</th>
                                     <th>State</th>
                                     <th>Address</th>
+                                    <th>Date</th>
                                     <th>Status</th>
                                     <th>Action</th>
                                 </tr>
@@ -73,6 +74,7 @@
                                     <td>{{ $lead->city }}</td>
                                     <td>{{ $lead->state }}</td>
                                     <td>{{ $lead->address }}</td>
+                                    <td>{{ $lead->created_at }}</td>
                                     <td>
                                         @if(strtolower($lead->status) == 'prospect')
                                             <span class="badge bg-warning">Prospect</span>
@@ -375,8 +377,7 @@ $('#successModal').on('hidden.bs.modal', function () {
 
 function filterTable() {
     // Get the input value
-    var input = document.getElementById("searchInput");
-    var filter = input.value.toLowerCase(); // Convert input to lowercase
+    var input = document.getElementById("searchInput").value.toLowerCase();
     var table = document.getElementById("datatables-reponsive");
     var tr = table.getElementsByTagName("tr"); // Get all table rows
 
@@ -384,17 +385,36 @@ function filterTable() {
     for (var i = 1; i < tr.length; i++) {
         var tdName = tr[i].getElementsByTagName("td")[1]; // Name column
         var tdLeadSource = tr[i].getElementsByTagName("td")[4]; // Lead Source column
+        var tdDate = tr[i].getElementsByTagName("td")[9]; // Date column (format: 2024-10-15 18:35:25)
 
-        if (tdName || tdLeadSource) {
+        if (tdName || tdLeadSource || tdDate) {
             var nameValue = tdName.textContent || tdName.innerText; // Get the text content of the Name column
             var leadSourceValue = tdLeadSource.textContent || tdLeadSource.innerText; // Get the text content of the Lead Source column
+            var dateValue = tdDate.textContent || tdDate.innerText; // Get the text content of the Date column
 
-            // Check if the filter text is found in any of these fields
-            if (nameValue.toLowerCase().indexOf(filter) > -1 || 
-                leadSourceValue.toLowerCase().indexOf(filter) > -1) {
-                tr[i].style.display = ""; // Show the row if match found
+            // Extract the date part from 'YYYY-MM-DD HH:MM:SS'
+            var tableDate = dateValue.split(' ')[0]; // Get only the 'YYYY-MM-DD' part
+
+            var rowMatches = false;
+
+            // Check if the input is a valid date
+            if (input.includes("-")) {
+                // If the input is in a date format, compare it with the table date
+                if (tableDate.indexOf(input) > -1) {
+                    rowMatches = true;
+                }
             } else {
-                tr[i].style.display = "none"; // Hide the row if no match
+                // Check if the input is found in Name or Lead Source columns
+                if (nameValue.toLowerCase().indexOf(input) > -1 || leadSourceValue.toLowerCase().indexOf(input) > -1) {
+                    rowMatches = true;
+                }
+            }
+
+            // Show or hide the row based on the match
+            if (rowMatches) {
+                tr[i].style.display = ""; // Show the row
+            } else {
+                tr[i].style.display = "none"; // Hide the row
             }
         }
     }
