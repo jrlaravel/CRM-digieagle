@@ -17,7 +17,7 @@
                 <!-- Filter Checkboxes -->
                 <div class="mb-3">
                     <label><input type="checkbox" id="birthdayFilter" checked> Show Birthdays</label>
-                    <label><input type="checkbox" id="leaveFilter" checked> Show Leaves</label>
+                    <label><input type="checkbox" id="leaveFilter" checked> Show Fastival Leaves</label>
                 </div>
 
                 <div id="fullcalendar"></div>
