@@ -158,7 +158,7 @@
                         '<td >' + item.OUTTime + '</td>' +
                         '<td class="text-danger">' + item.Erl_Out + '</td>' +
                         '<td>' + item.WorkTime + '</td>' +
-                        '<td class="text-danger">' + item.OverTime + '</td>' +
+                        '<td class="text-success">' + item.OverTime + '</td>' +
                         '<td>' + status + '</td>' +
                         '</tr>';
                     tableBody.append(row);
