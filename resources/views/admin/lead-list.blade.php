@@ -74,7 +74,7 @@
                                     <td>{{ $lead->city }}</td>
                                     <td>{{ $lead->state }}</td>
                                     <td>{{ $lead->address }}</td>
-                                    <td>{{ $lead->created_at }}</td>
+                                    <td>{{ \Carbon\Carbon::parse($lead->created_at)->format('d-m-Y H:i') }}</td>
                                     <td>
                                         @if(strtolower($lead->status) == 'prospect')
                                             <span class="badge bg-warning">Prospect</span>
@@ -109,8 +109,31 @@
                                                 data-weblink="{{ $lead->weblink }}">
                                             Edit
                                         </button>
-                                        <a href="{{route('admin/lead-delete', $lead->id)}}" class="btn btn-danger">Delete</a>
-                                    </td>
+                                        <a href="javascript:void(0);" 
+                                        class="btn btn-danger delete-btn" 
+                                        data-id="{{ $lead->id }}">Delete</a>
+                                     
+                                     <!-- Delete Confirmation Modal -->
+                                     <div class="modal fade" id="deleteModal" tabindex="-1" aria-labelledby="deleteModalLabel" aria-hidden="true">
+                                       <div class="modal-dialog">
+                                         <div class="modal-content">
+                                           <div class="modal-header">
+                                             <h5 class="modal-title" id="deleteModalLabel">Confirm Delete</h5>
+                                             <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                               <span aria-hidden="true">&times;</span>
+                                             </button>
+                                           </div>
+                                           <div class="modal-body">
+                                             Are you sure you want to delete this lead?
+                                           </div>
+                                           <div class="modal-footer">
+                                             <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancel</button>
+                                             <button type="button" class="btn btn-danger" id="confirmDeleteBtn">Delete</button>
+                                           </div>
+                                         </div>
+                                       </div>
+                                     </div>
+                                </td>
                                 </tr>
                                 @endforeach
                             </tbody>
@@ -375,50 +398,24 @@ $('#successModal').on('hidden.bs.modal', function () {
     location.reload();  
 });
 
-function filterTable() {
-    // Get the input value
-    var input = document.getElementById("searchInput").value.toLowerCase();
-    var table = document.getElementById("datatables-reponsive");
-    var tr = table.getElementsByTagName("tr"); // Get all table rows
+document.addEventListener('DOMContentLoaded', function () {
+    let deleteLeadId;
 
-    // Loop through all table rows (except the first row which contains the headers)
-    for (var i = 1; i < tr.length; i++) {
-        var tdName = tr[i].getElementsByTagName("td")[1]; // Name column
-        var tdLeadSource = tr[i].getElementsByTagName("td")[4]; // Lead Source column
-        var tdDate = tr[i].getElementsByTagName("td")[9]; // Date column (format: 2024-10-15 18:35:25)
+    // Open modal and store lead ID
+    document.querySelectorAll('.delete-btn').forEach(button => {
+        button.addEventListener('click', function () {
+            deleteLeadId = this.getAttribute('data-id');
+            $('#deleteModal').modal('show');
+        });
+    });
 
-        if (tdName || tdLeadSource || tdDate) {
-            var nameValue = tdName.textContent || tdName.innerText; // Get the text content of the Name column
-            var leadSourceValue = tdLeadSource.textContent || tdLeadSource.innerText; // Get the text content of the Lead Source column
-            var dateValue = tdDate.textContent || tdDate.innerText; // Get the text content of the Date column
+    // Confirm delete action
+    document.getElementById('confirmDeleteBtn').addEventListener('click', function () {
+        const deleteUrl = `{{ url('admin/lead-delete') }}/${deleteLeadId}`;
+        window.location.href = deleteUrl;
+    });
+});
 
-            // Extract the date part from 'YYYY-MM-DD HH:MM:SS'
-            var tableDate = dateValue.split(' ')[0]; // Get only the 'YYYY-MM-DD' part
-
-            var rowMatches = false;
-
-            // Check if the input is a valid date
-            if (input.includes("-")) {
-                // If the input is in a date format, compare it with the table date
-                if (tableDate.indexOf(input) > -1) {
-                    rowMatches = true;
-                }
-            } else {
-                // Check if the input is found in Name or Lead Source columns
-                if (nameValue.toLowerCase().indexOf(input) > -1 || leadSourceValue.toLowerCase().indexOf(input) > -1) {
-                    rowMatches = true;
-                }
-            }
-
-            // Show or hide the row based on the match
-            if (rowMatches) {
-                tr[i].style.display = ""; // Show the row
-            } else {
-                tr[i].style.display = "none"; // Hide the row
-            }
-        }
-    }
-}
 
 </script>
 

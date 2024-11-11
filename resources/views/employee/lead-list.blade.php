@@ -96,7 +96,30 @@
                                                 data-status="{{ $lead->status }}">
                                             Edit
                                         </button>
-                                        <a href="{{route('emp/lead-delete', $lead->id)}}" class="btn btn-danger">Delete</a>
+                                        <a href="javascript:void(0);" 
+                                        class="btn btn-danger delete-btn" 
+                                        data-id="{{ $lead->id }}">Delete</a>
+                                     
+                                     <!-- Delete Confirmation Modal -->
+                                     <div class="modal fade" id="deleteModal" tabindex="-1" aria-labelledby="deleteModalLabel" aria-hidden="true">
+                                       <div class="modal-dialog">
+                                         <div class="modal-content">
+                                           <div class="modal-header">
+                                             <h5 class="modal-title" id="deleteModalLabel">Confirm Delete</h5>
+                                             <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                               <span aria-hidden="true">&times;</span>
+                                             </button>
+                                           </div>
+                                           <div class="modal-body">
+                                             Are you sure you want to delete this lead?
+                                           </div>
+                                           <div class="modal-footer">
+                                             <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancel</button>
+                                             <button type="button" class="btn btn-danger" id="confirmDeleteBtn">Delete</button>
+                                           </div>
+                                         </div>
+                                       </div>
+                                     </div>
                                     </td>
                                 </tr>
                                 @endforeach
@@ -362,32 +385,24 @@ $('#successModal').on('hidden.bs.modal', function () {
     location.reload(); 
 });
 });
-function filterTable() {
-    // Get the input value
-    var input = document.getElementById("searchInput");
-    var filter = input.value.toLowerCase(); // Convert input to lowercase
-    var table = document.getElementById("datatables-reponsive");
-    var tr = table.getElementsByTagName("tr"); // Get all table rows
 
-    // Loop through all table rows (except the first row which contains the headers)
-    for (var i = 1; i < tr.length; i++) {
-        var tdName = tr[i].getElementsByTagName("td")[1]; // Name column
-        var tdLeadSource = tr[i].getElementsByTagName("td")[4]; // Lead Source column
+document.addEventListener('DOMContentLoaded', function () {
+    let deleteLeadId;
 
-        if (tdName || tdLeadSource) {
-            var nameValue = tdName.textContent || tdName.innerText; // Get the text content of the Name column
-            var leadSourceValue = tdLeadSource.textContent || tdLeadSource.innerText; // Get the text content of the Lead Source column
+    // Open modal and store lead ID
+    document.querySelectorAll('.delete-btn').forEach(button => {
+        button.addEventListener('click', function () {
+            deleteLeadId = this.getAttribute('data-id');
+            $('#deleteModal').modal('show');
+        });
+    });
 
-            // Check if the filter text is found in any of these fields
-            if (nameValue.toLowerCase().indexOf(filter) > -1 || 
-                leadSourceValue.toLowerCase().indexOf(filter) > -1) {
-                tr[i].style.display = ""; // Show the row if match found
-            } else {
-                tr[i].style.display = "none"; // Hide the row if no match
-            }
-        }
-    }
-}   
+    // Confirm delete action
+    document.getElementById('confirmDeleteBtn').addEventListener('click', function () {
+        const deleteUrl = `{{ url('emp/lead-delete') }}/${deleteLeadId}`;
+        window.location.href = deleteUrl;
+    });
+});
 </script>
 
 @endsection
