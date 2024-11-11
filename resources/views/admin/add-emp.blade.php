@@ -66,46 +66,50 @@
                         @enderror
                     </div>
                 </div>
-                <div class="mb-3">
-                        <label class="form-label" for="inputEmail4">Email</label>
-                        <input type="email" class="form-control @error('email') is-invalid @enderror" name="email" id="email" value="{{old('email')}}" placeholder="Email">
-                        @error('email')
+                <div class="row">
+                    <div class="mb-3 col-md-4">
+                            <label class="form-label" for="inputEmail4">Email</label>
+                            <input type="email" class="form-control @error('email') is-invalid @enderror" name="email" id="email" value="{{old('email')}}" placeholder="Email">
+                            @error('email')
+                            <p class="invalid-feedback">{{$message}}</p>
+                            @enderror
+                    </div>
+                    <div class="mb-3 col-md-4">
+                        <label class="form-label" for="inputAddress">Username</label>
+                            <input type="text" class="form-control @error('username') is-invalid @enderror" name="username" id="username" value="{{old('username')}}" placeholder="Username">
+                            @error('username')
+                            <p class="invalid-feedback">{{$message}}</p>
+                        @enderror
+                    </div>
+                    <div class="mb-3 col-md-4">
+                        <label class="form-label" for="inputPassword4">Password</label>
+                            <input type="password" class="form-control @error('password') is-invalid @enderror" name="password" value="{{old('password')}}" id="password" placeholder="Password">
+                            @error('password')
+                            <p class="invalid-feedback">{{$message}}</p>
+                            @enderror 
+                            <i 
+                                id="toggleIcon" 
+                                class="fa fa-eye position-absolute" 
+                                onclick="togglePasswordVisibility()" 
+                                style="cursor: pointer; right: 28px; top: 202px; transform: translateY(-50%);"
+                            ></i> 
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="mb-3 col-md-6">
+                        <label class="form-label" for="inputEmail4">Empcode</label>
+                        <input type="number" class="form-control @error('empcode') is-invalid @enderror" name="empcode" id="empcode" value="{{old('empcode')}}" placeholder="Empcode">
+                        @error('empcode')
                         <p class="invalid-feedback">{{$message}}</p>
                         @enderror
-                </div>
-                <div class="mb-3">
-                    <label class="form-label" for="inputAddress">Username</label>
-                        <input type="text" class="form-control @error('username') is-invalid @enderror" name="username" id="username" value="{{old('username')}}" placeholder="Username">
-                        @error('username')
+                    </div>
+                    <div class="mb-3 col-md-6">
+                        <label class="form-label" for="inputEmail4">Birth Date</label>
+                        <input type="date" class="form-control @error('email') is-invalid @enderror" name="birthdate" id="birthdate" value="{{old('birth_date')}}" placeholder="birthdate">
+                        @error('birthdate')
                         <p class="invalid-feedback">{{$message}}</p>
-                    @enderror
-                </div>
-                <div class="mb-3">
-                    <label class="form-label" for="inputPassword4">Password</label>
-                        <input type="password" class="form-control @error('password') is-invalid @enderror" name="password" value="{{old('password')}}" id="password" placeholder="Password">
-                        @error('password')
-                        <p class="invalid-feedback">{{$message}}</p>
-                        @enderror 
-                        <i 
-                            id="toggleIcon" 
-                            class="fa fa-eye position-absolute" 
-                            onclick="togglePasswordVisibility()" 
-                            style="cursor: pointer; right: 28px; top: 358px; transform: translateY(-50%);"
-                        ></i> 
-                </div>
-                <div class="mb-3">
-                    <label class="form-label" for="inputEmail4">Empcode</label>
-                    <input type="number" class="form-control @error('empcode') is-invalid @enderror" name="empcode" id="empcode" value="{{old('empcode')}}" placeholder="Empcode">
-                    @error('empcode')
-                    <p class="invalid-feedback">{{$message}}</p>
-                    @enderror
-                </div>
-                <div class="mb-3">
-                    <label class="form-label" for="inputEmail4">Birth Date</label>
-                    <input type="date" class="form-control @error('email') is-invalid @enderror" name="birthdate" id="birthdate" value="{{old('birth_date')}}" placeholder="birthdate">
-                    @error('birthdate')
-                    <p class="invalid-feedback">{{$message}}</p>
-                    @enderror
+                        @enderror
+                    </div>
                 </div>
                 <div class="mb-3">
                         <label class="form-label" for="inputAddress">Phone No.</label>
