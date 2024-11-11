@@ -55,18 +55,7 @@
 									@if(Session::has('error'))
 									<div class="alert alert-danger">{{Session::get('error')}}</div>
 									@endif
-									<div class="d-grid gap-2 mb-3">
-										<a class='btn btn-microsoft btn-lg' href='index.html'><i class="fab fa-fw fa-google"></i> Sign in with google</a>
-									</div>
-									<div class="row">
-										<div class="col">
-											<hr>
-										</div>
-										<div class="col-auto text-uppercase d-flex align-items-center">Or</div>
-										<div class="col">
-											<hr>
-										</div>
-									</div>
+									
 									<form method="post" action="{{route('admin/authenticate')}}">
                                         @csrf
 										<div class="mb-3">
