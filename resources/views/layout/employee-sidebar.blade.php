@@ -111,12 +111,12 @@
 					</a>
 		
 					<a href="{{ route('emp/calendar') }}" class="sidebar-link {{ request()->routeIs('emp/calendar') ? 'active' : '' }}">
-						<i class='fa fa-calendar-alt {{ request()->routeIs('emp/calendar') ? 'text-white' : '' }}'></i> <span class="align-middle">Calendar</span>
+						<i class='fa fa-birthday-cake {{ request()->routeIs('emp/calendar') ? 'text-white' : '' }}'></i> <span class="align-middle">Calendar</span>
 					</a>
 		
-					<a href="{{ route('emp/projects') }}" class="sidebar-link {{ request()->routeIs('emp/projects') ? 'active' : '' }}">
+					{{-- <a href="{{ route('emp/projects') }}" class="sidebar-link {{ request()->routeIs('emp/projects') ? 'active' : '' }}">
 						<i class='fa fa-project-diagram {{ request()->routeIs('emp/projects') ? 'text-white' : '' }}'></i> <span class="align-middle">Projects</span>
-					</a>
+					</a> --}}
 				</ul>
 			</div>
 		</nav>

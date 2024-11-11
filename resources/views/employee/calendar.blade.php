@@ -17,7 +17,7 @@
                 <!-- Filter Checkboxes -->
                 <div class="mb-3">
                     <label style="margin-right: 2rem; font-size: 16px"><input type="checkbox" id="birthdayFilter" checked> Show Birthdays</label>
-                    <label style="margin-right: 2rem; font-size: 20px"><input type="checkbox" id="leaveFilter" checked> Show Fastival Leaves</label>
+                    <label style="margin-right: 2rem; font-size: 16px"><input type="checkbox" id="leaveFilter" checked> Show Fastival Leaves</label>
                 </div>
 
                 <div id="fullcalendar"></div>
