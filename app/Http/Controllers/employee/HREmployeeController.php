@@ -115,6 +115,7 @@ class HREmployeeController extends Controller
         $user->birth_date = $request->input('date');
         $user->designation = $request->input('designation');
         $user->department = $request->input('department');
+        $user->empcode = $request->input('code');
         $user->save();
 
         return redirect()->route('emp/list-emp');  

@@ -92,7 +92,7 @@ class EmployeeController extends Controller
 
     public function show(){
         
-        $employees = DB::select('SELECT users.id as uid,users.first_name,users.last_name,users.username,users.birth_date,users.email,users.phone,users.address,dep.name as depname,dep.id as depid,des.id as desid,des.name as desname FROM `users` join department as dep on users.department = dep.id join designation as des on users.designation = des.id;');
+        $employees = DB::select('SELECT users.id as uid,users.first_name,users.last_name,users.username,users.birth_date,users.email,users.phone,users.address,dep.name as depname,users.empcode as code,dep.id as depid,des.id as desid,des.name as desname FROM `users` join department as dep on users.department = dep.id join designation as des on users.designation = des.id;');
         $department = Department::all();
         $designation = Designation::all();
         return view('admin.list-emp', compact('employees','department','designation'));
@@ -131,6 +131,7 @@ class EmployeeController extends Controller
         $user->birth_date = $request->input('date');
         $user->designation = $request->input('designation');
         $user->department = $request->input('department');
+        $user->empcode = $request->input('code');
         $user->save();
 
         return redirect()->route('admin/list-emp');  

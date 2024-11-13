@@ -131,26 +131,37 @@
                             @enderror
                         </div>
                     </div>
-                    <div class="mb-3">
-                            <label class="form-label" for="inputEmail4">Email</label>
-                            <input type="email" class="form-control @error('email') is-invalid @enderror" name="email" id="email" placeholder="Email">
-                            @error('email')
+                    <div class="row">
+                        <div class="mb-3 col-md-6">
+                                <label class="form-label" for="inputEmail4">Email</label>
+                                <input type="email" class="form-control @error('email') is-invalid @enderror" name="email" id="email" placeholder="Email">
+                                @error('email')
+                                <p class="invalid-feedback">{{$message}}</p>
+                                @enderror
+                        </div>
+                        <div class="mb-3 col-md-6">
+                            <label class="form-label" for="inputAddress">Phone No.</label>
+                            <input type="number" class="form-control @error('phone') is-invalid @enderror" name="phone" id="phone">
+                            @error('phone')
                             <p class="invalid-feedback">{{$message}}</p>
                             @enderror
+                        </div>
                     </div>
-                    <div class="mb-3">
-                        <label class="form-label" for="inputAddress">Phone No.</label>
-                        <input type="number" class="form-control @error('phone') is-invalid @enderror" name="phone" id="phone">
-                        @error('phone')
-                        <p class="invalid-feedback">{{$message}}</p>
-                        @enderror
-                    </div>
-                    <div class="mb-3">
-                        <label class="form-label" for="inputAddress">Birthdate</label>
-                        <input type="date" class="form-control @error('date') is-invalid @enderror" required name="date" id="date">
-                        @error('date')
-                        <p class="invalid-feedback">{{$message}}</p>
-                        @enderror
+                    <div class="row">
+                        <div class="mb-3 col-md-6">
+                            <label class="form-label" for="inputAddress">Birthdate</label>
+                            <input type="date" class="form-control @error('date') is-invalid @enderror" required name="date" id="date">
+                            @error('date')
+                            <p class="invalid-feedback">{{$message}}</p>
+                            @enderror
+                        </div>
+                        <div class="mb-3 col-md-6">
+                            <label class="form-label" for="inputAddress">Emp Code</label>
+                            <input type="number" class="form-control @error('code') is-invalid @enderror" required name="code" id="code">
+                            @error('code')
+                            <p class="invalid-feedback">{{$message}}</p>
+                            @enderror
+                        </div>
                     </div>
                     <div class="row">
                         <div class="mb-3 col-md-6">
@@ -230,6 +241,7 @@
                 $('#date').val(formattedDate);
                 $('#department').val(response.department);
                 $('#designation').val(response.designation);
+                $("#code").val(response.empcode);
 
             }
             },
