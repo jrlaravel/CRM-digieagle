@@ -107,7 +107,7 @@
 					</a>
 		
 					<a href="{{ route('emp/leave') }}" class="sidebar-link {{ request()->routeIs('emp/leave') ? 'active' : '' }}">
-						<i class='far fa-calendar-alt {{ request()->routeIs('emp/leave') ? 'text-white' : '' }}'></i> <span class="align-middle">Leave Management</span>
+						<i class='far fa-calendar-alt {{ request()->routeIs('emp/leave') ? 'text-white' : '' }}'></i> <span class="align-middle">Leave Records</span>
 					</a>
 		
 					<a href="{{ route('emp/calendar') }}" class="sidebar-link {{ request()->routeIs('emp/calendar') ? 'active' : '' }}">

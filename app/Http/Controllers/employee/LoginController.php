@@ -80,7 +80,6 @@ class LoginController extends Controller
         $user = User::where('email',$request->email)->first();
         if($user)
         {
-            // dd($user);   
             $token = Str::random(60);
   
             DB::table('password_reset_tokens')->insert([

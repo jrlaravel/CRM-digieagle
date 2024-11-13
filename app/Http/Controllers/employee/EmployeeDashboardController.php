@@ -94,11 +94,11 @@ class EmployeeDashboardController extends Controller
     public function profilePhoto(Request $request)
     {
         $validator = Validator::make($request->all(), [
-            'profile_photo' => 'required|image|mimes:jpeg,png,jpg',
+            'profile_photo' => 'required|image|mimes:jpeg,png,jpg|max:2048',
         ]);
 
         if ($validator->fails()) {
-            return back()->withErrors($validator)->withInput();
+            return back()->withErrors($validator)->withInput();   
         }
         
             if ($request->hasFile('profile_photo')) {
