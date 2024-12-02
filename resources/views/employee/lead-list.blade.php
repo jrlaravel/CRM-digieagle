@@ -107,26 +107,39 @@
                                                 data-status="{{ $lead->status }}">
                                             Edit
                                         </button>
-                                        <a href="javascript:void(0);" class="btn btn-danger" data-bs-toggle="modal" data-bs-target="#deleteConfirmModal" onclick="setDeleteUrl('{{ route('emp/lead-delete', $lead->id) }}')">Delete</a>
+                                       <!-- Delete Button -->
+<a href="javascript:void(0);" 
+class="btn btn-danger" 
+data-bs-toggle="modal" 
+data-bs-target="#deleteConfirmModal" 
+onclick="setDeleteUrl('{{ route('emp/lead-delete', $lead->id) }}')">Delete</a>
 
-                                        <!-- Delete Confirmation Modal -->
-                                       <div class="modal fade" id="deleteConfirmModal" tabindex="-1" aria-labelledby="deleteConfirmModalLabel" aria-hidden="true">
-                                           <div class="modal-dialog">
-                                               <div class="modal-content">
-                                                   <div class="modal-header">
-                                                       <h5 class="modal-title" id="deleteConfirmModalLabel">Confirm Delete</h5>
-                                                       <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                                                   </div>
-                                                   <div class="modal-body">
-                                                       Are you sure you want to delete this lead?
-                                                   </div>
-                                                   <div class="modal-footer">
-                                                       <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
-                                                       <a id="confirmDeleteBtn" href="#" class="btn btn-danger">Delete</a>
-                                                   </div>
-                                               </div>
-                                           </div>
-                                       </div>
+<!-- Delete Confirmation Modal -->
+<div class="modal fade" id="deleteConfirmModal" tabindex="-1" aria-labelledby="deleteConfirmModalLabel" aria-hidden="true">
+ <div class="modal-dialog">
+     <div class="modal-content">
+         <div class="modal-header">
+             <h5 class="modal-title" id="deleteConfirmModalLabel">Confirm Delete</h5>
+             <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+         </div>
+         <div class="modal-body">
+             Are you sure you want to delete this lead?
+         </div>
+         <div class="modal-footer">
+             <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+             <a id="confirmDeleteBtn" href="#" class="btn btn-danger">Delete</a>
+         </div>
+     </div>
+ </div>
+</div>
+
+<!-- JavaScript -->
+<script>
+ function setDeleteUrl(url) {
+     document.getElementById('confirmDeleteBtn').setAttribute('href', url);
+ }
+</script>
+
                                     </td>
                                 </tr>
                                 @endforeach

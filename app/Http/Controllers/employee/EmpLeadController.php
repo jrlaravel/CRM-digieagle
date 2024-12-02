@@ -37,6 +37,7 @@ class EmpLeadController extends Controller
             'state' => 'required|string|max:255',
             'status' => 'required',
             'address' => 'required|string|max:500',
+            'lead_source' => 'required|string'
         ]);
         
         if ($validator->passes()) {
@@ -88,6 +89,7 @@ class EmpLeadController extends Controller
             'state' => 'required|string|max:255',
             'address' => 'required|string|max:500',
             'status' => 'required',
+            'lead_source' => 'required|string'
         ]);
 
         // If validation fa ils
@@ -104,6 +106,7 @@ class EmpLeadController extends Controller
             'last_name' => $request->input('last_name'),
             'company_name' => $request->input('company_name'),
             'description' => $request->input('description'),
+            'lead_source' => $request->input('lead_source'),
             'email' => $request->input('email'),
             'phone' => $request->input('phone'),
             'city' => $request->input('city'),
@@ -125,7 +128,7 @@ class EmpLeadController extends Controller
     {
         $lead = Lead::find($id);
         $lead->delete();
-        return redirect()->route('emp/lead');
+        return redirect()->back()->while('success', 'Lead deleted successfully.');
     }
 
     public function lead_datail($id)

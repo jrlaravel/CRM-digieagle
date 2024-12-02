@@ -31,6 +31,7 @@ class LeadController extends Controller
             'lname' => 'required|string|max:255',
             'company_name' => 'required|string|max:255',
             'description' => 'required|string|max:255',
+            'lead_source' => 'required|string|max:255',
             'user_id' => 'required',
             'email' => 'required|email|max:255',
             'phone' => 'required|string|max:15',
@@ -46,6 +47,7 @@ class LeadController extends Controller
                 'last_name' => $request->input('lname'),
                 'company_name' => $request->input('company_name'),
                 'description' => $request->input('description'),
+                'lead_source' => $request->input('lead_source'), 
                 'user_id' => $request->input('user_id'),
                 'email' => $request->input('email'),
                 'phone' => $request->input('phone'),
@@ -84,6 +86,7 @@ class LeadController extends Controller
             'company_name' => 'required|string|max:255',
             'description' => 'nullable|string',
             'email' => 'required|email',
+            'lead_source' => 'required|string',
             'phone' => 'required|numeric|digits:10',
             'city' => 'required|string|max:255',
             'state' => 'required|string|max:255',
@@ -105,6 +108,7 @@ class LeadController extends Controller
             'last_name' => $request->input('last_name'),
             'company_name' => $request->input('company_name'),
             'description' => $request->input('description'),
+            'lead_source' => $request->input('lead_source'),
             'email' => $request->input('email'),
             'phone' => $request->input('phone'),
             'city' => $request->input('city'),
@@ -126,7 +130,7 @@ class LeadController extends Controller
     {
         $lead = Lead::find($id);
         $lead->delete();
-        return redirect()->route('admin/lead-list');
+        return redirect()->back()->while('success', 'Lead deleted successfully.');
     }
 
     public function lead_datail($id)
