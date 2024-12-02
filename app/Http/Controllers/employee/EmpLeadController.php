@@ -128,7 +128,7 @@ class EmpLeadController extends Controller
     {
         $lead = Lead::find($id);
         $lead->delete();
-        return redirect()->back()->while('success', 'Lead deleted successfully.');
+        return redirect()->back()->with('success', 'Lead deleted successfully.');
     }
 
     public function lead_datail($id)
