@@ -12,21 +12,32 @@
 @section('content')
 <meta name="csrf-token" content="{{ csrf_token() }}">
 <div class="container-fluid p-0">
-    <div class="d-flex flex-column flex-md-row align-items-md-center">
-        <button id="download-excel" class="btn btn-success mb-2 mb-md-0 me-md-2">Download Excel</button>
+    <div class="d-flex flex-wrap align-items-center gap-2 mb-3">
+        <!-- Download Excel Button -->
+        <button id="download-excel" class="btn btn-success">Download Excel</button>
+        
+        <!-- Hidden Input for Uploading Excel -->
         <input type="file" id="excel-file" name="excel_file" class="form-control d-none" accept=".xlsx, .xls">
-        <button id="upload-excel" class="btn btn-success mb-2 mb-md-0 me-md-2">Upload Excel</button>
-        <input type="text" id="searchInput" placeholder="Search" class="form-control me-md-2 mb-2 mb-md-0 w-100 w-md-auto" onkeyup="filterTable()">
-        <select id="status-filter" class="form-select w-100 w-md-auto">
+        
+        <!-- Upload Excel Button -->
+        <button id="upload-excel" class="btn btn-success">Upload Excel</button>
+        
+        <!-- Search Input -->
+        <input type="text" id="searchInput" placeholder="Search" 
+               class="form-control flex-grow-1 flex-md-grow-0 w-auto" onkeyup="filterTable()">
+        
+        <!-- Status Filter Dropdown -->
+        <select id="status-filter" class="form-select w-auto">
             <option value="">&#11044; All Status</option>
             <option value="No Response" class="text-secondary">&#11044; No Response</option>
-            <option value="Not interested" class="text-danger"> &#11044; Not interested</option>
-            <option value="Prospect" class="text-warning"> &#11044; Prospect</option>
-            <option value="lead" class="text-info"> &#11044; Lead</option>
-            <option value="hot lead" class="text-primary"> &#11044; Hot Lead</option>
-            <option value="client" class="text-success"> &#11044; Client</option>
+            <option value="Not interested" class="text-danger">&#11044; Not interested</option>
+            <option value="Prospect" class="text-warning">&#11044; Prospect</option>
+            <option value="lead" class="text-info">&#11044; Lead</option>
+            <option value="hot lead" class="text-primary">&#11044; Hot Lead</option>
+            <option value="client" class="text-success">&#11044; Client</option>
         </select>
     </div>
+    
         
     </div>
     <div class="row">
@@ -67,7 +78,7 @@
                                     <td>
                                         @if($lead->status == 'Prospect')
                                             <span class="badge bg-warning">Prospect</span>
-                                        @elseif($lead->status == 'lead')
+                                        @elseif($lead->status == 'Lead')
                                             <span class="badge bg-info">Lead</span>
                                         @elseif($lead->status == 'hot lead')
                                             <span class="badge bg-primary">Hot Lead</span>
