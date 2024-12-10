@@ -109,6 +109,14 @@
 					<a href="{{ route('emp/leave') }}" class="sidebar-link {{ request()->routeIs('emp/leave') ? 'active' : '' }}">
 						<i class='far fa-calendar-alt {{ request()->routeIs('emp/leave') ? 'text-white' : '' }}'></i> <span class="align-middle">Leave Records</span>
 					</a>
+
+					<a href="{{ route('emp/work-report') }}" class="sidebar-link {{ request()->routeIs('emp/work-report') ? 'active' : '' }}">
+						<i class='fa fa-file {{ request()->routeIs('emp/work-report') ? 'text-white' : '' }}'></i> <span class="align-middle">Work Report</span>
+					</a>
+
+					<a href="{{ route('emp/work-report-history') }}" class="sidebar-link {{ request()->routeIs('emp/work-report-history') ? 'active' : '' }}">
+						<i class='fa fa-file {{ request()->routeIs('emp/work-report-history') ? 'text-white' : '' }}'></i> <span class="align-middle">Work History</span>
+					</a>
 		
 					<a href="{{ route('emp/calendar') }}" class="sidebar-link {{ request()->routeIs('emp/calendar') ? 'active' : '' }}">
 						<i class='fa fa-birthday-cake {{ request()->routeIs('emp/calendar') ? 'text-white' : '' }}'></i> <span class="align-middle">Calendar</span>

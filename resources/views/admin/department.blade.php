@@ -13,7 +13,6 @@
 @section('content')
 
 <div class="container-fluid p-0">
-
     <div class="mb-3">
         <h1 class="h3 d-inline align-middle">Department List</h1>   
         <button type="button" class="btn btn-primary float-end" data-bs-toggle="modal" data-bs-target="#defaultModalSuccess">Add</button> 
@@ -21,7 +20,6 @@
 
     <div class="row">
         <div class="col-12">
-            
             <div class="card">
                 <div class="card-body">
                     <table id="datatables-reponsive" class="table table-striped" style="width:100%">

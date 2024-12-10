@@ -10,6 +10,7 @@ use Illuminate\Support\Facades\DB;
 use Carbon\Carbon;
 use App\Http\Controllers\Controller;
 use App\Models\User;
+use App\Models\Activity_log;
 use App\Models\Designation;
 use Illuminate\Support\Str;
 use Illuminate\Support\Facades\Mail;
@@ -54,7 +55,13 @@ class LoginController extends Controller
                 } else {
                     session()->put('has_hr_features', false);
                 }
-    
+                
+                // Log activity
+                $activity_log = new Activity_log();
+                $activity_log->user_id = $user->id;
+                $activity_log->description = 'Logged in successfully';
+                $activity_log->save();
+
                 return redirect()->route('emp/dashboard');
             } else {
                 Auth::guard('web')->logout();

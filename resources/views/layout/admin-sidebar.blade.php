@@ -110,6 +110,17 @@
 							</a>	
 						</ul>
 					</li>
+
+					<li class="sidebar-item">
+						<a data-bs-target="#client" data-bs-toggle="collapse" class="sidebar-link">
+							<i class="fa fa-line-chart "></i> <span class="align-middle">Client Management</span>
+						</a>
+						<ul id="client" class="sidebar-dropdown list-unstyled collapse" data-bs-parent="#sidebar">
+							<li class="sidebar-item"><a class='sidebar-link' href='{{route('admin/service-list')}}'>Service Type</a></li>
+							<li class="sidebar-item"><a class='sidebar-link ' href='{{route('admin/company-service')}}'>Client List</a></li>
+							</a>	
+						</ul>
+					</li>
 		
 					{{-- <li class="sidebar-item">
 						<a data-bs-target="#project" data-bs-toggle="collapse" class="sidebar-link {{ request()->routeIs('admin/project-type') || request()->routeIs('admin/add-project-detail') || request()->routeIs('admin/list-project-detail')  ? 'active' : 'collapsed' }}">
@@ -134,6 +145,10 @@
 		
 					<a data-bs-target="#dashboards" href="{{ route('admin/attendance') }}" class="sidebar-link {{ request()->routeIs('admin/attendance') ? 'active' : '' }}">
 						<i class='far fa-calendar-alt {{ request()->routeIs('admin/attendance') ? 'text-white' : '' }}'></i> <span class="align-middle">Attendance</span>
+					</a>
+
+					<a data-bs-target="#dashboards" href="{{ route('admin/work-report') }}" class="sidebar-link {{ request()->routeIs('admin/work-report') ? 'active' : '' }}">
+						<i class='far fa-file {{ request()->routeIs('admin/work-report') ? 'text-white' : '' }}'></i> <span class="align-middle">Work Report</span>
 					</a>
 		
 					<a data-bs-target="#dashboards" href="{{ route('admin/Calender') }}" class="sidebar-link {{ request()->routeIs('admin/Calender') ? 'active' : '' }}">

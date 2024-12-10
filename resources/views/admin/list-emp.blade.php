@@ -66,11 +66,11 @@
                                     <td>{{$data->first_name}}</td>
                                     <td>{{$data->last_name}}</td>
                                     <td>{{$data->username}}</td>
-                                    <td>{{$data->birth_date}}</td>
+                                    <td>{{ \Carbon\Carbon::parse($data->birth_date)->format('d-m-y') }}</td>
                                     <td>{{$data->depname}}</td>
                                     <td>{{$data->desname}}</td>
                                     <td>{{$data->phone}}</td>
-                                    <td>{{$data->address}}</td>
+                                    <td>{{ \Illuminate\Support\Str::words($data->address, 50, '...') }}</td>
                                     <td>{{$data->email}}</td>
                                     <td>
                                         <div class="dropdown">

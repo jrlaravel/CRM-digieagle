@@ -13,12 +13,14 @@ use App\Http\Controllers\admin\CardsController;
 use App\Http\Controllers\admin\LeaveController;
 use App\Http\Controllers\admin\ProjectController;
 use App\Http\Controllers\admin\TaskController;
+use App\Http\Controllers\admin\ClientController;
 use App\Http\Controllers\admin\LeadController;
 use App\Http\Controllers\employee\EmpLeadController;
 use App\Http\Controllers\employee\EmployeeLeaveController;
 use App\Http\Controllers\employee\ProjectController as EmployeeProjectController;
 use App\Http\Controllers\employee\HRleaveController;
 use App\Http\Controllers\employee\HREmployeeController;
+use App\Http\Controllers\employee\WorkReportController;
 
 
 Route::get('/', [LoginController::class, 'index'])->name('emp/login'); 
@@ -81,6 +83,16 @@ Route::prefix('emp')->group(function () {
         Route::get('getnotification',[EmployeeDashboardController::class, 'notification'])->name('emp/getnotification');
         Route::post('updatenotification/{id}',[EmployeeDashboardController::class, 'updatenotification'])->name('emp/updatenotification');
         Route::get('projects',[EmployeeProjectController::class, 'index'])->name('emp/projects');
+        Route::get('work-report', [WorkReportController::class, 'index'])->name('emp/work-report');
+        Route::get('/get-services/{companyId}', [WorkReportController::class, 'getServices'])->name('emp/get-services');
+        Route::post('add-work-report', [WorkReportController::class, 'add_work_report'])->name('emp/add-work-report');
+        Route::get('work-report-history', [WorkReportController::class, 'get_word_report'])->name('emp/work-report-history');
+        Route::post('/delete-all-report', [WorkReportController::class, 'deleteAllReports'])->name('emp/deleteAllReport');
+        Route::get('/delete-report-task/{id}', [WorkReportController::class, 'deletetask'])->name('emp/delete-report-task');
+        Route::get('/work-report-detail/{date}', [WorkReportController::class, 'getWorkReportByDate'])->name('emp/work-report-detail');
+        Route::get('edit-work-report/{id}', [WorkReportController::class, 'edit_work_report'])->name('emp/edit-work-report');
+        Route::post('update-work-report', [WorkReportController::class, 'update_work_report'])->name('emp/update-work-report');
+        Route::post('add-task-report', [WorkReportController::class, 'add_task_report'])->name('emp/add-task-report');
     });
 });
 
@@ -157,6 +169,21 @@ Route::prefix('admin')->group(function () {
         Route::get('delete-followup/{id}',[LeadController::class, 'delete_followup'])->name('admin/delete-followup');
         Route::post('update-followup',[LeadController::class, 'createOrUpdateFollowup'])->name('admin/update-followup');
         Route::get('task/{id}',[TaskController::class, 'index'])->name('admin/task');
+        Route::get('service-list',[ClientController::class, 'index'])->name('admin/service-list');
+        Route::post('add-service', [ClientController::class, 'store'])->name('admin/add-service');  
+        Route::get('delete-service/{id}', [ClientController::class, 'delete'])->name('admin/delete-service');
+        Route::get('/services/{id}/sub-services', [ClientController::class, 'getSubServices'])->name('admin.services.sub-services');
+        Route::post('/add-sub-service', [ClientController::class, 'addSubService'])->name('admin/add-sub-service');
+        Route::get('company-service', [ClientController::class, 'company_service'])->name('admin/company-service');  
+        Route::post('add-company-service', [ClientController::class, 'create_company_service'])->name('admin/add-company-service');  
+        Route::get('delete-company-service/{id}', [ClientController::class, 'delete_company_service'])->name('admin/delete-company-service');
+        Route::post('update-company-service', [ClientController::class, 'update_company_service'])->name('admin/update-company-service');
+        Route::get('delete-sub-service/{id}', [ClientController::class, 'delete_sub_service'])->name('admin/delete-sub-service');
+        Route::post('sub-service-store', [ClientController::class, 'storeSubService'])->name('admin/sub-service-store');
+        Route::get('work-report' , [EmployeeController::class, 'work_report'])->name('admin/work-report');
+        Route::post('get-work-report', [EmployeeController::class, 'get_work_report'])->name('admin/get-work-report');
+        Route::get('/work-report-detail/{date}/{id}', [EmployeeController::class, 'getWorkReportByDate'])->name('admin/work-report-detail');
+        Route::post('report-download', [EmployeeController::class, 'report_download'])->name('admin/report-download');
     });
 });
 
