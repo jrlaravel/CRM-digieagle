@@ -36,26 +36,39 @@
                         </div>
                     </div>
 
-                    <div class="row">
+                    <div class="row mt-4">
                         @foreach ($data as $report)
                         <div class="col-12 col-md-6 col-lg-3">
-                            <div class="card" 
-                                 data-bs-toggle="modal" 
-                                 data-bs-target="#workReportModal" 
-                                 data-report-date="{{ \Carbon\Carbon::parse($report->report_date)->format('Y-m-d') }}" 
-                                 data-companies="{{ $report->company_list }}" 
-                                 data-total-time="{{ $report->total_time }}">
+                            <div class="card" style="box-shadow: 0px 0px 3px 0px rgb(83 182 162); !important" >
                                  <div class="card-body">
                                     <h4>
                                         {{ \Carbon\Carbon::parse($report->report_date)->format('l, d M, Y') }}
-                                        
-                                        <!-- Show Edit Button Only for Today's Report -->
-                                        @if(\Carbon\Carbon::parse($report->report_date)->isToday())
-                                            <a href="{{route('emp/edit-work-report', $report->report_id)}}" class="float-end">
-                                                <i class="fa-sharp fa-solid fa-pen fa-sm" style="color: #000000;"></i>
-                                            </a>
-                                        @endif
-                                    </h4>
+                                    
+                                        <!-- Dropdown Menu -->
+                                        <div class="dropdown float-end">
+                                            <i class="fa fa-ellipsis-v" id="dropdownMenuButton" data-bs-toggle="dropdown" aria-expanded="false" style="cursor: pointer;"></i>
+                                            <ul class="dropdown-menu" aria-labelledby="dropdownMenuButton">
+                                                <!-- View Option -->
+                                                <li>
+                                                    <a class="dropdown-item" href="#" data-bs-toggle="modal" 
+                                                    data-bs-target="#workReportModal" 
+                                                    data-report-date="{{ \Carbon\Carbon::parse($report->report_date)->format('Y-m-d') }}" 
+                                                    data-companies="{{ $report->company_list }}" 
+                                                    data-total-time="{{ $report->total_time }}">
+                                                        <i class="fa fa-eye me-2" aria-hidden="true"></i>View
+                                                    </a>
+                                                </li>
+                                                <!-- Edit Option -->
+                                                @if(\Carbon\Carbon::parse($report->report_date)->isToday())
+                                                    <li>
+                                                        <a class="dropdown-item" href="{{route('emp/edit-work-report', $report->report_id)}}">
+                                                            <i class="fa fa-pen me-2"></i>Edit
+                                                        </a>
+                                                    </li>
+                                                @endif
+                                            </ul>
+                                        </div>
+                                    </h4>                                    
                                     <hr>
                                     <ul>
                                         @foreach (explode(',', $report->company_list) as $company)
@@ -114,72 +127,48 @@
 document.addEventListener('DOMContentLoaded', function () {
     // Listen for the modal show event
     $('#workReportModal').on('show.bs.modal', function (e) {
-        var card = $(e.relatedTarget); // Get the card that triggered the modal
-        var reportDate = card.data('report-date');
-        var companies = card.data('companies');
-        var totalTime = card.data('total-time');
+        var link = $(e.relatedTarget); // Get the link that triggered the modal
+        var reportDate = link.data('report-date');
+        var companies = link.data('companies');
+        var totalTime = link.data('total-time');
 
         // Populate modal fields
-        $('#modalReportDate').text(reportDate);
+        $('#modalReportDate').text('Report Date: ' + reportDate);
         $('#modalTotalTime').text('Total Time: ' + totalTime);
 
         // Populate company list dynamically
         var companyListHtml = '';
-        var companiesArray = companies.split(','); // Split the companies by comma
+        var companiesArray = companies.split(',');
         companiesArray.forEach(function (company) {
             companyListHtml += '<li>' + company.trim() + '</li>';
         });
         $('#modalCompanyList').html(companyListHtml);
-    });
-});
 
-document.addEventListener('DOMContentLoaded', function () {
-    document.querySelectorAll('.card').forEach(function (card) {
-        card.addEventListener('click', function () {
-            // Get the data-report-date attribute (assumed to be in Y-m-d format)
-            const rawReportDate = card.getAttribute('data-report-date'); // e.g., "2024-11-27"
+        // Clear previous modal table content
+        var modalTableBody = $('#datatables-reponsive tbody');
+        modalTableBody.html('');
 
-            if (!rawReportDate) {
-                console.error('Missing report date!');
-                return; // Exit early if there's no valid date
-            }
-
-            // Update the modal date (display the raw date in a readable format, e.g., "28 Nov, 2024")
-            const formattedDate = new Date(rawReportDate).toLocaleDateString('en-GB', {
-                day: '2-digit',
-                month: 'short',
-                year: 'numeric'
-            });
-            document.getElementById('modalReportDate').textContent = formattedDate;
-
-            // Clear previous modal table content
-            const modalTableBody = document.querySelector('#datatables-reponsive tbody');
-            modalTableBody.innerHTML = '';
-
-            // Fetch data for the selected date
-            fetch(`/emp/work-report-detail/${rawReportDate}`)
-                .then(response => response.json())
-                .then(data => {
-                    data.details.forEach(row => {
-                        const tableRow = `
-                            <tr>
-                                <td>${row.client_name}</td>
-                                <td>${row.task_name}</td>
-                                <td>${row.start_time}</td>
-                                <td>${row.end_time}</td>
-                                <td><span class="badge rounded-pill text-white text-bg-${row.status_class}">${row.status}</span></td>
-                            </tr>
-                        `;
-                        modalTableBody.insertAdjacentHTML('beforeend', tableRow);
-                    });
-                })
-                .catch(error => {
-                    console.error('Error fetching report data:', error);
+        // Fetch detailed data for the selected report
+        fetch(`/emp/work-report-detail/${reportDate}`)
+            .then(response => response.json())
+            .then(data => {
+                data.details.forEach(row => {
+                    var tableRow = `
+                        <tr>
+                            <td>${row.client_name}</td>
+                            <td>${row.task_name}</td>
+                            <td>${row.start_time}</td>
+                            <td>${row.end_time}</td>
+                            <td><span class="badge rounded-pill text-white text-bg-${row.status_class}">${row.status}</span></td>
+                        </tr>
+                    `;
+                    modalTableBody.append(tableRow);
                 });
-        });
+            })
+            .catch(error => {
+                console.error('Error fetching report data:', error);
+            });
     });
 });
-
-
 </script>
 @endsection

@@ -61,15 +61,13 @@
                         </div>
                         <div class="mb-3 col-md-4">
                             <label class="form-label" for="inputAddress">From date</label>
-                            <input type="text" class="form-control" data-inputmask-alias="datetime"
-                            data-inputmask-inputformat="dd/mm/yyyy"  name="fdate" required id="fdate">
-                            <span class="text-muted">e.g "DD/MM/YYYY"</span>
+                            <input type="date" class="form-control" data-inputmask-alias="datetime"  name="fdate" required id="fdate">
+                            
                         </div>
                         <div class="mb-3 col-md-4">
                             <label class="form-label" for="inputPassword4">To Date</label>
-                            <input type="text" class="form-control" data-inputmask-alias="datetime"
-                            data-inputmask-inputformat="dd/mm/yyyy"  name="tdate" required id="tdate">
-                            <span class="text-muted">e.g "DD/MM/YYYY"</span>
+                            <input type="date" class="form-control" data-inputmask-alias="datetime"  name="tdate" id="tdate">
+                            
                         </div>
                     </div>
                     <button type="submit" class="btn btn-success float-end">Generate</button>

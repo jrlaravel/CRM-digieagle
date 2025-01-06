@@ -25,16 +25,21 @@ class AttendanceController extends Controller
     }
 
     public function inoutdata(Request $request)
-    {
-        // return $request->all();
-        $code = $request->input('empcode');
-        $fdate = $request->input('fdate');
-        $tdate = $request->input('tdate');
+{
+    // Extract parameters from the request
+    $code = $request->input('empcode');
+    $fdate = Carbon::createFromFormat('Y-m-d', $request->input('fdate'))->format('d/m/Y');
+    
+    // Check if 'tdate' is provided, if null, set it to the current date
+    $tdate = $request->input('tdate') 
+        ? Carbon::createFromFormat('Y-m-d', $request->input('tdate'))->format('d/m/Y') 
+        : Carbon::now()->format('d/m/Y');
 
-        // Call the service method with the formatted dates
-        $attendanceData = $this->eTimeOfficeService->getInOutPunchData($code, $fdate, $tdate);
+    // Call the service method with the formatted dates
+    $attendanceData = $this->eTimeOfficeService->getInOutPunchData($code, $fdate, $tdate);
 
-        // Return the data as JSON
-        return response()->json($attendanceData);
-    }
+    // Return the data as JSON
+    return response()->json($attendanceData);
+}
+
 }

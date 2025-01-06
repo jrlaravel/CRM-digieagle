@@ -165,11 +165,11 @@ class EmployeeController extends Controller
 
     public function get_work_report(Request $request)
     {
+        
         // Custom validation for the start and end dates
         $validator = Validator::make($request->all(), [
             'employee' => 'required|integer',
-            'sdate' => 'required|date_format:d/m/Y',
-            'edate' => 'required|date_format:d/m/Y|after_or_equal:sdate',
+            'sdate' => 'required',
         ]);
     
         // If validation fails, return validation error messages
@@ -180,43 +180,47 @@ class EmployeeController extends Controller
                 'errors' => $validator->errors(),
             ]);
         }
-    
+        
         // Retrieve input values and format dates
         $userId = $request->input('employee');
-        $sdate = Carbon::createFromFormat('d/m/Y', $request->input('sdate'))->format('Y-m-d');
-        $edate = Carbon::createFromFormat('d/m/Y', $request->input('edate'))->format('Y-m-d');
-    
+        $sdate = $request->input('sdate');
+        $edate = $request->input('edate');
+        if($edate == null)
+        {
+            $edate = date('Y-m-d');
+        }
+        
         try {
             // Fetch data using the query
             $data = DB::table('work_report as wr')
-                    ->join('work_report_detail as wrd', 'wr.id', '=', 'wrd.date_id')
-                    ->join('company_detail as cd', 'wrd.company_id', '=', 'cd.id')
-                    ->select(
-                        'wr.report_date as report_date',
-                        DB::raw('GROUP_CONCAT(DISTINCT cd.name ORDER BY cd.name ASC) as company_list'),
-                        DB::raw('SEC_TO_TIME(SUM(TIME_TO_SEC(TIMEDIFF(wrd.end_time, wrd.start_time)))) as total_time'),
-                        'wr.user_id as user_id'  // user_id should be part of select
-                    )
-                    ->where('wr.user_id', $userId)
-                    ->whereBetween('wr.report_date', [$sdate, $edate])
-                    ->groupBy('wr.report_date', 'wr.user_id') // Include user_id in GROUP BY
-                    ->orderBy('wr.report_date', 'ASC')
-                    ->get();
-
-            // Check if data is empty
-            if ($data->isEmpty()) {
+            ->join('work_report_detail as wrd', 'wr.id', '=', 'wrd.date_id')
+            ->join('company_detail as cd', 'wrd.company_id', '=', 'cd.id')
+            ->select(
+                'wr.report_date as report_date',
+                DB::raw('GROUP_CONCAT(DISTINCT cd.name ORDER BY cd.name ASC) as company_list'),
+                DB::raw('SEC_TO_TIME(SUM(TIME_TO_SEC(TIMEDIFF(wrd.end_time, wrd.start_time)))) as total_time'),
+                'wr.user_id as user_id'  // user_id should be part of select
+                )
+                ->where('wr.user_id', $userId)
+                ->whereBetween('wr.report_date', [$sdate, $edate])
+                ->groupBy('wr.report_date', 'wr.user_id') // Include user_id in GROUP BY
+                ->orderBy('wr.report_date', 'ASC')
+                ->get();
+                
+                // Check if data is empty
+                if ($data->isEmpty()) {
+                    return response()->json([
+                        'success' => false,
+                        'message' => 'No reports found for the selected criteria.',
+                    ]);
+                }
+                
+                // Return the fetched data as JSON response
                 return response()->json([
-                    'success' => false,
-                    'message' => 'No reports found for the selected criteria.',
+                    'success' => true,
+                    'data' => $data,
                 ]);
-            }
-    
-            // Return the fetched data as JSON response
-            return response()->json([
-                'success' => true,
-                'data' => $data,
-            ]);
-    
+            
         } catch (QueryException $e) {
             // Return a generic error message
             return response()->json([
