@@ -36,13 +36,13 @@
                     </div>
                     <div class="mb-3 col-md-4">
                         <label class="form-label" for="inputAddress">From date</label>
-                        <input type="text" class="form-control" data-inputmask-alias="datetime"
+                        <input type="date" class="form-control" data-inputmask-alias="datetime"
                         data-inputmask-inputformat="dd/mm/yyyy"  name="sdate" required id="fdate">
                         <span class="text-muted">e.g "DD/MM/YYYY"</span>
                     </div>
                     <div class="mb-3 col-md-4">
                         <label class="form-label" for="inputPassword4">To Date</label>
-                        <input type="text" class="form-control" data-inputmask-alias="datetime"
+                        <input type="date" class="form-control" data-inputmask-alias="datetime"
                         data-inputmask-inputformat="dd/mm/yyyy"  name="edate" required id="tdate">
                         <span class="text-muted">e.g "DD/MM/YYYY"</span>
                     </div>
