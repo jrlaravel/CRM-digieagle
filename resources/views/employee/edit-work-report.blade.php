@@ -23,6 +23,9 @@
                             <h5 class="card-title float-start">Submitted Work Reports</h5>
                             <button class="btn btn-outline-primary float-end" id="addnewtaskbutton">+ Add New Task</button>
                         </div>
+                        @if(Session::has('error'))
+                        <div class="alert alert-danger">{{Session::get('error')}}</div>
+                        @endif
                         <div class="card-body">
                             <div class="table-responsive">
                                 <table class="table table-bordered" id="workReportTable">
@@ -34,6 +37,7 @@
                                             <th>Start Time</th>
                                             <th>End Time</th>
                                             <th>Status</th>
+                                            <th>Note</th>
                                             <th>Total Time</th>
                                             <th>Action</th>
                                         </tr>
@@ -47,6 +51,7 @@
                                             <td>{{ $report->start_time }}</td>
                                             <td>{{ $report->end_time }}</td>
                                             <td>{{ $report->status }}</td>  
+                                             <td>{{ $report->note }}</td>
                                             <td>{{ $report->total_time }}</td>
                                             <td>
                                                 <button 
@@ -58,6 +63,7 @@
                                                     data-start-time="{{ $report->start_time }}" 
                                                     data-end-time="{{ $report->end_time }}" 
                                                     data-status="{{ $report->status }}"
+                                                    data-note="{{ $report->note }}"
                                                     data-total-time="{{ $report->total_time }}"
                                                     data-wrdid="{{ $report->wrdid}}"
                                                 >
@@ -123,6 +129,9 @@
                                             <option value="Onhold">On-hold</option>
                                         </select>
                             
+                                        <label class="form-label">Note</label>
+                                        <textarea class="form-control" id="note" name="note" rows="3" placeholder="Enter note" required></textarea>
+
                                         <label class="form-label">Total Time Taken (hours)</label>
                                         <input type="time" name="total_time[]" class="form-control total-time" id="total-time" readonly />
                                     </div>
@@ -180,7 +189,11 @@
                                             <option value="Pending">Pending</option>
                                             <option value="Onhold">On-hold</option>
                                         </select>
-                    
+                                        
+                                        <label class="form-label">Note</label>
+                                        <textarea class="form-control" id="add-note" name="note" placeholder="Enter note" rows="3" required></textarea>
+
+
                                         <label class="form-label">Total Time Taken (hours)</label>
                                         <input type="time" name="total_time" class="form-control total-time" id="add-total-time" readonly />
                                     </div>
@@ -302,6 +315,7 @@
                 const endTime = button.getAttribute('data-end-time');
                 const totalTime = button.getAttribute('data-total-time');
                 const status = button.getAttribute('data-status');
+                const note = button.getAttribute('data-note');
                 const reportDate = button.getAttribute('data-date');
                 const wrdid = button.getAttribute('data-wrdid');
 
@@ -320,6 +334,7 @@
                 document.getElementById('start-time').value = startTime;
                 document.getElementById('end-time').value = endTime;
                 document.getElementById('status').value = status;
+                document.getElementById('note').value = note;
                 document.getElementById('report-date').value = reportDate;
                 document.getElementById('total-time').value = totalTime;
                 document.getElementById('wrdid').value = wrdid; 

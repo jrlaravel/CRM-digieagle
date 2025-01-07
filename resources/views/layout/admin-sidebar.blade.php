@@ -376,5 +376,6 @@ setInterval(fetchNotifications, 60000);
 </script>
 
 @yield('scripts')
+<script>window.$zoho=window.$zoho || {};$zoho.salesiq=$zoho.salesiq||{ready:function(){}}</script><script id="zsiqscript" src="https://salesiq.zohopublic.in/widget?wc=siq82dba1d1b57c00bee380c39430435c230011ba716e7cfe521f45cdce7e0b4d54" defer></script>
 </body>
 </html>

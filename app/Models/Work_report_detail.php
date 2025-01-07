@@ -14,6 +14,7 @@ class Work_report_detail extends Model
         'company_id',
         'service_id',
         'status',
+        'note',
         'start_time',
         'end_time',
         'total_time',

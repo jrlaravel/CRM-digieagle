@@ -41,5 +41,4 @@ class AttendanceController extends Controller
     // Return the data as JSON
     return response()->json($attendanceData);
 }
-
 }
