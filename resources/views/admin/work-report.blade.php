@@ -135,7 +135,7 @@
                                         .join('')}
                                 </ul>
                                 <hr>
-                                <h4>Total Time: ${report.total_time}</h4>
+                                <h4>Total Time (hours) : ${report.total_time}</h4>
                             </div>
                         </div>
                     </div>

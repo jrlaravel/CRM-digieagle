@@ -30,6 +30,7 @@ class WorkReportController extends Controller
 
     public function add_work_report(Request $request)
     {
+        // return $request->all();  
         // Get the report data and other fields from the request
         $reportData = $request->input('report_data');
         $date = $request->input('report_date');
@@ -100,6 +101,7 @@ class WorkReportController extends Controller
                     'company_id' => $company->id,
                     'service_id' => $service->id,
                     'status' => $data['status'],
+                    'note' => $data['note'],
                     'start_time' => $start_time->format('H:i:s'),
                     'end_time' => $end_time->format('H:i:s'),
                     'total_time' => $total_time,
@@ -177,11 +179,48 @@ class WorkReportController extends Controller
 
     public function edit_work_report($id)
     {
-        $companydata = DB::select('select id,name from company_detail');
-        $data = DB::select('SELECT wr.report_date as date,wr.id as report_id, wrd.id as wrdid, cd.id as cid,cd.name as cname , ss.sub_service as sname , ss.id as sid, wrd.status, wrd.start_time, wrd.end_time, TIMEDIFF(wrd.end_time, wrd.start_time) AS total_time FROM work_report wr JOIN work_report_detail wrd ON wr.id = wrd.date_id JOIN company_detail cd ON wrd.company_id = cd.id JOIN sub_service ss ON wrd.service_id = ss.id WHERE wr.id = '.$id);
-        return view('employee/edit-work-report',compact('data','companydata'));
+        // Get today's date
+        $today = Carbon::today()->format('Y-m-d');
+        
+        // Fetch company data
+        $companydata = DB::select('SELECT id, name FROM company_detail');
+        
+        // Fetch report data only if the report's date matches today's date
+        $data = DB::select("
+            SELECT 
+                wr.report_date AS date,
+                wr.id AS report_id,
+                wrd.note AS note,
+                wrd.id AS wrdid,
+                cd.id AS cid,
+                cd.name AS cname,
+                ss.sub_service AS sname,
+                ss.id AS sid,
+                wrd.status,
+                wrd.start_time,
+                wrd.end_time,
+                TIMEDIFF(wrd.end_time, wrd.start_time) AS total_time
+            FROM 
+                work_report wr
+            JOIN 
+                work_report_detail wrd ON wr.id = wrd.date_id
+            JOIN 
+                company_detail cd ON wrd.company_id = cd.id
+            JOIN 
+                sub_service ss ON wrd.service_id = ss.id
+            WHERE 
+                wr.id = :id AND wr.report_date = :today
+        ", ['id' => $id, 'today' => $today]);
+    
+        // Check if data is empty (no report for today's date)
+        if (empty($data)) {
+            return redirect()->back()->with('error', 'No work report found');
+        }
+    
+        // Return view with data
+        return view('employee/edit-work-report', compact('data', 'companydata'));
     }
-
+    
 
     public function add_task_report(Request $request)
     {
@@ -196,6 +235,7 @@ class WorkReportController extends Controller
             $workReportDetail->company_id = $request->company_name;
             $workReportDetail->service_id = $request->service;
             $workReportDetail->status = $request->status;
+            $workReportDetail->note = $request->note;
             $workReportDetail->start_time = $request->start_time;
             $workReportDetail->end_time = $request->end_time;
             $workReportDetail->total_time = $request->total_time;
@@ -221,6 +261,7 @@ class WorkReportController extends Controller
             $start_time = is_array($request->start_time) ? $request->start_time[0] : $request->start_time;
             $end_time = is_array($request->end_time) ? $request->end_time[0] : $request->end_time;
             $status = is_array($request->status) ? $request->status[0] : $request->status;
+            $note = is_array($request->note) ? $request->note[0] : $request->note;
             $total_time = is_array($request->total_time) ? $request->total_time[0] : $request->total_time;
 
 
@@ -229,7 +270,8 @@ class WorkReportController extends Controller
             $workReportDetail->service_id = $service_id;
             $workReportDetail->start_time = $start_time;
             $workReportDetail->end_time = $end_time;
-            $workReportDetail->status = $status;            
+            $workReportDetail->status = $status;        
+            $workReportDetail->note = $note;    
             $workReportDetail->total_time = $total_time;
             $workReportDetail->save();
             return redirect()->back()->with('success', 'Task updated successfully.');

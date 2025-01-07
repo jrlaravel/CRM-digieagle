@@ -139,7 +139,7 @@
                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
             <div class="modal-body">
-                <form id="addSubServiceForm" action="{{ route('admin/sub-service-store') }}" method="POST">
+                <form id="addSubServiceForm" action="{{ route('admin/add-sub-service') }}" method="POST">
                     @csrf
                     <input type="hidden" id="mainServiceId" name="main_service_id">
                     <div class="mb-3">
@@ -174,47 +174,6 @@
     // Show the modal
     new bootstrap.Modal(document.getElementById('addSubServiceModal')).show();
 }
-
-// Handle form submission via AJAX
-document.getElementById('addSubServiceForm').addEventListener('submit', function(e) {
-    e.preventDefault();
-
-    var formData = new FormData(this);
-
-    // Debug: Log the form data to the console
-    formData.forEach(function(value, key) {
-        console.log(key + ": " + value);  // This will log each form field's key-value pair
-    });
-
-    // Perform AJAX request to add the sub-service
-    fetch("{{ route('admin/sub-service-store') }}", {
-        method: "POST",
-        body: formData,
-        headers: {
-            'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').getAttribute('content'),
-        }
-    })
-    .then(response => response.json())
-    .then(data => {
-        console.log(data);  // Log the response from the server
-        if (data.success) {
-            // Close the modal and show a success message
-            new bootstrap.Modal(document.getElementById('addSubServiceModal')).hide();
-            alert(data.message); // Or use a notification library for better UI
-            // Optionally, refresh the table or update the view with the new sub-service
-        } else {
-            alert(data.message); // Show error message
-        }
-    })
-    .catch(error => {
-        console.error('Error:', error);
-        alert('Something went wrong');
-    });
-});
-
-
-
-
 
   document.addEventListener("DOMContentLoaded", function () {
         $("#datatables-reponsive").DataTable({
@@ -305,8 +264,6 @@ document.getElementById('addSubServiceForm').addEventListener('submit', function
                 $('#addSubServiceModal').modal('hide'); // Hide the modal
                 alert('Sub-Service added successfully!');
                 location.reload(); // Optionally, reload the page to reflect changes
-            } else {
-                alert('Something went wrong, please try again.');
             }
         }
     });

@@ -62,6 +62,9 @@
                                         <option value="Onhold">On-hold</option>
                                     </select>
         
+                                    <label for="for-label">Note</label>
+                                    <input type="text" name="note[]" class="form-control note" placeholder="Enter note" id="note">
+
                                     <label class="form-label">Total Time Taken (hours)</label>
                                     <input type="time" name="total_time[]" class="form-control total-time" id="total-time"  readonly />
                                 </div>
@@ -88,6 +91,7 @@
                                         <th>Start Time</th>
                                         <th>End Time</th>
                                         <th>Status</th>
+                                        <th>Note</th>
                                         <th>Total Time</th>
                                         <th>Action</th>
                                     </tr>
@@ -117,13 +121,11 @@
     <script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
 
     
-    @section('scripts')
-    <script>
+@section('scripts')
+<script>
     let tableData = [];
 
     document.addEventListener("DOMContentLoaded", function () {
-
-        // Initialize flatpickr if needed
         flatpickr("#report-date", {
             defaultDate: "today",
             minDate: "today",
@@ -132,58 +134,46 @@
             disableMobile: true
         });
 
-        // Flatpickr initialization
         flatpickr(".flatpickr-minimum");
 
-        // Function to calculate the total time dynamically
         function calculateTotalTime() {
-    const startTimes = document.querySelectorAll(".start-time");
-    const endTimes = document.querySelectorAll(".end-time");
-    const totalTimes = document.querySelectorAll(".total-time");
+            const startTimes = document.querySelectorAll(".start-time");
+            const endTimes = document.querySelectorAll(".end-time");
+            const totalTimes = document.querySelectorAll(".total-time");
 
-    startTimes.forEach((startTime, index) => {
-        const endTime = endTimes[index];
-        const totalTime = totalTimes[index];
+            startTimes.forEach((startTime, index) => {
+                const endTime = endTimes[index];
+                const totalTime = totalTimes[index];
 
-        if (startTime.value && endTime.value) {
-            // Split the start and end times into hours and minutes
-            const [startHours, startMinutes] = startTime.value.split(":").map(Number);
-            const [endHours, endMinutes] = endTime.value.split(":").map(Number);
+                if (startTime.value && endTime.value) {
+                    const [startHours, startMinutes] = startTime.value.split(":").map(Number);
+                    const [endHours, endMinutes] = endTime.value.split(":").map(Number);
 
-            // Calculate total minutes from midnight for both times
-            const startTotalMinutes = startHours * 60 + startMinutes;
-            const endTotalMinutes = endHours * 60 + endMinutes;
+                    const startTotalMinutes = startHours * 60 + startMinutes;
+                    const endTotalMinutes = endHours * 60 + endMinutes;
 
-            // Calculate the difference in minutes
-            let diffMinutes = endTotalMinutes - startTotalMinutes;
+                    let diffMinutes = endTotalMinutes - startTotalMinutes;
 
-            // Handle overnight case (e.g., 23:00 - 02:00)
-            if (diffMinutes < 0) {
-                diffMinutes += 24 * 60; // Add 24 hours worth of minutes
-            }
+                    if (diffMinutes < 0) {
+                        diffMinutes += 24 * 60;
+                    }
 
-            // Convert minutes to HH:mm format
-            const hours = Math.floor(diffMinutes / 60);
-            const minutes = diffMinutes % 60;
+                    const hours = Math.floor(diffMinutes / 60);
+                    const minutes = diffMinutes % 60;
 
-            // Format as HH:mm
-            totalTime.value = `${String(hours).padStart(2, "0")}:${String(minutes).padStart(2, "0")}`;
-        } else {
-            totalTime.value = ''; // Clear the field if inputs are incomplete
+                    totalTime.value = `${String(hours).padStart(2, "0")}:${String(minutes).padStart(2, "0")}`;
+                } else {
+                    totalTime.value = ''; // Clear the field if inputs are incomplete
+                }
+            });
         }
-    });
-}
 
-        // Add event listeners to start and end time fields
         document.addEventListener("input", function (event) {
             if (event.target.classList.contains("start-time") || event.target.classList.contains("end-time")) {
                 calculateTotalTime();
             }
         });
 
-
-
-         // Function to validate if all required fields are filled
         function validateFields() {
             const companies = document.getElementsByName("company_name[]");
             const services = document.getElementsByName("service[]");
@@ -193,183 +183,172 @@
             const totalTimes = document.getElementsByName("total_time[]");
 
             for (let i = 0; i < companies.length; i++) {
-                // Check if any of the fields is empty
                 if (!companies[i].value || !services[i].value || !startTimes[i].value || !endTimes[i].value || !status[i].value || !totalTimes[i].value) {
-                    return false; // Return false if any field is empty
+                    return false;
                 }
             }
-            return true; // Return true if all fields are filled
+            return true;
         }
-            // Add Service functionality
-        
-      // Define tableData globally to store all rows
-      let tableData = []; // Ensure tableData is initialized at the start.
 
-      document.getElementById("addServiceBtn").addEventListener("click", function () {
-    const companies = document.getElementsByName("company_name[]");
-    const services = document.getElementsByName("service[]");
-    const startTimes = document.getElementsByName("start_time[]");
-    const endTimes = document.getElementsByName("end_time[]");
-    const status = document.getElementsByName("status[]");
-    const totalTimes = document.getElementsByName("total_time[]");
+        document.getElementById("addServiceBtn").addEventListener("click", function () {
+            const companies = document.getElementsByName("company_name[]");
+            const services = document.getElementsByName("service[]");
+            const startTimes = document.getElementsByName("start_time[]");
+            const endTimes = document.getElementsByName("end_time[]");
+            const status = document.getElementsByName("status[]");
+            const notes = document.getElementsByName("note[]");
+            const totalTimes = document.getElementsByName("total_time[]");
 
-    // Check the last selected value for each field
-    const companyName = companies[companies.length - 1].options[companies[companies.length - 1].selectedIndex]?.text || '';
-    const serviceName = services[services.length - 1].options[services[services.length - 1].selectedIndex]?.text || '';
-    const startTime = startTimes[startTimes.length - 1].value || '';
-    const endTime = endTimes[endTimes.length - 1].value || '';
-    const statusValue = status[status.length - 1].value || '';
-    const totalTime = totalTimes[totalTimes.length - 1].value || '';
+            const companyName = companies[companies.length - 1].options[companies[companies.length - 1].selectedIndex]?.text || '';
+            const serviceName = services[services.length - 1].options[services[services.length - 1].selectedIndex]?.text || '';
+            const startTime = startTimes[startTimes.length - 1].value || '';
+            const endTime = endTimes[endTimes.length - 1].value || '';
+            const statusValue = status[status.length - 1].value || '';
+            const noteValue = notes[notes.length - 1]?.value || ''; // Allow empty or null note
+            const totalTime = totalTimes[totalTimes.length - 1].value || '';
 
-    // Log values to the console for debugging
-    console.log('Company Name:', companyName);
-    console.log('Service Name:', serviceName);
-    console.log('Start Time:', startTime);
-    console.log('End Time:', endTime);
-    console.log('Status:', statusValue);
-    console.log('Total Time:', totalTime);
+            if (!companyName || !serviceName || !startTime || !endTime || !statusValue || !totalTime) {
+                alert("Please fill in all required fields before adding the service.");
+                return;
+            }
 
-    // Check if any field is empty
-    if (!companyName || !serviceName || !startTime || !endTime || !statusValue || !totalTime) {
-        alert("Please fill in all fields before adding the service.");
-        return;
-    }
+            const rowData = {
+                companyName,
+                serviceName,
+                startTime,
+                endTime,
+                status: statusValue,
+                note: noteValue, // Include note even if empty
+                totalTime
+            };
+            tableData.push(rowData);
 
-    // Add row data to the tableData array
-    const rowData = {
-        companyName,
-        serviceName,
-        startTime,
-        endTime,
-        status: statusValue,
-        totalTime
-    };
-    tableData.push(rowData);
+            const tableBody = document.getElementById("workReportTable").getElementsByTagName('tbody')[0];
+            const row = tableBody.insertRow();
 
-    // Add the row to the table visually
-    const tableBody = document.getElementById("workReportTable").getElementsByTagName('tbody')[0];
-    const row = tableBody.insertRow();
+            row.insertCell(0).innerText = companyName;
+            row.insertCell(1).innerText = serviceName;
+            row.insertCell(2).innerText = startTime;
+            row.insertCell(3).innerText = endTime;
+            row.insertCell(4).innerText = statusValue;
+            row.insertCell(5).innerText = noteValue || 'N/A'; // Show 'N/A' if note is empty
+            row.insertCell(6).innerText = totalTime;
 
-    row.insertCell(0).innerText = companyName;
-    row.insertCell(1).innerText = serviceName;
-    row.insertCell(2).innerText = startTime;
-    row.insertCell(3).innerText = endTime;
-    row.insertCell(4).innerText = statusValue;
-    row.insertCell(5).innerText = totalTime;
+            const removeBtnCell = row.insertCell(7);
+            const removeBtn = document.createElement("button");
+            removeBtn.innerText = "Remove";
+            removeBtn.classList.add("remove-btn", "btn", "btn-danger");
+            removeBtn.onclick = function () {
+                row.remove();
+                tableData = tableData.filter(data => 
+                    !(data.companyName === companyName &&
+                      data.serviceName === serviceName &&
+                      data.startTime === startTime &&
+                      data.endTime === endTime &&
+                      data.status === statusValue &&
+                      data.note === noteValue &&
+                      data.totalTime === totalTime)
+                );
+            };
+            removeBtnCell.appendChild(removeBtn);
 
-    // Remove button
-    const removeBtnCell = row.insertCell(6);
-    const removeBtn = document.createElement("button");
-    removeBtn.innerText = "Remove";
-    removeBtn.classList.add("remove-btn", "btn", "btn-danger");
-    removeBtn.onclick = function () {
-        row.remove();
-        // Update tableData by filtering out the removed row
-        tableData = tableData.filter(data => 
-            !(data.companyName === companyName &&
-              data.serviceName === serviceName &&
-              data.startTime === startTime &&
-              data.endTime === endTime &&
-              data.status === statusValue &&
-              data.totalTime === totalTime)
-        );
-    };
-    removeBtnCell.appendChild(removeBtn);
+            companies[companies.length - 1].value = '';
+            services[services.length - 1].value = '';
+            startTimes[startTimes.length - 1].value = '';
+            endTimes[endTimes.length - 1].value = '';
+            status[status.length - 1].value = '';
+            notes[notes.length - 1].value = ''; // Reset note field
+            totalTimes[totalTimes.length - 1].value = '';
+        });
 
-    // Reset form fields after adding
-    companies[companies.length - 1].value = '';
-    services[services.length - 1].value = '';
-    startTimes[startTimes.length - 1].value = '';
-    endTimes[endTimes.length - 1].value = '';
-    status[status.length - 1].value = '';
-    totalTimes[totalTimes.length - 1].value = '';
-});
+        document.getElementById("submitReportBtn").addEventListener("click", function () {
+            if (tableData.length === 0) {
+                alert("No data to submit.");
+                return;
+            }
 
+            const reportDate = document.getElementById("report-date").value || new Date().toISOString().split('T')[0];
 
-// Submit button logic
-document.getElementById("submitReportBtn").addEventListener("click", function () {
-    if (tableData.length === 0) {
-        alert("No data to submit.");
-        return;
-    }
+            sendToController(tableData, reportDate);
+        });
 
-    // Get the report date (you can use today's date or select a specific date)
-    const reportDate = document.getElementById("report-date").value || new Date().toISOString().split('T')[0]; // Fallback to today's date if not set
-
-    // Send data to the controller (use your AJAX method or form submission here)
-    sendToController(tableData, reportDate);
-});
-
-function sendToController(data, reportDate) {   
-    fetch('/emp/add-work-report', {
-        method: 'POST',
-        headers: {
-            'Content-Type': 'application/json',
-            'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').getAttribute('content')
-        },
-        body: JSON.stringify({ 
-            report_data: data, // Array of all rows
-            report_date: reportDate,
-            user_id: {{ session('employee')->id }} // Ensure user ID is passed as well
-        })
-    })
-    .then(response => response.json())
-    .then(responseData => {
-        if (responseData.success) {
-            alert('Report submitted successfully!');
-            // Redirect to work-report-history route after successful submission
-            window.location.href = "{{ route('emp/work-report-history') }}";
-        } else {
-            alert('Failed to submit the report: ' + responseData.error);
-        }
-    })
-    .catch(error => {
-        console.error('Error:', error);
-        alert('An error occurred while submitting the report.');
-    });
-}
-
-
-        // Fetch services based on the selected company
-        $(function() {
-            $('#company-dropdown').on('change', function() {
-                var companyId = this.value; // Get selected company ID
-                $('#service').html(''); // Clear the service dropdown
-
-                if (companyId) {
-                    // Enable the service dropdown before making the AJAX call
-                    $('#service').prop('disabled', false);
-
-                    // Fetch services based on the selected company
-                    $.ajax({
-                        url: '/emp/get-services/' + companyId, // Replace with your actual route
-                        type: 'GET',
-                        success: function(data) {
-                            if (data.services && data.services.length > 0) {
-                                $('#service').html('<option value="">Select Service</option>'); // Reset options
-                                $.each(data.services, function(key, value) {
-                                    $('#service').append('<option value="' + value.serviceid + '">' + value.sub_service + '</option>');
-                                });
-                            } else {
-                                $('#service').html('<option value="">No services available</option>');
-                                $('#service').prop('disabled', true); // Disable if no services are returned
-                            }
-                        },
-                        error: function() {
-                            console.error('Error fetching services');
-                            $('#service').prop('disabled', true); // Disable the dropdown in case of an error
-                            $('#service').html('<option value="">Select Service</option>');
-                        }
-                    });
+        function sendToController(data, reportDate) {
+            fetch('/emp/add-work-report', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').getAttribute('content')
+                },
+                body: JSON.stringify({ 
+                    report_data: data,
+                    report_date: reportDate,
+                    user_id: {{ session('employee')->id }}
+                })
+            })
+            .then(response => response.json())
+            .then(responseData => {
+                if (responseData.success) {
+                    alert('Report submitted successfully!');
+                    window.location.href = "{{ route('emp/work-report-history') }}";
                 } else {
-                    // If no company is selected, disable and reset the service dropdown
+                    alert('Failed to submit the report: ' + responseData.error);
+                }
+            })
+            .catch(error => {
+                console.error('Error:', error);
+                alert('An error occurred while submitting the report.');
+            });
+        }
+    });
+
+
+    $(function() {
+    let serviceChoices;
+
+    $('#company-dropdown').on('change', function() {
+        var companyId = this.value; // Get selected company ID
+        $('#service').html(''); // Clear the service dropdown
+
+        if (serviceChoices) {
+            serviceChoices.destroy(); // Destroy previous Choices instance
+        }
+
+        if (companyId) {
+            $('#service').prop('disabled', false); // Enable dropdown
+
+            $.ajax({
+                url: '/emp/get-services/' + companyId, // Replace with your actual route
+                type: 'GET',
+                success: function(data) {
+                    if (data.services && data.services.length > 0) {
+                        $('#service').html('<option value="">Select Service</option>'); // Reset options
+                        $.each(data.services, function(key, value) {
+                            $('#service').append('<option value="' + value.serviceid + '">' + value.sub_service + '</option>');
+                        });
+
+                        // Initialize Choices.js on the service dropdown
+                        serviceChoices = new Choices('#service', {
+                            searchEnabled: true,
+                            placeholderValue: 'Search service...',
+                            removeItemButton: false, // Adjust as needed
+                        });
+                    } else {
+                        $('#service').html('<option value="">No services available</option>');
+                        $('#service').prop('disabled', true);
+                    }
+                },
+                error: function() {
+                    console.error('Error fetching services');
                     $('#service').prop('disabled', true);
                     $('#service').html('<option value="">Select Service</option>');
                 }
             });
-        });
-
+        } else {
+            $('#service').prop('disabled', true);
+            $('#service').html('<option value="">Select Service</option>');
+        }
     });
+});
 </script>
 
 <script>    
