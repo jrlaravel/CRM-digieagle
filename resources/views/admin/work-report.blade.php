@@ -19,7 +19,7 @@
         <div class="card">
         <div class="card-header">
             <h5 class="card-title float-start">Work Report</h5>
-            <button type="button" class="btn btn-primary float-end" id="download-report">Download</button>
+            {{-- <button type="button" class="btn btn-primary float-end" id="download-report">Download</button> --}}
         </div>
         <div class="card-body">
             <form id="work-report-form">  
@@ -61,8 +61,8 @@
     </div>
 </div>
 
-<div class="modal fade" id="workReportModal" tabindex="-1" aria-labelledby="workReportModalLabel" aria-hidden="true">
-    <div class="modal-dialog">
+<div class="modal fade bd-example-modal-lg" id="workReportModal" tabindex="-1" aria-labelledby="workReportModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-lg">
         <div class="modal-content">
             <div class="modal-header">
                 <h5 class="modal-title" id="workReportModalLabel">Work Report Details</h5>
@@ -78,6 +78,7 @@
                             <th>Task Name</th>
                             <th>Start Time</th>
                             <th>End Time</th>
+                            <th colspan="4">Note</th>
                             <th>Status</th>
                         </tr>
                     </thead>
@@ -192,6 +193,7 @@ function attachCardClickEventListeners() {
                                 <td>${row.task_name}</td>
                                 <td>${row.start_time}</td>
                                 <td>${row.end_time}</td>
+                                <td colspan="4">${row.note}</td>
                                 <td><span class="badge rounded-pill text-white text-bg-${row.status_class}">${row.status}</span></td>
                             </tr>
                         `;
@@ -212,7 +214,7 @@ document.addEventListener('DOMContentLoaded', function () {
 
 </script>
 
-<script>
+{{-- <script>
     
 document.getElementById('download-report').addEventListener('click', function () {
     // Collect date and employee data from the form
@@ -263,5 +265,5 @@ document.getElementById('download-report').addEventListener('click', function ()
     form.submit();
 });
 
-</script>
+</script> --}}
 @endsection

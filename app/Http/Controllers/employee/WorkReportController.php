@@ -5,7 +5,7 @@ namespace App\Http\Controllers\employee;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use App\Models\Company_detail;
-use App\Models\Sub_service;
+use App\Models\Service;
 use App\Models\User;
 use App\Models\Work_Report;
 use App\Models\Work_report_detail;
@@ -17,15 +17,20 @@ class WorkReportController extends Controller
 {
     public function index()
     {
-        $companydata = DB::select('select id,name from company_detail');
+        $companydata = DB::select('SELECT * FROM `company_detail` join company_services on company_detail.id = company_services.company_id WHERE company_services.department_id = ' .session('employee')->department);
+        // dd($companydata);
         return view('employee/work-report', compact('companydata'));
     }
 
     public function getServices($companyId)
     {
-        $services = DB::select('SELECT company_id,sub_service,sub_service.id as serviceid FROM `company_services` JOIN main_service on company_services.service_id = main_service.id join sub_service on sub_service.main_service_id = main_service.id WHERE company_id = '.$companyId);
+        // Fetch services related to the department of the logged-in employee and the specified company ID
+        $departmentId = session('employee')->department;
+        $services = DB::select('
+            SELECT services.id as serviceid , services.service_name FROM `company_services` join company_detail on company_services.company_id = company_detail.id join services on services.department_id = company_services.department_id WHERE company_services.company_id = '.$companyId.' and company_services.department_id = '.$departmentId);  
         return response()->json(['services' => $services]);
     }
+
 
 
     public function add_work_report(Request $request)
@@ -79,7 +84,7 @@ class WorkReportController extends Controller
             }
     
             // Retrieve service_id by service name
-            $service = Sub_service::where('sub_service', $data['serviceName'])->first();
+            $service = Service::where('service_name', $data['serviceName'])->first();
             if (!$service) {
                 return response()->json(['error' => 'Service not found for: ' . $data['serviceName']], 404);
             }
@@ -145,14 +150,16 @@ class WorkReportController extends Controller
 
     public function getWorkReportByDate($date)
     {
+        $userId = session('employee')->id; // Corrected method to access `id`
+
         // Fetch data from the database based on the date
         $reportDetails = DB::table('work_report_detail as wrd')
             ->join('company_detail as cd', 'wrd.company_id', '=', 'cd.id')
-            ->join('sub_service as ss', 'wrd.service_id', '=', 'ss.id')
-            ->join('work_report as wr' , 'wrd.date_id','=', 'wr.id')
+            ->join('services as ss', 'wrd.service_id', '=', 'ss.id')
+            ->join('work_report as wr', 'wrd.date_id', '=', 'wr.id')
             ->select(
                 'cd.name as client_name',
-                'ss.sub_service as task_name',
+                'ss.service_name as task_name',
                 'wrd.start_time',
                 'wrd.end_time',
                 DB::raw("CASE 
@@ -162,13 +169,15 @@ class WorkReportController extends Controller
                         END as status_class"),
                 'wrd.status'
             )
-            ->where('wr.report_date', $date)
-            ->get();    
+            ->where('wr.report_date', '=', $date)
+            ->where('wr.user_id', '=', $userId)
+            ->get();
 
         return response()->json([
             'details' => $reportDetails,
         ]);
     }
+
     
     public function deletetask($id)
     {
@@ -194,7 +203,7 @@ class WorkReportController extends Controller
                 wrd.id AS wrdid,
                 cd.id AS cid,
                 cd.name AS cname,
-                ss.sub_service AS sname,
+                ss.service_name AS sname,
                 ss.id AS sid,
                 wrd.status,
                 wrd.start_time,
@@ -207,7 +216,7 @@ class WorkReportController extends Controller
             JOIN 
                 company_detail cd ON wrd.company_id = cd.id
             JOIN 
-                sub_service ss ON wrd.service_id = ss.id
+                services ss ON wrd.service_id = ss.id
             WHERE 
                 wr.id = :id AND wr.report_date = :today
         ", ['id' => $id, 'today' => $today]);

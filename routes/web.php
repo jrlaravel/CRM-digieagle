@@ -172,13 +172,12 @@ Route::prefix('admin')->group(function () {
         Route::get('service-list',[ClientController::class, 'index'])->name('admin/service-list');
         Route::post('add-service', [ClientController::class, 'store'])->name('admin/add-service');  
         Route::get('delete-service/{id}', [ClientController::class, 'delete'])->name('admin/delete-service');
-        Route::get('/services/{id}/sub-services', [ClientController::class, 'getSubServices'])->name('admin.services.sub-services');
-        Route::post('/add-sub-service', [ClientController::class, 'addSubService'])->name('admin/add-sub-service');
+        Route::get('/services/{id}', [ClientController::class, 'getSubServices'])->name('admin/services');
         Route::get('company-service', [ClientController::class, 'company_service'])->name('admin/company-service');  
         Route::post('add-company-service', [ClientController::class, 'create_company_service'])->name('admin/add-company-service');  
         Route::get('delete-company-service/{id}', [ClientController::class, 'delete_company_service'])->name('admin/delete-company-service');
         Route::post('update-company-service', [ClientController::class, 'update_company_service'])->name('admin/update-company-service');
-        Route::get('delete-sub-service/{id}', [ClientController::class, 'delete_sub_service'])->name('admin/delete-sub-service');
+        Route::get('delete-service/{id}', [ClientController::class, 'delete_service'])->name('admin/delete-service');
         Route::post('sub-service-store', [ClientController::class, 'storeSubService'])->name('admin/sub-service-store');
         Route::get('work-report' , [EmployeeController::class, 'work_report'])->name('admin/work-report');
         Route::post('get-work-report', [EmployeeController::class, 'get_work_report'])->name('admin/get-work-report');

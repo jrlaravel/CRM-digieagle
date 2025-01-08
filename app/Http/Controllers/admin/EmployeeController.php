@@ -235,12 +235,13 @@ class EmployeeController extends Controller
         // Fetch data from the database based on the date and user ID
         $reportDetails = DB::table('work_report_detail as wrd')
             ->join('company_detail as cd', 'wrd.company_id', '=', 'cd.id')
-            ->join('sub_service as ss', 'wrd.service_id', '=', 'ss.id')
+            ->join('services as ss', 'wrd.service_id', '=', 'ss.id')
             ->join('work_report as wr', 'wrd.date_id', '=', 'wr.id')
             ->select(
                 'cd.name as client_name',
-                'ss.sub_service as task_name',
+                'ss.service_name as task_name',
                 'wrd.start_time',
+                'wrd.note',
                 'wrd.end_time',
                 DB::raw("CASE 
                             WHEN wrd.status = 'completed' THEN 'success'

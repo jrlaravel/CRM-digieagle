@@ -12,6 +12,7 @@ use App\Http\Controllers\Controller;
 use App\Models\User;
 use App\Models\Activity_log;
 use App\Models\Designation;
+use App\Models\Department;
 use Illuminate\Support\Str;
 use Illuminate\Support\Facades\Mail;
 
@@ -35,10 +36,11 @@ class LoginController extends Controller
     
         if (Auth::guard('web')->attempt(['username' => $request->username, 'password' => $request->password])) {
             $user = Auth::guard('web')->user();
-    
+            $department = Department::find($user->department);
+            // dd($department);
+            $user->department_name = $department->name;
             // Check if the user's role is either employee or HR
             if ($user->role == 'employee' || $user->role == 'hr') {
-
                 session()->put('employee', $user);
     
                 $designation = Designation::find($user->designation);

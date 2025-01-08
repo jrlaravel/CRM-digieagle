@@ -11,6 +11,6 @@ class Company_service extends Model
     use HasFactory;
     protected $fillable = [
         'company_id',
-        'service_id',
+        'department_id',
     ];
 }

@@ -3,8 +3,8 @@
 namespace App\Http\Controllers\admin;
 
 use Illuminate\Http\Request;
-use App\Models\Main_service;
-use App\Models\Sub_service;
+use App\Models\Department;
+use App\Models\Service;
 use App\Models\Company_detail;
 use App\Models\Company_service;
 use App\Http\Controllers\Controller;
@@ -17,17 +17,14 @@ class ClientController extends Controller
     public function index()
 {
     // Get all main services
-    $Services = DB::select('SELECT id,main_service FROM main_service'); 
-    return view('admin.service-list',compact('Services'));
+    $department = Department::all();
+    return view('admin.service-list',compact('department'));
 }
 
 public function getSubServices($id)
 {
-    // Fetch sub-services related to the selected main service
-    $subServices = Sub_service::where('main_service_id', $id)->get();
-
-    // Return sub-services as JSON
-    return response()->json($subServices);
+    $services = Service::where('department_id', $id)->get();
+    return response()->json($services);
 }
 
 
@@ -35,31 +32,28 @@ public function store(Request $request)
 {
     // Validate the data
     $validator = Validator::make($request->all(), [
-        'main_service' => 'required|string',
-        'sub_services' => 'required|array|min:1',
-        'sub_services.*' => 'required|string',
+        'department' => 'required|exists:department,id',
+        'services' => 'required|array|min:1',
+        'services.*' => 'required|string',
     ]);
     
     // Check if validation passes
     if ($validator->passes()) {
         DB::beginTransaction();
-        
         try {
-            // Create the main service (parent service)
-            $mainService = Main_service::create([
-                'main_service' => $request->main_service,
-            ]);
-
-            // Loop through the sub-services and add them (set the main service as parent)
-            foreach ($request->sub_services as $subService) {
-                Sub_service::create([
-                    'sub_service' => $subService,
-                    'main_service_id' => $mainService->id,  // Set the main service ID as parent for sub-services
+            $department = $request->department; 
+            
+            // Loop through the services and add them
+            foreach ($request->services as $service) {
+                Service::create([
+                    'service_name' => $service,
+                    'department_id' => $department,  // Set the department ID for each service
                 ]);
             }
-            DB::commit();
 
-            return redirect()->back()->with('success', 'Service and sub-services added successfully!');
+            DB::commit();
+            
+            return redirect()->back()->with('success', 'Services added successfully!');
         } catch (\Exception $e) {
             DB::rollBack();
             return redirect()->back()->with('error', 'Failed to add service. Please try again.');
@@ -68,8 +62,8 @@ public function store(Request $request)
         return redirect()->back()->withInput()->withErrors($validator);
     }
 }
-   
 
+   
 public function delete($id)
 {
     // Delete the main service and all related sub-services
@@ -78,6 +72,11 @@ public function delete($id)
 
     return redirect()->route('admin/service-list')->with('success', 'Service and sub-services deleted successfully.');
 }
+
+
+
+
+
 
 public function addSubService(Request $request)
 {
@@ -101,8 +100,6 @@ public function addSubService(Request $request)
        }
    
 }
-
-
 
 public function update(Request $request, $id)
 {
@@ -146,44 +143,61 @@ public function update(Request $request, $id)
 
 public function company_service()
 {
-    $services = DB::select('select * from main_service');
-    $details = DB::select("SELECT company_detail.id AS company_id, company_detail.name AS company_name, company_detail.industry AS company_industry, company_detail.description AS company_description, company_detail.note AS company_notes, GROUP_CONCAT(main_service.main_service SEPARATOR ', ') AS services_provided FROM company_services JOIN company_detail ON company_services.company_id = company_detail.id JOIN main_service ON company_services.service_id = main_service.id GROUP BY company_detail.id, company_detail.name, company_detail.industry, company_detail.description , company_detail.note");
-    // dd($details);
-    return view('admin/company_service',compact('services','details'));
+    $department = DB::select('select * from department');
+    $details = DB::select("SELECT 
+        company_detail.id AS company_id, 
+        company_detail.name AS company_name, 
+        company_detail.industry AS company_industry, 
+        company_detail.description AS company_description, 
+        company_detail.note AS company_notes, 
+        GROUP_CONCAT(department.name SEPARATOR ', ') AS departments_provided 
+    FROM 
+        company_services 
+    JOIN 
+        company_detail ON company_services.company_id = company_detail.id 
+    JOIN 
+        department ON department.id = company_services.department_id 
+    GROUP BY 
+        company_detail.id, 
+        company_detail.name, 
+        company_detail.industry, 
+        company_detail.description, 
+        company_detail.note;
+    ");
+    return view('admin/company_service',compact('department','details'));
 }
 
 public function create_company_service(Request $request)
 {
-    // dd($request->all());
     // Validate the request input
     $validator = Validator::make($request->all(), [
         'name' => 'required',
         'description' => 'required',
         'industry' => 'required',
-        'services' => 'required|array', // Ensure services is an array
-        'services.*' => 'required|exists:main_service,id', // Validate that service IDs exist
+        'departments' => 'required|array', // Ensure department is an array
+        'departments.*' => 'required|exists:department,id', // Validate that service IDs exist
     ]);
-
+    
     if ($validator->fails()) {
         return redirect()->back()->withInput()->withErrors($validator);
     }
-
+    
     $company = Company_detail::create([
         'name' => $request->name,
         'description' => $request->description,
         'industry' => $request->industry,
         'note' => $request->note,
     ]);
-
+    
     // Add services to the company_service table
-    foreach ($request->services as $serviceId) {
+    foreach ($request->departments as $departmentId) {
         Company_service::create([
             'company_id' => $company->id,
-            'service_id' => $serviceId,
+            'department_id' => $departmentId,
         ]);
     }
-
-    return redirect()->back()->with('message', 'Company successfully created');
+    
+    return redirect()->back()->with('success', 'Company successfully created');
 }
 
 public function delete_company_service($id)
@@ -201,8 +215,8 @@ public function update_company_service(Request $request)
         'company_name' => 'required|string|max:255',
         'company_industry' => 'required|string|max:255',
         'company_description' => 'required|string',
-        'services' => 'required|array', 
-            'services.*' => 'required|exists:main_service,id', // Ensure service IDs are valid
+        'departments' => 'required|array', 
+            'departments.*' => 'required|exists:department,id', // Ensure service IDs are valid
     ]);
 
     if ($validator->fails()) {
@@ -224,21 +238,22 @@ public function update_company_service(Request $request)
     Company_service::where('company_id', $company->id)->delete();
 
     // Add new selected services
-    foreach ($request->services as $serviceId) {
+    foreach ($request->departments as $departmentId) {
         Company_service::create([
             'company_id' => $company->id,
-            'service_id' => $serviceId,
+            'department_id' => $departmentId,
         ]);
     }
 
     return redirect()->back()->with('message', 'Company successfully updated');
 }
 
-public function delete_sub_service($id)
+
+public function delete_service($id)
 {
     // Find the sub-service by ID
-    $subService = Sub_service::find($id);
+    $subService = Service::find($id);
     $subService->delete();
-    return redirect()->back()->with('message', 'Sub-service successfully deleted');
+    return redirect()->back()->with('message', 'service successfully deleted');
 }     
 }

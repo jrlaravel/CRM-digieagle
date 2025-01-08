@@ -11,20 +11,20 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('company_services', function (Blueprint $table) {
+        Schema::create('services', function (Blueprint $table) {
             $table->id();
-            $table->unsignedBigInteger('company_id');
-            $table->unsignedBigInteger('department_id');
+            $table->UnsignedBigInteger('department_id');
+            $table->string('service_name');
             $table->timestamps();
-            $table->foreign('company_id')->references('id')->on('company_detail')->onDelete('cascade');
             $table->foreign('department_id')->references('id')->on('department')->onDelete('cascade');
         });
     }
+
     /**
      * Reverse the migrations.
      */
     public function down(): void
     {
-        Schema::dropIfExists('company_services');
+        //
     }
 };

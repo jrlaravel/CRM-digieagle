@@ -264,7 +264,7 @@
                     if (data.services && data.services.length > 0) {
                         $(serviceDropdownId).html('<option value="">Select Service</option>');
                         $.each(data.services, function(key, value) {
-                            $(serviceDropdownId).append('<option value="' + value.serviceid + '">' + value.sub_service + '</option>');
+                            $(serviceDropdownId).append('<option value="' + value.serviceid + '">' + value.service_name + '</option>');
                         });
                     } else {
                         $(serviceDropdownId).html('<option value="">No services available</option>');
