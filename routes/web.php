@@ -185,8 +185,6 @@ Route::prefix('admin')->group(function () {
         Route::post('get-work-report', [EmployeeController::class, 'get_work_report'])->name('admin/get-work-report');
         Route::get('/work-report-detail/{date}/{id}', [EmployeeController::class, 'getWorkReportByDate'])->name('admin/work-report-detail');
         Route::post('report-download', [EmployeeController::class, 'report_download'])->name('admin/report-download');
-        // Route::post('sub-service-add', [ClientController::class, 'addSubService'])->name('admin/sub-service-add');
-
     });
 });
 
