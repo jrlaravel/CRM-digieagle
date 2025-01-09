@@ -149,8 +149,8 @@
                             <tr>
                                 <td>{{$key+1}}</td>
                                 <td>{{$data->name}}</td>
-                                <td>{{$data->start_date}}</td>
-                                <td>{{$data->end_date}}</td>
+                                <td>{{ $data->start_date ? \Carbon\Carbon::parse($data->start_date)->format('d-m-Y') : 'N/A' }}</td>
+                                <td>{{ $data->end_date ? \Carbon\Carbon::parse($data->end_date)->format('d-m-Y') : 'N/A' }}</td>
                                 <td>{{$data->total_days}}</td>
                                 <td class="reason-cell" data-reason="{{ $data->reason }}">{{$data->reason}}</td>
                                 <td>
@@ -232,53 +232,65 @@
 </div>
 
 <script>
-    document.addEventListener('DOMContentLoaded', function() {
-    $('#cancelConfirmationModal').on('show.bs.modal', function (event) {
-        var button = $(event.relatedTarget); // Button that triggered the modal
-        var url = button.data('href'); // Extract the leave delete URL from data-href attribute
-        
-        // Set the action URL for the cancel leave form
-        var form = $(this).find('#cancelLeaveForm');
-        form.attr('action', url); // Update the form action with the correct URL
+    document.addEventListener('DOMContentLoaded', function () {
+        $('#cancelConfirmationModal').on('show.bs.modal', function (event) {
+            var button = $(event.relatedTarget); // Button that triggered the modal
+            var url = button.data('href'); // Extract the leave delete URL from data-href attribute
+
+            // Set the action URL for the cancel leave form
+            var form = $(this).find('#cancelLeaveForm');
+            form.attr('action', url); // Update the form action with the correct URL
+        });
     });
-});
 
-
-    $(document).ready(function() {
-    $('#leaveType').change(function() {
-        var selectedLeave = $('#leaveType option:selected').data('name');
-        
-        // Clear any previous restrictions when changing leave type
-        $('#from').removeAttr('min');
-        $('#to').removeAttr('min');
-        
-        // If Casual Leave is selected
-        if (selectedLeave === 'Casual Leave') {
+    $(document).ready(function () {
+        function setMonthRestrictions() {
             var today = new Date();
-            today.setHours(0, 0, 0, 0); // Set time to 00:00:00
+            var firstDay = new Date(today.getFullYear(), today.getMonth(), 1).toISOString().split('T')[0]; // First day of the month
+            var lastDay = new Date(today.getFullYear(), today.getMonth() + 1, 0).toISOString().split('T')[0]; // Last day of the month
 
-            // Add 2 days to the current date
-            var minDate = new Date(today);
-            minDate.setDate(minDate.getDate() + 4);
-
-            // Set the min attribute for the 'from' and 'to' date inputs
-            $('#from').attr('min', minDate.toISOString().split('T')[0]);
-            $('#to').attr('min', minDate.toISOString().split('T')[0]);
+            // Set min and max attributes for the date inputs
+            $('#from').attr('min', firstDay);
+            $('#from').attr('max', lastDay);
+            $('#to').attr('min', firstDay);
+            $('#to').attr('max', lastDay);
         }
 
+        // Apply month restrictions on page load
+        setMonthRestrictions();
 
-          // If Sick Leave is selected
-          if (selectedLeave === 'Sick Leave') {
-            $('#reportInput').show(); // Show the report input field
-            var today = new Date().toISOString().split('T')[0];
+        // Handle leave type change
+        $('#leaveType').change(function () {
+            var selectedLeave = $('#leaveType option:selected').data('name');
 
-            // Set the min attribute for the date input fields
-            document.getElementById('to').setAttribute('min', today);
-            document.getElementById('from').setAttribute('min', today);
-        }
+            // Clear any previous restrictions when changing leave type
+            $('#from').removeAttr('min').removeAttr('max');
+            $('#to').removeAttr('min').removeAttr('max');
+
+            if (selectedLeave === 'Casual Leave') {
+                var today = new Date();
+                today.setHours(0, 0, 0, 0);
+
+                var minDate = new Date(today);
+                minDate.setDate(minDate.getDate() + 4);
+
+                $('#from').attr('min', minDate.toISOString().split('T')[0]);
+                $('#to').attr('min', minDate.toISOString().split('T')[0]);
+            }
+
+            if (selectedLeave === 'Sick Leave') {
+                $('#reportInput').show(); // Show the report input field
+                var today = new Date().toISOString().split('T')[0];
+
+                document.getElementById('to').setAttribute('min', today);
+                document.getElementById('from').setAttribute('min', today);
+            }
+
+            // Reapply the current month restrictions if needed
+            setMonthRestrictions();
+        });
     });
-});
-
 </script>
+
 
 @endsection

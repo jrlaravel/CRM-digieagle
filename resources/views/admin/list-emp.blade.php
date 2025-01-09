@@ -214,7 +214,19 @@
 @endsection
 
 @section('scripts')
+
+<link rel="stylesheet" href="https://cdn.datatables.net/1.13.5/css/jquery.dataTables.min.css">
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script src="https://cdn.datatables.net/1.13.5/js/jquery.dataTables.min.js"></script>
+
   <script>
+      $(document).ready(function () {
+        $('#datatables-reponsive').DataTable({
+            responsive: true,
+            pageLength: 5, // Number of rows per page
+        });
+    });
+
     document.addEventListener("DOMContentLoaded", function() {
         // Datatables Responsive
         $("#datatables-reponsive").DataTable({

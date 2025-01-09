@@ -83,7 +83,7 @@
 					@if(session('has_hr_features'))
 					<li class="sidebar-item">
 						<a data-bs-target="#leave" data-bs-toggle="collapse" class="sidebar-link {{ request()->routeIs('emp/leave-type') || request()->routeIs('emp/leave-list') ? 'active' : 'collapsed' }}">
-							<i class="fa fa-line-chart {{ request()->routeIs('emp/leave-type') || request()->routeIs('emp/leave-list') ? 'text-white' : '' }}"></i> <span class="align-middle">Leave Management</span>
+							<i class="fas fa-calendar-times {{ request()->routeIs('emp/leave-type') || request()->routeIs('emp/leave-list') ? 'text-white' : '' }}"></i> <span class="align-middle">Leave Management</span>
 						</a>
 						<ul id="leave" class="sidebar-dropdown list-unstyled collapse" data-bs-parent="#sidebar">
 							<li class="sidebar-item"><a class='sidebar-link {{ request()->routeIs('emp/leave-type') ? 'active' : '' }}' href='{{ route('emp/leave-type') }}'>Leaves Type</a></li>
@@ -107,19 +107,19 @@
 					</a>
 		
 					<a href="{{ route('emp/leave') }}" class="sidebar-link {{ request()->routeIs('emp/leave') ? 'active' : '' }}">
-						<i class='far fa-calendar-alt {{ request()->routeIs('emp/leave') ? 'text-white' : '' }}'></i> <span class="align-middle">Leave Records</span>
+						<i class='fas fa-calendar-times {{ request()->routeIs('emp/leave') ? 'text-white' : '' }}'></i> <span class="align-middle">Leave Records</span>
 					</a>
 
 					<a href="{{ route('emp/work-report') }}" class="sidebar-link {{ request()->routeIs('emp/work-report') ? 'active' : '' }}">
-						<i class='fa fa-file {{ request()->routeIs('emp/work-report') ? 'text-white' : '' }}'></i> <span class="align-middle">Work Report</span>
+						<i class='fa fa-file-text {{ request()->routeIs('emp/work-report') ? 'text-white' : '' }}'></i> <span class="align-middle">Work Report</span>
 					</a>
 
 					<a href="{{ route('emp/work-report-history') }}" class="sidebar-link {{ request()->routeIs('emp/work-report-history') ? 'active' : '' }}">
-						<i class='fa fa-file {{ request()->routeIs('emp/work-report-history') ? 'text-white' : '' }}'></i> <span class="align-middle">Work History</span>
+						<i class='fa fa-history {{ request()->routeIs('emp/work-report-history') ? 'text-white' : '' }}'></i> <span class="align-middle">Work History</span>
 					</a>
 		
 					<a href="{{ route('emp/calendar') }}" class="sidebar-link {{ request()->routeIs('emp/calendar') ? 'active' : '' }}">
-						<i class='fa fa-birthday-cake {{ request()->routeIs('emp/calendar') ? 'text-white' : '' }}'></i> <span class="align-middle">Calendar</span>
+						<i class='fa fa-birthday-cake {{ request()->routeIs('emp/calendar') ? 'text-white' : '' }}'></i> <span class="align-middle">Birthdays</span>
 					</a>
 		
 					{{-- <a href="{{ route('emp/projects') }}" class="sidebar-link {{ request()->routeIs('emp/projects') ? 'active' : '' }}">

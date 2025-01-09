@@ -63,7 +63,7 @@
                                     <th>Leave Type</th>
                                     <th>From</th>
                                     <th>To</th>
-                                    <th>total_days</th>
+                                    <th>Total days</th>
                                     <th style="width: 35%">Reason</th>
                                     <th>Status</th>
                                     <th>Action</th>
@@ -76,8 +76,8 @@
                                     <td>{{ $key + 1 }}</td>
                                     <td>{{ $leave->first_name }} {{ $leave->last_name }}</td>
                                     <td>{{ $leave->name }}</td>
-                                    <td>{{ $leave->start_date }}</td>
-                                    <td>{{ $leave->end_date }}</td>
+                                    <td>{{ $leave->start_date ? \Carbon\Carbon::parse($leave->start_date)->format('d-m-Y') : 'N/A' }}</td>
+                                    <td>{{ $leave->end_date ? \Carbon\Carbon::parse($leave->end_date)->format('d-m-Y') : 'N/A' }}</td>
                                     <td>{{ $leave->total_days }}</td>
                                     <td class="reason-cell" data-reason="{{ $leave->reason }}">{{ $leave->reason }}</td>
                                     <td>
