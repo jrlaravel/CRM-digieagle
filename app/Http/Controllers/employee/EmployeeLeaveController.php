@@ -89,8 +89,7 @@ class EmployeeLeaveController extends Controller
                 'designation' => $designation->name
             ];
     
-            // Uncomment below to send email to HR
-            // Mail::to('hr@example.com')->send(new LeaveRequestMail($leaveDetails));
+            Mail::to('hr.digieagleinc@gmail.com','ceo.digieagleinc@gmail.com','manager.digieagleinc@gmail.com')->send(new LeaveRequestMail($leaveDetails));
             
             // Redirect back with success message
             return redirect()->back()->with('success', 'Leave request submitted successfully and HR has been notified.');
