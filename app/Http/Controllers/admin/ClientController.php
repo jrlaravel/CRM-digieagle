@@ -17,7 +17,7 @@ class ClientController extends Controller
 {
     public function index()
 {
-    // Get all main services
+    // Get all main status
     $department = Department::all();
     return view('admin.service-list',compact('department'));
 }
@@ -30,10 +30,9 @@ public function getSubServices($id)
 
 public function store(Request $request)
 {
-    return $request->all();
     // Validate the data
     $validator = Validator::make($request->all(), [
-        'department' => 'required|exists:department,id',
+        'department_id' => 'required|exists:department,id',
         'services' => 'required|array|min:1',
         'services.*' => 'required|string',
     ]);
@@ -42,7 +41,7 @@ public function store(Request $request)
     if ($validator->passes()) {
         DB::beginTransaction();
         try {
-            $department = $request->department; 
+            $department = $request->department_id; 
             
             // Loop through the services and add them
             foreach ($request->services as $service) {
@@ -51,9 +50,10 @@ public function store(Request $request)
                     'department_id' => $department,  // Set the department ID for each service
                 ]);
             }
-
+            
             DB::commit();
             
+            // return $request->all();
             return redirect()->back()->with('success', 'Services added successfully!');
         } catch (\Exception $e) {
             DB::rollBack();
@@ -188,14 +188,55 @@ public function delete_service($id)
     return redirect()->back()->with('message', 'service successfully deleted');
 }    
 
-public function add_status($id)
+public function add_status(Request $request)
 {
-
+    // return $request->all();
+    // Validate the data
+    $validator = Validator::make($request->all(), [
+        'department_id' => 'required|exists:department,id',
+        'status' => 'required|array|min:1',
+        'status.*' => 'required|string',
+    ]);
+    
+    // Check if validation passes
+    if ($validator->passes()) {
+        DB::beginTransaction();
+        try {
+            $department = $request->department_id; 
+            
+            // Loop through the status and add them
+            foreach ($request->status as $status) {
+                Status::create([
+                    'name' => $status,
+                    'department_id' => $department,  // Set the department ID for each statu$status
+                ]);
+            }
+            
+            DB::commit();
+            
+            // return $request->all();
+            return redirect()->back()->with('success', 'status added successfully!');
+        } catch (\Exception $e) {
+            DB::rollBack();
+            return redirect()->back()->with('error', 'Failed to add statu$status. Please try again.');
+        }
+    } else {
+        return redirect()->back()->withInput()->withErrors($validator);
+    }
 }
 
 public function get_status($id)
 {
     $status = Status::where('department_id', $id)->get();
     return response()->json($status);
+}
+
+public function delete_status($id)
+{
+    // Delete the main status and all related sub-status
+    $mainStatus = Status::find($id);
+    $mainStatus->delete();
+
+    return redirect()->route('admin/service-list')->with('success', 'Status deleted successfully.');
 }
 }

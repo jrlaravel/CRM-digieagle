@@ -16,7 +16,6 @@
 <div class="container-fluid p-0">
     <div class="mb-3">
         <h1 class="h3 d-inline align-middle">Service List</h1>
-        {{-- <button type="button" class="btn btn-primary float-end" data-bs-toggle="modal" data-bs-target="#defaultModalSuccess">Add New Service</button> --}}
     </div>
     <div class="row">
         <!-- Main Services Table (Left Column) -->
@@ -39,7 +38,7 @@
                                     <td>{{ $loop->iteration }}</td>
                                     <td>{{ $data->name }}</td>
                                     <td>
-                                        {{-- <a href="javascript:void(0)" class="btn btn-light" style="border: 1px solid #000" onclick="loadStatusList({{ $data->id }})">Edit Status</a> --}}
+                                        <a href="javascript:void(0)" class="btn btn-light" style="border: 1px solid #000" onclick="loadStatusList({{ $data->id }})">Edit Status</a>
                                         <a href="javascript:void(0)" class="btn btn-light" style="border: 1px solid #000" onclick="loadSubServices({{ $data->id }})">Edit Service</a>
                                     </td>
                                 </tr>
@@ -58,7 +57,11 @@
                     <div class="d-flex justify-content-between align-items-center mb-3">
                         <h5 class="card-title float-start">Services List</h5>
                         <!-- Pass `departmentId` to the function -->
-                        <a href="javascript:void(0)" class="btn btn-success float-end" onclick="openAddSubServiceModal(selectedDepartmentId)">Add Service</a>
+                        <a href="javascript:void(0)" 
+                            class="btn btn-success float-end" 
+                            onclick="openAddSubServiceModal({{ $data->id }})">
+                            Add Service
+                        </a>
                     </div>
                     <div class="table-responsive">
                         <table id="subServicesTable" class="table table-striped" style="width:100%">
@@ -80,12 +83,12 @@
 
     
         <!-- Status Table (Right Column) -->
-        {{-- <div id="statusSection" class="col-12 col-md-6 d-none">
+        <div id="statusSection" class="col-12 col-md-6 d-none">
             <div class="card">
                 <div class="card-body">
                     <div class="d-flex justify-content-between align-items-center mb-3">
                         <h5 class="card-title">Status List</h5>
-                        <a href="javascript:void(0)" class="btn btn-success float-end" onclick="openAddStatusModal()">Add Status</a>
+                        <a href="javascript:void(0)" class="btn btn-success float-end" onclick="openAddStatusModal({{ $data->id }})">Add Status</a>
                     </div>
                     <div class="table-responsive">
                         <table id="statusTable" class="table table-striped" style="width:100%">
@@ -103,7 +106,7 @@
                     </div>
                 </div>
             </div>
-        </div> --}}
+        </div>
     </div>
     
     
@@ -138,7 +141,7 @@
             <div class="modal-body">
                 <form id="addSubServiceForm" action="{{ route('admin/add-service') }}" method="POST">
                     @csrf
-                    <input type="hidden" id="selectedDepartmentId" name="department">
+                    <input type="hidden" id="selectedDepartmentId" name="department_id" value="">
                     
                     <div id="subServiceContainer">
                         <div class="mb-3 sub-service-field">
@@ -156,8 +159,9 @@
 </div>
 
 
-<!-- Modal to Add status -->
-{{-- <div class="modal fade" id="addStatusModal" tabindex="-1" aria-labelledby="addStatusModalLabel" aria-hidden="true">
+
+<!-- Modal to Add Status -->
+<div class="modal fade" id="addStatusModal" tabindex="-1" aria-labelledby="addStatusModalLabel" aria-hidden="true">
     <div class="modal-dialog">
         <div class="modal-content">
             <div class="modal-header">
@@ -167,26 +171,61 @@
             <div class="modal-body">
                 <form id="addStatusForm" action="{{ route('admin/add-status') }}" method="POST">
                     @csrf
-                    <input type="hidden" id="departmentId" name="department">
+                    <input type="hidden" id="DepartmentId" name="department_id" value="">
                     
-                    <div id="StatusContainer">
-                        <div class="mb-3 sub-service-field">
-                            <label for="StatusName" class="form-label">Status Name</label>
-                            <input type="text" class="form-control" name="services[]" required>
+                    <div id="statusContainer">
+                        <div class="mb-3 status-field">
+                            <label for="statusName" class="form-label">Status Name</label>
+                            <input type="text" class="form-control" name="status[]" required>
                         </div>
                     </div>
-
+                    
                     <button type="button" class="btn btn-success float-start" id="addStatusBtn">+ Add</button>
-                    <button type="submit" class="btn btn-primary float-end">Add Service</button>
+                    <button type="submit" class="btn btn-primary float-end">Add Status</button>
                 </form>
             </div>
         </div>
     </div>
-</div> --}}
+</div>
+
+@if(Session::has('success'))
+<div class="modal fade" id="confirmationModal" tabindex="-1" role="dialog" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-zoom" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">Success</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <p>{{ Session::get('success') }}</p>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-success" data-bs-dismiss="modal">OK</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    document.addEventListener('DOMContentLoaded', function () {
+        const confirmationModal = new bootstrap.Modal(document.getElementById('confirmationModal'));
+        confirmationModal.show();
+
+        // Automatically hide the modal after 2 seconds
+        setTimeout(() => {
+            confirmationModal.hide();
+        }, 2000);
+    });
+</script>
+@endif
+
 @endsection
 
 @section('scripts')
 <script>
+    // Define globally to share across functions
+    let selectedDepartmentId = null;
+
 function setDeleteRoute(route) {
     document.getElementById('deleteConfirmButton').setAttribute('href', route);
 }
@@ -197,12 +236,80 @@ document.addEventListener("DOMContentLoaded", function () {
     });
 });
 
-  // Function to open modal and set department ID
-function openAddSubServiceModal(selectedDepartmentId) {
+// Add new input field for another service
+document.getElementById('addSubServiceBtn').addEventListener('click', function () {
+    const subServiceContainer = document.getElementById('subServiceContainer');
+    const newField = document.createElement('div');
+    newField.classList.add('mb-3', 'sub-service-field');
+    newField.innerHTML = `
+    <label for="subServiceName" class="form-label">Service Name</label>
+    <input type="text" class="form-control" name="services[]" required>
+    `;
+    subServiceContainer.appendChild(newField);
+});
 
-    console.log(selectedDepartmentId);
-    document.getElementById('selectedDepartmentId').value = selectedDepartmentId;  // Set department ID in hidden input field
+
+function loadSubServices(departmentId) {
+
+    selectedDepartmentId = departmentId; // Update the global variable
     
+    // Show the Sub Services section and hide the Status section
+    $('#subServicesSection').removeClass('d-none');
+    $('#statusSection').addClass('d-none');
+
+        // Fetch sub-services for the selected department
+        $.ajax({
+            url: `/admin/services/${selectedDepartmentId}`, // Adjust the URL if needed
+            method: 'GET',
+            success: function(data) {
+                const subServicesTable = $('#subServicesTable tbody');
+                subServicesTable.empty(); // Clear the existing table content
+
+                if (data.length > 0) {
+                    data.forEach((service, index) => {
+                        const row = `
+                            <tr>
+                                <td>${index + 1}</td>
+                                <td>${service.service_name}</td>
+                                <td>
+                                    <a href="#" 
+                                    onclick="setDeleteRoute('/admin/delete-service/${service.id}')" 
+                                    data-bs-toggle="modal" 
+                                    data-bs-target="#confirmDeleteModal" 
+                                    class="btn btn-danger">
+                                        Delete
+                                    </a>
+                                </td>
+                            </tr>
+                        `;
+                        subServicesTable.append(row);
+                    });
+                } else {
+                    const row = `
+                        <tr>
+                            <td colspan="3" class="text-center">No services available for this department.</td>
+                        </tr>
+                    `;
+                    subServicesTable.append(row);
+                }
+            },
+            error: function(error) {
+                console.error('Error fetching sub-services:', error);
+            }
+        });
+}
+
+function openAddSubServiceModal() {
+    if (!selectedDepartmentId) {
+        console.error('No department ID set for modal.');
+        return;
+    }
+
+    console.log('Opening modal for Department ID:', selectedDepartmentId);
+
+    // Set the hidden input value
+    document.getElementById('selectedDepartmentId').value = selectedDepartmentId;
+
     // Clear existing input fields before showing the modal
     document.getElementById('subServiceContainer').innerHTML = `
         <div class="mb-3 sub-service-field">
@@ -215,58 +322,35 @@ function openAddSubServiceModal(selectedDepartmentId) {
     modal.show();
 }
 
-// Add new input field for another service
-document.getElementById('addSubServiceBtn').addEventListener('click', function () {
-    const subServiceContainer = document.getElementById('subServiceContainer');
-    const newField = document.createElement('div');
-    newField.classList.add('mb-3', 'sub-service-field');
-    newField.innerHTML = `
-        <label for="subServiceName" class="form-label">Service Name</label>
-        <input type="text" class="form-control" name="services[]" required>
-    `;
-    subServiceContainer.appendChild(newField);
-});
-
-// Add new input field for another service
-document.getElementById('addStatusBtn').addEventListener('click', function () {
-    const StatusContainer = document.getElementById('subServiceContainer');
-    const newField = document.createElement('div');
-    newField.classList.add('mb-3', 'sub-service-field');
-    newField.innerHTML = `
-        <label for="StatusName" class="form-label">Status Name</label>
-        <input type="text" class="form-control" name="status[]" required>
-    `;
-    StatusContainer.appendChild(newField);
-});
+// let selectedDepartmentId = null;
 
 
-function loadSubServices(departmentId) {
+function loadStatusList(departmentId) {
+    // let selectedDepartmentId = null; // Define a global variable to hold the selected department ID
+    selectedDepartmentId = departmentId; // Update the global variable
+    console.log('Loaded Department ID:', selectedDepartmentId);
 
-    let selectedDepartmentId = null;
-    // Set the selected department ID globally
-    selectedDepartmentId = departmentId;
+    // Show the Status section and hide the Sub Services section
+    $('#statusSection').removeClass('d-none');
+    $('#subServicesSection').addClass('d-none');
 
-    // Show the Sub Services section and hide the Status section
-    $('#subServicesSection').removeClass('d-none');
-    $('#statusSection').addClass('d-none');
-
-    // Send AJAX request to fetch sub-services based on the department ID
+    // Fetch statuses for the selected department
     $.ajax({
-        url: `/admin/services/${selectedDepartmentId}`, // Adjust the URL if needed
+        url: `/admin/status/${selectedDepartmentId}`, // Adjust the URL if needed
         method: 'GET',
-        success: function(data) {
-            const subServicesTable = $('#subServicesTable tbody');
-            subServicesTable.empty(); // Clear the existing table content
+        success: function (data) {
+            const statusTable = $('#statusTable tbody');
+            statusTable.empty(); // Clear existing table content
 
             if (data.length > 0) {
-                data.forEach((services, index) => {
+                data.forEach((status, index) => {
                     const row = `
                         <tr>
                             <td>${index + 1}</td>
-                            <td>${services.service_name}</td>
+                            <td>${status.name}</td>
                             <td>
                                 <a href="#" 
-                                   onclick="setDeleteRoute('/admin/delete-service/${services.id}')" 
+                                   onclick="setDeleteRoute('/admin/delete-status/${status.id}')" 
                                    data-bs-toggle="modal" 
                                    data-bs-target="#confirmDeleteModal" 
                                    class="btn btn-danger">
@@ -275,72 +359,59 @@ function loadSubServices(departmentId) {
                             </td>
                         </tr>
                     `;
-                    subServicesTable.append(row); // Append rows dynamically
+                    statusTable.append(row); // Append rows dynamically
                 });
             } else {
                 const row = `
                     <tr>
-                        <td colspan="3" class="text-center">No services available for this department.</td>
+                        <td colspan="3" class="text-center">No statuses available for this department.</td>
                     </tr>
                 `;
-                subServicesTable.append(row); // Display a message if no data
+                statusTable.append(row); // Display a message if no data
             }
         },
-        error: function(error) {
-            console.error('Error fetching sub-services:', error);
+        error: function (error) {
+            console.error('Error fetching statuses:', error);
         }
     });
 }
 
-// let selectedDepartmentId = null;
+function openAddStatusModal() {
+    if (!selectedDepartmentId) {
+        console.error('No department ID set for modal.');
+        return;
+    }
 
-// function loadStatusList(departmentId) {
+    console.log('Opening modal for Department ID:', selectedDepartmentId);
+
+    // Set the hidden input value
+    document.getElementById('DepartmentId').value = selectedDepartmentId;
+
+    // Clear existing input fields before showing the modal
+    document.getElementById('statusContainer').innerHTML = `
+        <div class="mb-3 status-field">
+            <label for="statusName" class="form-label">Status Name</label>
+            <input type="text" class="form-control" name="status[]" required>
+        </div>`;
     
-//     // Show the Status section and hide the Sub Services section
-//     $('#statusSection').removeClass('d-none');
-//     $('#subServicesSection').addClass('d-none');
+    // Show modal
+    const modal = new bootstrap.Modal(document.getElementById('addStatusModal'));
+    modal.show();
+}
 
-//     // Send AJAX request to fetch statuses based on the department ID
-//     $.ajax({
-//         url: `/admin/status/${departmentId}`, // Adjust the URL if needed
-//         method: 'GET',
-//         success: function(data) {
-//             const statusTable = $('#statusTable tbody');
-//             statusTable.empty(); // Clear the existing table content
+// Add new input field for another status
+document.getElementById('addStatusBtn').addEventListener('click', function () {
+    const statusContainer = document.getElementById('statusContainer');
+    const newField = document.createElement('div');
+    newField.classList.add('mb-3', 'status-field');
+    newField.innerHTML = `
+        <label for="statusName" class="form-label">Status Name</label>
+        <input type="text" class="form-control" name="status[]" required>
+    `;
+    statusContainer.appendChild(newField);
+});
 
-//             if (data.length > 0) {
-//                 data.forEach((status, index) => {
-//                     const row = `
-//                         <tr>
-//                             <td>${index + 1}</td>
-//                             <td>${status.status_name}</td>
-//                             <td>
-//                                 <a href="#" 
-//                                    onclick="setDeleteRoute('/admin/delete-status/${status.id}')" 
-//                                    data-bs-toggle="modal" 
-//                                    data-bs-target="#confirmDeleteModal" 
-//                                    class="btn btn-danger">
-//                                     Delete
-//                                 </a>
-//                             </td>
-//                         </tr>
-//                     `;
-//                     statusTable.append(row); // Append rows dynamically
-//                 });
-//             } else {
-//                 const row = `
-//                     <tr>
-//                         <td colspan="3" class="text-center">No statuses available for this department.</td>
-//                     </tr>
-//                 `;
-//                 statusTable.append(row); // Display a message if no data
-//             }
-//         },
-//         error: function(error) {
-//             console.error('Error fetching statuses:', error);
-//         }
-//     });
-// }
+
 
 </script>
 @endsection
