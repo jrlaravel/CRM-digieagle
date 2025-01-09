@@ -16,7 +16,6 @@
 <div class="container-fluid p-0">
     <div class="mb-3">
         <h1 class="h3 d-inline align-middle">Service List</h1>
-        {{-- <button type="button" class="btn btn-primary float-end" data-bs-toggle="modal" data-bs-target="#defaultModalSuccess">Add New Service</button> --}}
     </div>
     <div class="row">
         <!-- Main Services Table (Left Column) -->
