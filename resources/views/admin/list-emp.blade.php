@@ -44,14 +44,14 @@
             <div class="card">
                 <div class="card-body">
                     <div class="table-responsive">
-                        <table id="datatables-reponsive" class="table table-striped" style="width:100%">
+                    <table id="datatables-reponsive" class="table table-striped" style="width:100%">
                             <thead>
                                 <tr>
                                     <th>No.</th>
                                     <th>First Name</th>
                                     <th>Last Name</th>
                                     <th>Username</th>
-                                    <th colspan="3">Birth Date</th>
+                                    <th>Birth Date</th>
                                     <th>Department</th>
                                     <th>Designation</th>
                                     <th>Phone No.</th>
@@ -61,47 +61,40 @@
                                 </tr>
                             </thead>
                             <tbody>
-
-                                @php
-                                    $counter = 1;
-                                @endphp
-                                @foreach($employees as $data) 
+                                @php $counter = ($employees->currentPage() - 1) * $employees->perPage() + 1; @endphp
+                                @foreach($employees as $data)
                                 <tr>
-                                    <td>{{$counter}}</td>
-                                    <td>{{$data->first_name}}</td>
-                                    <td>{{$data->last_name}}</td>
-                                    <td>{{$data->username}}</td>
-                                    <td colspan="3">{{ \Carbon\Carbon::parse($data->birth_date)->format('d-m-y') }}</td>
-                                    <td>{{$data->depname}}</td>
-                                    <td>{{$data->desname}}</td>
-                                    <td>{{$data->phone}}</td>
+                                    <td>{{ $counter }}</td>
+                                    <td>{{ $data->first_name }}</td>
+                                    <td>{{ $data->last_name }}</td>
+                                    <td>{{ $data->username }}</td>
+                                    <td>{{ \Carbon\Carbon::parse($data->birth_date)->format('d-m-Y') }}</td>
+                                    <td>{{ $data->depname }}</td>
+                                    <td>{{ $data->desname }}</td>
+                                    <td>{{ $data->phone }}</td>
                                     <td>{{ \Illuminate\Support\Str::words($data->address, 50, '...') }}</td>
-                                    <td>{{$data->email}}</td>
+                                    <td>{{ $data->email }}</td>
                                     <td>
                                         <div class="dropdown">
                                             <button class="btn btn-primary dropdown-toggle" type="button" id="dropdownMenuButton" data-bs-toggle="dropdown" aria-expanded="false">
                                                 Actions
                                             </button>
                                             <ul class="dropdown-menu" aria-labelledby="dropdownMenuButton">
-                                                <li>
-                                                    <a class="dropdown-item text-primary" href="#" data-bs-toggle="modal" data-bs-target="#defaultModalSuccess" onclick="openpostmethod({{ $data->uid }})">Edit</a>
-                                                </li>
-                                                <li>
-                                                    <a class="dropdown-item text-danger" href="{{ route('admin/delete-emp-data', $data->uid) }}">Delete</a>
-                                                </li>
-                                                <li>
-                                                    <a class="dropdown-item text-secondary" href="#">Inactive</a>
-                                                </li>
+                                                <li><a class="dropdown-item text-primary" href="#" data-bs-toggle="modal" data-bs-target="#defaultModalSuccess" onclick="openpostmethod({{ $data->uid }})">Edit</a></li>
+                                                <li><a class="dropdown-item text-danger" href="{{ route('admin/delete-emp-data', $data->uid) }}">Delete</a></li>
+                                                <li><a class="dropdown-item text-secondary" href="#">Inactive</a></li>
                                             </ul>
                                         </div>
                                     </td>
                                 </tr>
-                                @php
-                                    $counter++;
-                                @endphp
+                                @php $counter++; @endphp
                                 @endforeach
                             </tbody>
                         </table>
+                        <!-- Pagination Links -->
+                        <div class="d-flex justify-content-center">
+                            {{ $employees->links() }}
+                        </div>                        
                     </div>
                 </div>
             </div>
@@ -220,10 +213,14 @@
 <script src="https://cdn.datatables.net/1.13.5/js/jquery.dataTables.min.js"></script>
 
   <script>
-      $(document).ready(function () {
+
+    $(document).ready(function () {
         $('#datatables-reponsive').DataTable({
-            responsive: true,
-            pageLength: 5, // Number of rows per page
+            paging: true,
+            searching: true,
+            ordering: true,
+            info: true,
+            pageLength: 10
         });
     });
 
