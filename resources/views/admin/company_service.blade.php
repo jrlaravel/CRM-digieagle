@@ -52,32 +52,33 @@
                             </thead>
                             <tbody>
                                 @php $counter = 1; @endphp
-                            @forEach($details as $item)
+                                @foreach($details as $item)
                                     <tr>
-                                        <td>{{$counter}}</td>
-                                        <td>{{$item->company_name}}</td>
-                                        <td>{{$item->company_industry}}</td>
-                                        <td>{{$item->company_description}}</td>
-                                        <td>{{$item->departments_provided}}</td>
+                                        <td>{{ $counter }}</td>
+                                        <td>{{ $item->company_name }}</td>
+                                        <td>{{ $item->company_industry }}</td>
+                                        <td>{{ $item->company_description }}</td>
+                                        <td>{{ $item->departments_provided }}</td>
                                         <td>
                                             <button class="btn btn-primary edit-lead" 
-                                            data-id="{{ $item->company_id }}"
-                                            data-name="{{ $item->company_name }}"
-                                            data-description="{{ $item->company_description }}"
-                                            data-department="{{ $item->departments_provided }}"
-                                            data-industry = "{{$item->company_industry}}"
-                                            data-note = "{{$item->company_notes}}">
-                                            Edit
-                                        </button>
-                                        <a href="javascript:void(0)" class="btn btn-danger" onclick="showConfirmationDeleteModal('{{ route('admin/delete-company-service', $item->company_id) }}')">Delete</a>
-                                    </td>
-                                        
+                                                    data-id="{{ $item->company_id }}"
+                                                    data-name="{{ $item->company_name }}"
+                                                    data-description="{{ $item->company_description }}"
+                                                    data-department="{{ $item->departments_provided }}"
+                                                    data-industry="{{ $item->company_industry }}"
+                                                    data-note="{{ $item->company_notes }}">
+                                                Edit
+                                            </button>
+                                            <a href="javascript:void(0)" class="btn btn-danger" 
+                                               onclick="showConfirmationDeleteModal('{{ route('admin/delete-company-service', $item->company_id) }}')">
+                                               Delete
+                                            </a>
                                         </td>
                                     </tr>   
                                     @php $counter++; @endphp
-                            @endforeach
+                                @endforeach
                             </tbody>
-                        </table>
+                        </table>                        
                     </div>
                 </div>
             </div>
@@ -239,9 +240,20 @@
 </div>
 
 @endsection
-
 @section('scripts')
-  <script>
+<link rel="stylesheet" href="https://cdn.datatables.net/1.13.5/css/jquery.dataTables.min.css">
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script src="https://cdn.datatables.net/1.13.5/js/jquery.dataTables.min.js"></script>
+
+<script>
+
+    $(document).ready(function () {
+        $('#datatables-reponsive').DataTable({
+            responsive: true,
+            pageLength: 5, // Number of rows per page
+        });
+    });
+
     document.addEventListener("DOMContentLoaded", function() {
         // Datatables Responsive
         $("#datatables-reponsive").DataTable({
@@ -300,9 +312,6 @@
         });
     });
 
-</script>
-
-<script>
     document.addEventListener('DOMContentLoaded', function () {
         @if(session('success'))
             var confirmationModal = new bootstrap.Modal(document.getElementById('confirmationModal'));
@@ -314,9 +323,7 @@
             }, 3000);
         @endif
     });
-</script>
 
-<script>
     function showConfirmationDeleteModal(deleteUrl) {
         // Set the URL for the delete action
         document.getElementById('confirmDeleteBtn').setAttribute('href', deleteUrl);
