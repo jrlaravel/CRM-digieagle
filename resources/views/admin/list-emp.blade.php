@@ -30,8 +30,9 @@
 </style>
 <div class="container-fluid p-0">
 
-    <div class="mb-3">
+    <div class="d-flex justify-content-between align-items-center mb-3 mb-3">
         <h1 class="h3 d-inline align-middle">Employee List</h1>    
+        <a class="btn btn-primary float-en" href="{{route('admin/add-emp')}}">Add Employee</a>
     </div>
 
     <div class="row">

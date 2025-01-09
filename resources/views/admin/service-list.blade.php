@@ -151,7 +151,7 @@
                     </div>
 
                     <button type="button" class="btn btn-success float-start" id="addSubServiceBtn">+ Add</button>
-                    <button type="submit" class="btn btn-primary float-end">Add Service</button>
+                    <button type="submit" class="btn btn-primary float-end">Submit</button>
                 </form>
             </div>
         </div>
@@ -181,7 +181,7 @@
                     </div>
                     
                     <button type="button" class="btn btn-success float-start" id="addStatusBtn">+ Add</button>
-                    <button type="submit" class="btn btn-primary float-end">Add Status</button>
+                    <button type="submit" class="btn btn-primary float-end">Submit</button>
                 </form>
             </div>
         </div>
