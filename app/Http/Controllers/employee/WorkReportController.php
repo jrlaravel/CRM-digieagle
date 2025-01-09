@@ -18,8 +18,8 @@ class WorkReportController extends Controller
     public function index()
     {
         $companydata = DB::select('SELECT * FROM `company_detail` join company_services on company_detail.id = company_services.company_id WHERE company_services.department_id = ' .session('employee')->department);
-        // dd($companydata);
-        return view('employee/work-report', compact('companydata'));
+        $status = DB::select('SELECT * FROM `status` where department_id = ' . session('employee')->department);
+        return view('employee/work-report', compact('companydata', 'status'));
     }
 
     public function getServices($companyId)
@@ -30,8 +30,6 @@ class WorkReportController extends Controller
             SELECT services.id as serviceid , services.service_name FROM `company_services` join company_detail on company_services.company_id = company_detail.id join services on services.department_id = company_services.department_id WHERE company_services.company_id = '.$companyId.' and company_services.department_id = '.$departmentId);  
         return response()->json(['services' => $services]);
     }
-
-
 
     public function add_work_report(Request $request)
     {
