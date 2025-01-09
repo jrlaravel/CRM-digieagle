@@ -46,7 +46,7 @@
                                     <th>First Name</th>
                                     <th>Last Name</th>
                                     <th>Username</th>
-                                    <th colspan="2">Birth Date</th>
+                                    <th colspan="3">Birth Date</th>
                                     <th>Department</th>
                                     <th>Designation</th>
                                     <th>Phone No.</th>
@@ -66,7 +66,7 @@
                                     <td>{{$data->first_name}}</td>
                                     <td>{{$data->last_name}}</td>
                                     <td>{{$data->username}}</td>
-                                    <td colspan="2">{{ \Carbon\Carbon::parse($data->birth_date)->format('d-m-y') }}</td>
+                                    <td colspan="3">{{ \Carbon\Carbon::parse($data->birth_date)->format('d-m-y') }}</td>
                                     <td>{{$data->depname}}</td>
                                     <td>{{$data->desname}}</td>
                                     <td>{{$data->phone}}</td>
