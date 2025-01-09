@@ -178,7 +178,8 @@ Route::prefix('admin')->group(function () {
         Route::get('delete-company-service/{id}', [ClientController::class, 'delete_company_service'])->name('admin/delete-company-service');
         Route::post('update-company-service', [ClientController::class, 'update_company_service'])->name('admin/update-company-service');
         Route::get('delete-service/{id}', [ClientController::class, 'delete_service'])->name('admin/delete-service');
-        Route::post('sub-service-store', [ClientController::class, 'storeSubService'])->name('admin/sub-service-store');
+        Route::post('add-status' , [ClientController::class, 'add_status'])->name('admin/add-status');
+        Route::post('status/{id}' , [ClientController::class, 'get_status'])->name('admin/status');
         Route::get('work-report' , [EmployeeController::class, 'work_report'])->name('admin/work-report');
         Route::post('get-work-report', [EmployeeController::class, 'get_work_report'])->name('admin/get-work-report');
         Route::get('/work-report-detail/{date}/{id}', [EmployeeController::class, 'getWorkReportByDate'])->name('admin/work-report-detail');

@@ -5,6 +5,7 @@ namespace App\Http\Controllers\admin;
 use Illuminate\Http\Request;
 use App\Models\Department;
 use App\Models\Service;
+use App\Models\Status;
 use App\Models\Company_detail;
 use App\Models\Company_service;
 use App\Http\Controllers\Controller;
@@ -27,9 +28,9 @@ public function getSubServices($id)
     return response()->json($services);
 }
 
-
 public function store(Request $request)
 {
+    return $request->all();
     // Validate the data
     $validator = Validator::make($request->all(), [
         'department' => 'required|exists:department,id',
@@ -62,7 +63,6 @@ public function store(Request $request)
         return redirect()->back()->withInput()->withErrors($validator);
     }
 }
-
    
 public function delete($id)
 {
@@ -71,74 +71,6 @@ public function delete($id)
     $mainService->delete();
 
     return redirect()->route('admin/service-list')->with('success', 'Service and sub-services deleted successfully.');
-}
-
-
-
-
-
-
-public function addSubService(Request $request)
-{
-    $validated = $request->validate([
-        'main_service_id' => 'required|exists:main_service,id',
-        'sub_service' => 'required|string|max:255',
-    ]);
-
-    if($validated)
-    {
-        Sub_service::create([
-            'sub_service' => $request->sub_service,
-            'main_service_id' => $request->main_service_id,
-        ]);
-    
-        return response()->json(['success' => true, 'message' => 'Sub service added successfully']);
-    }
-       else{
-
-           return response()->json(['success' => false, 'message' => 'Failed to add sub service']);
-       }
-   
-}
-
-public function update(Request $request, $id)
-{
-    DB::beginTransaction();
-    try {
-        // Validate the request
-        $request->validate([
-            'sub_services' => 'array',
-            'sub_services.*' => 'string|max:255',
-            'new_sub_services' => 'array',
-            'new_sub_services.*' => 'string|max:255',
-        ]);
-
-        // Update existing sub-services
-        if ($request->filled('sub_services')) {
-            foreach ($request->sub_services as $subServiceId => $subServiceName) {
-                Sub_service::where('id', $subServiceId)->update([
-                    'sub_service' => $subServiceName, // Make sure the field name matches your DB
-                ]);
-            }
-        }
-
-        // Add new sub-services
-        if ($request->filled('new_sub_services')) {
-            foreach ($request->new_sub_services as $newSubServiceName) {
-                Sub_service::create([
-                    'main_service_id' => $id, // Ensure the foreign key is correct
-                    'sub_service' => $newSubServiceName, // Adjust the field name accordingly
-                ]);
-            }
-        }
-
-        DB::commit();
-        return redirect()->back()->with('success', 'Sub-services updated successfully.');
-    } catch (\Exception $e) {
-        DB::rollBack();
-        // Log the exception for debugging
-        return redirect()->back()->with('error', 'Failed to update sub-services. Please try again.');
-    }
 }
 
 public function company_service()
@@ -248,12 +180,22 @@ public function update_company_service(Request $request)
     return redirect()->back()->with('message', 'Company successfully updated');
 }
 
-
 public function delete_service($id)
 {
     // Find the sub-service by ID
     $subService = Service::find($id);
     $subService->delete();
     return redirect()->back()->with('message', 'service successfully deleted');
-}     
+}    
+
+public function add_status($id)
+{
+
+}
+
+public function get_status($id)
+{
+    $status = Status::where('department_id', $id)->get();
+    return response()->json($status);
+}
 }

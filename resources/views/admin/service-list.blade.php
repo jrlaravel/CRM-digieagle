@@ -23,7 +23,8 @@
         <div class="col-12 col-md-6">
             <div class="card">
                 <div class="card-body">
-                    <div class="table-responsive"> <!-- Added table-responsive class -->
+                    <h5 class="card-title">Department List  </h5>
+                    <div class="table-responsive">
                         <table id="datatables-reponsive" class="table table-striped" style="width:100%">
                             <thead>
                                 <tr>
@@ -38,23 +39,28 @@
                                     <td>{{ $loop->iteration }}</td>
                                     <td>{{ $data->name }}</td>
                                     <td>
-                                        <a href="javascript:void(0)" class="btn btn-primary" onclick="loadSubServices({{ $data->id }})">Edit</a>       
-                                        <a href="javascript:void(0)" class="btn btn-success" onclick="openAddSubServiceModal({{ $data->id }})">Add</a>
+                                        {{-- <a href="javascript:void(0)" class="btn btn-light" style="border: 1px solid #000" onclick="loadStatusList({{ $data->id }})">Edit Status</a> --}}
+                                        <a href="javascript:void(0)" class="btn btn-light" style="border: 1px solid #000" onclick="loadSubServices({{ $data->id }})">Edit Service</a>
                                     </td>
-                                </tr>                                           
+                                </tr>
                                 @endforeach
                             </tbody>
                         </table>
-                    </div> <!-- End table-responsive -->
+                    </div>
                 </div>
             </div>
         </div>
     
         <!-- Sub Services Table (Right Column) -->
-        <div class="col-12 col-md-6">
+        <div id="subServicesSection" class="col-12 col-md-6 d-none">
             <div class="card">
                 <div class="card-body">
-                    <div class="table-responsive"> <!-- Added table-responsive class -->
+                    <div class="d-flex justify-content-between align-items-center mb-3">
+                        <h5 class="card-title float-start">Services List</h5>
+                        <!-- Pass `departmentId` to the function -->
+                        <a href="javascript:void(0)" class="btn btn-success float-end" onclick="openAddSubServiceModal(selectedDepartmentId)">Add Service</a>
+                    </div>
+                    <div class="table-responsive">
                         <table id="subServicesTable" class="table table-striped" style="width:100%">
                             <thead>
                                 <tr>
@@ -63,15 +69,43 @@
                                     <th>Action</th>
                                 </tr>
                             </thead>
-                            <tbody>
+                            <tbody id="subServicesTableBody">
                                 <!-- Sub-services will be dynamically added here -->
                             </tbody>
                         </table>
-                    </div> <!-- End table-responsive -->
+                    </div>
                 </div>
             </div>
         </div>
+
+    
+        <!-- Status Table (Right Column) -->
+        {{-- <div id="statusSection" class="col-12 col-md-6 d-none">
+            <div class="card">
+                <div class="card-body">
+                    <div class="d-flex justify-content-between align-items-center mb-3">
+                        <h5 class="card-title">Status List</h5>
+                        <a href="javascript:void(0)" class="btn btn-success float-end" onclick="openAddStatusModal()">Add Status</a>
+                    </div>
+                    <div class="table-responsive">
+                        <table id="statusTable" class="table table-striped" style="width:100%">
+                            <thead>
+                                <tr>
+                                    <th>No.</th>
+                                    <th>Status Name</th>
+                                    <th>Action</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <!-- Statuses will be dynamically added here -->
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div> --}}
     </div>
+    
     
 
     <!-- Confirmation Modal -->
@@ -104,7 +138,7 @@
             <div class="modal-body">
                 <form id="addSubServiceForm" action="{{ route('admin/add-service') }}" method="POST">
                     @csrf
-                    <input type="hidden" id="departmentId" name="department">
+                    <input type="hidden" id="selectedDepartmentId" name="department">
                     
                     <div id="subServiceContainer">
                         <div class="mb-3 sub-service-field">
@@ -122,8 +156,33 @@
 </div>
 
 
-  
+<!-- Modal to Add status -->
+{{-- <div class="modal fade" id="addStatusModal" tabindex="-1" aria-labelledby="addStatusModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="addStatusModalLabel">Add Status</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <form id="addStatusForm" action="{{ route('admin/add-status') }}" method="POST">
+                    @csrf
+                    <input type="hidden" id="departmentId" name="department">
+                    
+                    <div id="StatusContainer">
+                        <div class="mb-3 sub-service-field">
+                            <label for="StatusName" class="form-label">Status Name</label>
+                            <input type="text" class="form-control" name="services[]" required>
+                        </div>
+                    </div>
 
+                    <button type="button" class="btn btn-success float-start" id="addStatusBtn">+ Add</button>
+                    <button type="submit" class="btn btn-primary float-end">Add Service</button>
+                </form>
+            </div>
+        </div>
+    </div>
+</div> --}}
 @endsection
 
 @section('scripts')
@@ -139,8 +198,10 @@ document.addEventListener("DOMContentLoaded", function () {
 });
 
   // Function to open modal and set department ID
-function openAddSubServiceModal(departmentId) {
-    document.getElementById('departmentId').value = departmentId;  // Set department ID in hidden input field
+function openAddSubServiceModal(selectedDepartmentId) {
+
+    console.log(selectedDepartmentId);
+    document.getElementById('selectedDepartmentId').value = selectedDepartmentId;  // Set department ID in hidden input field
     
     // Clear existing input fields before showing the modal
     document.getElementById('subServiceContainer').innerHTML = `
@@ -166,14 +227,37 @@ document.getElementById('addSubServiceBtn').addEventListener('click', function (
     subServiceContainer.appendChild(newField);
 });
 
+// Add new input field for another service
+document.getElementById('addStatusBtn').addEventListener('click', function () {
+    const StatusContainer = document.getElementById('subServiceContainer');
+    const newField = document.createElement('div');
+    newField.classList.add('mb-3', 'sub-service-field');
+    newField.innerHTML = `
+        <label for="StatusName" class="form-label">Status Name</label>
+        <input type="text" class="form-control" name="status[]" required>
+    `;
+    StatusContainer.appendChild(newField);
+});
+
+
 function loadSubServices(departmentId) {
-    // Send AJAX request to fetch sub-services based on the main service id using jQuery
+
+    let selectedDepartmentId = null;
+    // Set the selected department ID globally
+    selectedDepartmentId = departmentId;
+
+    // Show the Sub Services section and hide the Status section
+    $('#subServicesSection').removeClass('d-none');
+    $('#statusSection').addClass('d-none');
+
+    // Send AJAX request to fetch sub-services based on the department ID
     $.ajax({
-        url: `/admin/services/${departmentId}`, // Adjust the URL if needed
+        url: `/admin/services/${selectedDepartmentId}`, // Adjust the URL if needed
         method: 'GET',
         success: function(data) {
             const subServicesTable = $('#subServicesTable tbody');
-            subServicesTable.empty();
+            subServicesTable.empty(); // Clear the existing table content
+
             if (data.length > 0) {
                 data.forEach((services, index) => {
                     const row = `
@@ -182,16 +266,16 @@ function loadSubServices(departmentId) {
                             <td>${services.service_name}</td>
                             <td>
                                 <a href="#" 
-                                onclick="setDeleteRoute('/admin/delete-service/${services.id}')" 
-                                data-bs-toggle="modal" 
-                                data-bs-target="#confirmDeleteModal" 
-                                class="btn btn-danger">
+                                   onclick="setDeleteRoute('/admin/delete-service/${services.id}')" 
+                                   data-bs-toggle="modal" 
+                                   data-bs-target="#confirmDeleteModal" 
+                                   class="btn btn-danger">
                                     Delete
                                 </a>
                             </td>
                         </tr>
                     `;
-                    subServicesTable.append(row);
+                    subServicesTable.append(row); // Append rows dynamically
                 });
             } else {
                 const row = `
@@ -199,7 +283,7 @@ function loadSubServices(departmentId) {
                         <td colspan="3" class="text-center">No services available for this department.</td>
                     </tr>
                 `;
-                subServicesTable.append(row);
+                subServicesTable.append(row); // Display a message if no data
             }
         },
         error: function(error) {
@@ -207,5 +291,56 @@ function loadSubServices(departmentId) {
         }
     });
 }
+
+// let selectedDepartmentId = null;
+
+// function loadStatusList(departmentId) {
+    
+//     // Show the Status section and hide the Sub Services section
+//     $('#statusSection').removeClass('d-none');
+//     $('#subServicesSection').addClass('d-none');
+
+//     // Send AJAX request to fetch statuses based on the department ID
+//     $.ajax({
+//         url: `/admin/status/${departmentId}`, // Adjust the URL if needed
+//         method: 'GET',
+//         success: function(data) {
+//             const statusTable = $('#statusTable tbody');
+//             statusTable.empty(); // Clear the existing table content
+
+//             if (data.length > 0) {
+//                 data.forEach((status, index) => {
+//                     const row = `
+//                         <tr>
+//                             <td>${index + 1}</td>
+//                             <td>${status.status_name}</td>
+//                             <td>
+//                                 <a href="#" 
+//                                    onclick="setDeleteRoute('/admin/delete-status/${status.id}')" 
+//                                    data-bs-toggle="modal" 
+//                                    data-bs-target="#confirmDeleteModal" 
+//                                    class="btn btn-danger">
+//                                     Delete
+//                                 </a>
+//                             </td>
+//                         </tr>
+//                     `;
+//                     statusTable.append(row); // Append rows dynamically
+//                 });
+//             } else {
+//                 const row = `
+//                     <tr>
+//                         <td colspan="3" class="text-center">No statuses available for this department.</td>
+//                     </tr>
+//                 `;
+//                 statusTable.append(row); // Display a message if no data
+//             }
+//         },
+//         error: function(error) {
+//             console.error('Error fetching statuses:', error);
+//         }
+//     });
+// }
+
 </script>
 @endsection
