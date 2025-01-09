@@ -90,11 +90,7 @@
                                 @php $counter++; @endphp
                                 @endforeach
                             </tbody>
-                        </table>
-                        <!-- Pagination Links -->
-                        <div class="d-flex justify-content-center">
-                            {{ $employees->links() }}
-                        </div>                        
+                        </table>                        
                     </div>
                 </div>
             </div>
