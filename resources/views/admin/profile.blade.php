@@ -33,7 +33,13 @@
                     <h5 class="card-title mb-0">Profile Details</h5>
                 </div>
                 <div class="card-body text-center">
-                    <img src="{{asset('storage/profile_photos').'/'.$data->profile_photo_path}}" class="img-fluid rounded-circle mb-2" width="128" height="128" />
+                    @if(!empty($data) && isset($data[0]) && $data[0]->profile_photo_path == '')
+                        <img src="{{ asset('storage/profile_photos/default.png') }}" class="img-fluid rounded-circle mb-2" width="128" height="128" />
+                        @elseif(!empty($data) && isset($data[0]))
+                            <img src="{{ asset('storage/profile_photos').'/'.$data[0]->profile_photo_path }}" class="img-fluid rounded-circle mb-2" width="128" height="128" />
+                        @else
+                            <img src="{{ asset('storage/profile_photos/default.png') }}" class="img-fluid rounded-circle mb-2" width="128" height="128" />
+                    @endif
                     <h5 class="card-title mb-0">{{$data->first_name}} {{$data->last_name}} </h5>
 
                     @if ($errors->any())

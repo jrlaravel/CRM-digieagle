@@ -44,7 +44,11 @@ if (is_array($decodedSkills) && isset($decodedSkills[0])) {
                     <h5 class="card-title mb-0">Profile Details</h5>
                 </div>
                 <div class="card-body text-center">
+                    @if($data[0]->profile_photo_path == null)
+                    <img src="{{asset('storage/profile_photos/default.png')}}" class="img-fluid rounded-circle mb-2" width="128" height="128" />
+                    @else
                     <img src="{{asset('storage/profile_photos').'/'.$data[0]->profile_photo_path}}"  class="img-fluid rounded-circle mb-2" width="128" height="128" />
+                    @endif
                     <h5 class="card-title mb-0">{{$data[0]->first_name}} {{$data[0]->last_name}} </h5>
                     <div class="text-muted mb-2">{{$data[0]->desname}}</div>
                     

@@ -2,7 +2,11 @@
 @section('profile')
 <div class="d-flex justify-content-center">
     <div class="flex-shrink-0">
-        <img src="{{asset('storage/profile_photos').'/'.session('employee')->profile_photo_path}}" class="avatar img-fluid rounded me-1" alt="" />
+        @if(session('employee') && session('employee')->profile_photo_path)
+            <img src="{{ asset('storage/profile_photos') . '/' . session('employee')->profile_photo_path }}" class="avatar img-fluid rounded" />
+        @else
+            <img src="{{ asset('storage/profile_photos/default.png') }}" class="avatar img-fluid rounded" />
+        @endif	
     </div>
     <div class="flex-grow-1 ps-2">
            <h4 class="text-white">{{session('employee')->first_name}}</h4>
@@ -51,15 +55,11 @@
                     <div class="row">
                         <div class="mb-3 col-md-6">
                             <label class="form-label" for="inputAddress">From date</label>
-                            <input type="text" class="form-control" data-inputmask-alias="datetime"
-                             data-inputmask-inputformat="dd/mm/yyyy"  name="fdate" required id="fdate">
-                            <span class="text-muted">e.g "DD/MM/YYYY"</span>
+                            <input type="date" class="form-control" name="fdate" required id="fdate">
                         </div>
                         <div class="mb-3 col-md-6">
                             <label class="form-label" for="inputPassword4">To Date</label>
-                            <input type="text" class="form-control" data-inputmask-alias="datetime"
-                            data-inputmask-inputformat="dd/mm/yyyy"  name="tdate" required id="tdate">
-                            <span class="text-muted">e.g "DD/MM/YYYY"</span>
+                            <input type="date" class="form-control" name="tdate" required id="tdate">
                         </div>
                     </div>
                     <button type="submit" class="btn btn-success float-end">Generate</button>

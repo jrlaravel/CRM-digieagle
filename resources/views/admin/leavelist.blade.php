@@ -2,7 +2,11 @@
 @section('profile')
 <div class="d-flex justify-content-center">
     <div class="flex-shrink-0">
-        <img src="{{ asset('storage/profile_photos') . '/' . session('user')->profile_photo_path }}" class="avatar img-fluid rounded me-1"  />
+        @if(session('user') && session('user')->profile_photo_path)
+            <img src="{{ asset('storage/profile_photos') . '/' . session('user')->profile_photo_path }}" class="avatar img-fluid rounded" />
+        @else
+            <img src="{{ asset('storage/profile_photos/default.png') }}" class="avatar img-fluid rounded" />
+        @endif	
     </div>
     <div class="flex-grow-1 ps-2">
         <p class="text-white">{{ session('user')->first_name }}</p>
@@ -103,7 +107,7 @@
                                                         <a href="#" class="dropdown-item text-danger" data-bs-toggle="modal" data-bs-target="#rejectModal{{ $leave->id }}">Reject</a>
                                                     </li>
                                                     <li>
-                                                        <a href="{{ route('admin/leave-delete', $leave->id) }}" class="dropdown-item text-danger">Cancel</a>
+                                                        <a href="{{ route('admin/leave-delete', $leave->id) }}" class="dropdown-item text-danger">Delete</a>
                                                     </li>
                                                 </ul>
                                             </div>

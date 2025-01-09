@@ -2,7 +2,11 @@
 @section('profile')
 <div class="d-flex justify-content-center">
     <div class="flex-shrink-0">
-        <img src="{{asset('storage/profile_photos').'/'.session('employee')->profile_photo_path}}" class="avatar img-fluid rounded me-1"  />
+        @if(session('employee') && session('employee')->profile_photo_path)
+            <img src="{{ asset('storage/profile_photos') . '/' . session('employee')->profile_photo_path }}" class="avatar img-fluid rounded" />
+        @else
+            <img src="{{ asset('storage/profile_photos/default.png') }}" class="avatar img-fluid rounded" />
+        @endif	
     </div>
     <div class="flex-grow-1 ps-2">
         

@@ -93,13 +93,13 @@
 						</a>
 						<ul id="leave" class="sidebar-dropdown list-unstyled collapse" data-bs-parent="#sidebar">
 							<li class="sidebar-item">
-								<a class='sidebar-link {{ request()->routeIs('admin/leave') ? 'active' : '' }}' href='{{ route('admin/leave') }}'>Leave List</a>
+								<a class='sidebar-link {{ request()->routeIs('admin/leave') ? 'active' : '' }}' href='{{ route('admin/leave') }}'>Leaves List</a>
 							</li>
 							<li class="sidebar-item">
-								<a class='sidebar-link {{ request()->routeIs('admin/leave-type') ? 'active' : '' }}' href='{{ route('admin/leave-type') }}'>Leave Type</a>
+								<a class='sidebar-link {{ request()->routeIs('admin/leave-type') ? 'active' : '' }}' href='{{ route('admin/leave-type') }}'>Leaves Type</a>
 							</li>
 							<li class="sidebar-item">
-								<a href="{{ route('admin/festival-leave') }}" class="sidebar-link {{ request()->routeIs('admin/festival-leave') ? 'active' : '' }}">Festival Leave</a>
+								<a href="{{ route('admin/festival-leave') }}" class="sidebar-link {{ request()->routeIs('admin/festival-leave') ? 'active' : '' }}">Festivals Leave</a>
 							</li>	
 						</ul>
 					</li>
@@ -260,7 +260,11 @@
 						</li>
 						<li class="nav-item dropdown">
 							<a class="nav-icon pe-md-0 dropdown-toggle" href="#" data-bs-toggle="dropdown">
-								<img src="{{asset('storage/profile_photos').'/'.session('user')->profile_photo_path}}" class="avatar img-fluid rounded" />
+								@if(session('user') && session('user')->profile_photo_path)
+									<img src="{{ asset('storage/profile_photos') . '/' . session('user')->profile_photo_path }}" class="avatar img-fluid rounded" />
+								@else
+									<img src="{{ asset('storage/profile_photos/default.png') }}" class="avatar img-fluid rounded" />
+								@endif				
 							</a>
 							<div class="dropdown-menu dropdown-menu-end">
 								<a class='dropdown-item' href='{{route('admin/profile')}}'><i class="align-middle me-1" data-feather="user"></i> Profile</a>

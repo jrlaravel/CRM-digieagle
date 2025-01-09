@@ -86,8 +86,8 @@
 							<i class="fa fa-line-chart {{ request()->routeIs('emp/leave-type') || request()->routeIs('emp/leave-list') ? 'text-white' : '' }}"></i> <span class="align-middle">Leave Management</span>
 						</a>
 						<ul id="leave" class="sidebar-dropdown list-unstyled collapse" data-bs-parent="#sidebar">
-							<li class="sidebar-item"><a class='sidebar-link {{ request()->routeIs('emp/leave-type') ? 'active' : '' }}' href='{{ route('emp/leave-type') }}'>Leave Type</a></li>
-							<li class="sidebar-item"><a class='sidebar-link {{ request()->routeIs('emp/leave') ? 'active' : '' }}' href='{{ route('emp/leave-list') }}'>Leave List</a></li>
+							<li class="sidebar-item"><a class='sidebar-link {{ request()->routeIs('emp/leave-type') ? 'active' : '' }}' href='{{ route('emp/leave-type') }}'>Leaves Type</a></li>
+							<li class="sidebar-item"><a class='sidebar-link {{ request()->routeIs('emp/leave') ? 'active' : '' }}' href='{{ route('emp/leave-list') }}'>Leaves List</a></li>
 						</ul>
 					</li>
 

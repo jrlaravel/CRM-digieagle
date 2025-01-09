@@ -3,7 +3,11 @@
 @section('profile')
 <div class="d-flex justify-content-center">
     <div class="flex-shrink-0">
-        <img src="{{asset('storage/profile_photos').'/'.session('employee')->profile_photo_path}}" class="avatar img-fluid rounded me-1"  />
+        @if(session('employee') && session('employee')->profile_photo_path)
+            <img src="{{ asset('storage/profile_photos') . '/' . session('employee')->profile_photo_path }}" class="avatar img-fluid rounded" />
+        @else
+            <img src="{{ asset('storage/profile_photos/default.png') }}" class="avatar img-fluid rounded" />
+        @endif	
     </div>
     <div class="flex-grow-1 ps-2">
         <p class="text-white">{{session('employee')->first_name}}</p>
@@ -64,7 +68,7 @@
                                         <textarea class="form-control" id="note" name="note[]" rows="3" placeholder="Enter note"></textarea>
 
                                         <label class="form-label">Total Time Taken (hours)</label>
-                                        <input type="time" name="total_time[]" class="form-control total-time" id="total-time"  readonly />
+                                        <input type="time" name="total_time[]" class="form-control total-time" id="total-time"  disabled readonly />
                                     </div>
                                 </div>
                                 <button type="button" class="btn btn-success mt-3" id="addServiceBtn" >Add More Services</button>
