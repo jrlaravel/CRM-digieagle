@@ -147,7 +147,7 @@
             <div class="card-body">
                 <div class="row">
                     <div class="col mt-0">
-                        <h5 class="card-title">Present Days</h5>
+                        <h5 class="card-title">Present Days (Month)</h5>
                     </div>
                 </div>
                 <h1 class="mt-1 mb-3">{{$presentDaysCount}}</h1>
@@ -159,7 +159,7 @@
             <div class="card-body">
                 <div class="row">
                     <div class="col mt-0">
-                        <h5 class="card-title">Abesent Days</h5>
+                        <h5 class="card-title">Remaining Days (Month)</h5>
                     </div>
                 </div>
                 <h1 class="mt-1 mb-3">{{$absentDaysCount}}</h1>

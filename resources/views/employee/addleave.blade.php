@@ -265,32 +265,54 @@
 
             // Clear any previous restrictions when changing leave type
             $('#from').removeAttr('min').removeAttr('max');
-            $('#to').removeAttr('min').removeAttr('max');
+            $('#to').removeAttr('min').removeAttr('max').removeAttr('disabled');
 
             if (selectedLeave === 'Casual Leave') {
                 var today = new Date();
                 today.setHours(0, 0, 0, 0);
 
                 var minDate = new Date(today);
-                minDate.setDate(minDate.getDate() + 4);
+                minDate.setDate(minDate.getDate() + 4); // 4 days from today
 
                 $('#from').attr('min', minDate.toISOString().split('T')[0]);
                 $('#to').attr('min', minDate.toISOString().split('T')[0]);
+
+                // Exit early to avoid overriding by month restrictions
+                return;
             }
 
             if (selectedLeave === 'Sick Leave') {
                 $('#reportInput').show(); // Show the report input field
                 var today = new Date().toISOString().split('T')[0];
 
-                document.getElementById('to').setAttribute('min', today);
-                document.getElementById('from').setAttribute('min', today);
+                $('#from').attr('min', today);
+                $('#to').attr('min', today);
+
+                // Exit early to avoid overriding by month restrictions
+                return;
             }
 
-            // Reapply the current month restrictions if needed
+            if (selectedLeave === 'Half Day') {
+                // Restrict to the same date for both 'from' and 'to'
+                $('#to').attr('disabled', true); // Disable 'to' field initially
+                $('#from').change(function () {
+                    var selectedDate = $(this).val();
+                    $('#to').val(selectedDate).attr('min', selectedDate).attr('max', selectedDate).removeAttr('disabled');
+                });
+
+                // Exit early to avoid overriding by month restrictions
+                return;
+            } else {
+                // Enable 'to' field for other leave types
+                $('#to').removeAttr('disabled');
+            }
+
+            // Reapply the current month restrictions if the leave type is not Casual, Sick, or Half Day
             setMonthRestrictions();
         });
     });
 </script>
+
 
 
 @endsection

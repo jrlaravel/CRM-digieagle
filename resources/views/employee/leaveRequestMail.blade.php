@@ -98,7 +98,7 @@
                 <li><strong>Other Note:</strong> {{ $leaveDetails['other'] }}</li>
             </ul>
 
-            <p>Please review and take necessary action.</p>
+            <p>Please review and take necessary action from here <a href="{{route('admin/leave')}}">Click here</a> </p>
         </div>
         <div class="email-footer">
             <p>2024 Digieagleinc. All rights reserved.</p>

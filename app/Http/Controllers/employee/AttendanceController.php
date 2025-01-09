@@ -21,8 +21,12 @@ class AttendanceController extends Controller
     public function inoutdata(Request $request)
     {
         $code = $request->input('empcode');
-        $fdate = $request->input('fdate');
-        $tdate = $request->input('tdate');
+        $fdate = Carbon::createFromFormat('Y-m-d', $request->input('fdate'))->format('d/m/Y');
+    
+        // Check if 'tdate' is provided, if null, set it to the current date
+        $tdate = $request->input('tdate') 
+            ? Carbon::createFromFormat('Y-m-d', $request->input('tdate'))->format('d/m/Y') 
+            : Carbon::now()->format('d/m/Y');
 
         $attendanceData = $this->eTimeOfficeService->getInOutPunchData($code, $fdate, $tdate);
 
