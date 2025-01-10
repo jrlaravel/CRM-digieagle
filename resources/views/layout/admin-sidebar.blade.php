@@ -155,7 +155,7 @@
 					</a>
 
 					<a data-bs-target="#dashboards" href="{{ route('admin/activity_log') }}" class="sidebar-link {{ request()->routeIs('admin/activity_log') ? 'active' : '' }}">
-						<i class="fa fa-birthday-cake {{ request()->routeIs('admin/activity_log') ? 'text-white' : '' }}" aria-hidden="true"></i><span class="align-middle">Activity Log</span>
+						<i class="fa fa-history {{ request()->routeIs('admin/activity_log') ? 'text-white' : '' }}" aria-hidden="true"></i><span class="align-middle">Activity Log</span>
 					</a>
 		
 		
