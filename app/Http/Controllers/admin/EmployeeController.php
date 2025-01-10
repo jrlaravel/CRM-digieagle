@@ -8,6 +8,7 @@ use Illuminate\Support\Facades\Validator;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\DB;
 use App\Models\User;
+use App\Models\Activity_log;
 use App\Models\Department;
 use App\Models\Designation;
 use App\Models\Notification;
@@ -309,8 +310,13 @@ public function show() {
         ->orderBy('wr.report_date', 'ASC')
         ->get();
     
-    
         return $data;
+    }
+
+    public function activity_log()
+    {
+        $data = Activity_log::paginate(10);
+        return view('admin/activity_log', compact('data'));
     }
 
 }

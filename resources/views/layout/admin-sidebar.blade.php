@@ -153,6 +153,11 @@
 					<a data-bs-target="#dashboards" href="{{ route('admin/Calender') }}" class="sidebar-link {{ request()->routeIs('admin/Calender') ? 'active' : '' }}">
 						<i class="fa fa-birthday-cake {{ request()->routeIs('admin/Calender') ? 'text-white' : '' }}" aria-hidden="true"></i><span class="align-middle">Birthdays / Leaves</span>
 					</a>
+
+					<a data-bs-target="#dashboards" href="{{ route('admin/activity_log') }}" class="sidebar-link {{ request()->routeIs('admin/activity_log') ? 'active' : '' }}">
+						<i class="fa fa-birthday-cake {{ request()->routeIs('admin/activity_log') ? 'text-white' : '' }}" aria-hidden="true"></i><span class="align-middle">Activity Log</span>
+					</a>
+		
 		
 				</ul>
 			</div>

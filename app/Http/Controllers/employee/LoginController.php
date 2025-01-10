@@ -63,6 +63,7 @@ class LoginController extends Controller
                 $activity_log->user_id = $user->id;
                 $activity_log->description = 'Logged in successfully';
                 $activity_log->save();
+                // dd($activity_log);
 
                 return redirect()->route('emp/dashboard');
             } else {
@@ -141,6 +142,12 @@ class LoginController extends Controller
             $user = User::where('email', $request->email)
                         ->update(['password' => Hash::make($request->password)]);
 
+            // Log activity
+            $activity_log = new Activity_log();
+            $activity_log->user_id = $user->id;
+            $activity_log->description = 'Password change successfully';
+            $activity_log->save();
+
             DB::table('password_reset_tokens')->where(['email'=> $request->email])->delete();
           
             return redirect()->route('emp/login')->with('message', 'Your password has been changed!');
@@ -152,6 +159,12 @@ class LoginController extends Controller
     
 
     public function logout(){
+        $userid = session('employee')->id;
+        // Log activity
+        $activity_log = new Activity_log();
+        $activity_log->user_id = $userid;
+        $activity_log->description = 'Logged out successfully';
+        $activity_log->save();
         Auth::logout();
         return redirect()->route('emp/login');
     }

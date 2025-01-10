@@ -113,6 +113,12 @@ class WorkReportController extends Controller
                 return response()->json(['error' => 'Error inserting data into details: ' . $e->getMessage()], 500);
             }
         }
+
+        // Log activity
+        $activity_log = new Activity_log();
+        $activity_log->user_id = $user_id;
+        $activity_log->description = 'Report added successfully';
+        $activity_log->save();
     
         return response()->json(['success' => 'Report added successfully']);
     }
