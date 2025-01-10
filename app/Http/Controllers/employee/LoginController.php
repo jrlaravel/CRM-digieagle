@@ -142,11 +142,11 @@ class LoginController extends Controller
             $user = User::where('email', $request->email)
                         ->update(['password' => Hash::make($request->password)]);
 
-            // Log activity
-            $activity_log = new Activity_log();
-            $activity_log->user_id = $user->id;
-            $activity_log->description = 'Password change successfully';
-            $activity_log->save();
+            // // Log activity
+            // $activity_log = new Activity_log();
+            // $activity_log->user_id = $user->id;
+            // $activity_log->description = 'Password change successfully';
+            // $activity_log->save();
 
             DB::table('password_reset_tokens')->where(['email'=> $request->email])->delete();
           
