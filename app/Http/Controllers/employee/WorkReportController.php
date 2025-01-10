@@ -7,7 +7,7 @@ use Illuminate\Http\Request;
 use App\Models\Company_detail;
 use App\Models\Service;
 use App\Models\User;
-use App\Models\Work_Report;
+use App\Models\WorkReport;
 use App\Models\Work_report_detail;
 use Carbon\Carbon;
 use App\Models\Activity_log;
@@ -54,11 +54,11 @@ class WorkReportController extends Controller
         }
     
         // Check if a report for this user and date already exists
-        $workReport = Work_Report::where('user_id', $user_id)->where('report_date', $date)->first();
+        $workReport = WorkReport::where('user_id', $user_id)->where('report_date', $date)->first();
         if (!$workReport) {
             // Create a new entry in Work_Report
             try {
-                $workReport = Work_Report::create([
+                $workReport = WorkReport::create([
                     'user_id' => $user_id,
                     'report_date' => $date,
                 ]);
@@ -238,7 +238,7 @@ class WorkReportController extends Controller
 
     public function add_task_report(Request $request)
     {
-        $workReport = Work_report::where('report_date', $request->report_date)->first();
+        $workReport = WorkReport::where('report_date', $request->report_date)->first();
         if($workReport == '')
         {
             return redirect()->back()->with('error', 'Report not found');
@@ -262,7 +262,7 @@ class WorkReportController extends Controller
     {
         // Find the Work_report by the given report date
         // return $request->all();
-        $workReport = Work_report::where('report_date', $request->report_date)->first();
+        $workReport = WorkReport::where('report_date', $request->report_date)->first();
         if($workReport == '')
         {
             return redirect()->back()->with('error', 'Report not found');
