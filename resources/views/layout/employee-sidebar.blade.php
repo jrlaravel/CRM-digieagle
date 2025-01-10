@@ -233,7 +233,11 @@
 						</li>
 						<li class="nav-item dropdown">
 							<a class="nav-icon pe-md-0 dropdown-toggle" href="#" data-bs-toggle="dropdown">
-								<img src="{{asset('storage/profile_photos').'/'.session('employee')->profile_photo_path}}" class="avatar img-fluid rounded" />
+								@if(session('employee') && session('employee')->profile_photo_path)
+								<img src="{{ asset('storage/profile_photos') . '/' . session('employee')->profile_photo_path }}" class="avatar img-fluid rounded" />
+							@else
+								<img src="{{ asset('storage/profile_photos/default.png') }}" class="avatar img-fluid rounded" />
+							@endif
 							</a>
 							<div class="dropdown-menu dropdown-menu-end">
 								<a class='dropdown-item' href='{{route('emp/profile')}}'><i class="align-middle me-1" data-feather="user"></i> Profile</a>
