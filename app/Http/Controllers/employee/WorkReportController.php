@@ -10,6 +10,7 @@ use App\Models\User;
 use App\Models\Work_Report;
 use App\Models\Work_report_detail;
 use Carbon\Carbon;
+use App\Models\Activity_log;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Storage;
 

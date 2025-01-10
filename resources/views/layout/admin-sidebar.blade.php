@@ -69,10 +69,10 @@
 						
 						</a>
 						<ul id="pages" class="sidebar-dropdown list-unstyled collapse" data-bs-parent="#sidebar">
-							<li class="sidebar-item"><a class='sidebar-link {{ request()->routeIs('admin/list-emp') ? 'active' : '' }}' href='{{ route('admin/list-emp') }}'>List Employee</a></li>
+							<li class="sidebar-item"><a class='sidebar-link {{ request()->routeIs('admin/list-emp') ? 'active' : '' }}' href='{{ route('admin/list-emp') }}'>List Employees</a></li>
 							<li class="sidebar-item"><a class='sidebar-link {{ request()->routeIs('admin/add-emp') ? 'active' : '' }}' href='{{ route('admin/add-emp') }}'>Add Employees</a></li>
 							<li class="sidebar-item"><a class='sidebar-link {{ request()->routeIs('admin/attendance') ? 'active' : '' }}' href='{{ route('admin/attendance') }}'>Attendance</a></li>
-							<li class="sidebar-item"><a class='sidebar-link {{ request()->routeIs('admin/work-report') ? 'active' : '' }}' href='{{ route('admin/work-report') }}'>Work Report</a></li>
+							<li class="sidebar-item"><a class='sidebar-link {{ request()->routeIs('admin/work-report') ? 'active' : '' }}' href='{{ route('admin/work-report') }}'>Work Reports</a></li>
 						</ul>
 					</li>
 
