@@ -268,6 +268,7 @@
             $('#to').removeAttr('min').removeAttr('max').removeAttr('disabled');
 
             if (selectedLeave === 'Casual Leave') {
+                $('#reportInput').hide(); // Show the report input field
                 var today = new Date();
                 today.setHours(0, 0, 0, 0);
 
@@ -294,6 +295,7 @@
 
             if (selectedLeave === 'Half Day') {
                 // Restrict to the same date for both 'from' and 'to'
+                $('#reportInput').hide(); // Show the report input field
                 $('#to').attr('disabled', true); // Disable 'to' field initially
                 $('#from').change(function () {
                     var selectedDate = $(this).val();
@@ -312,7 +314,4 @@
         });
     });
 </script>
-
-
-
 @endsection

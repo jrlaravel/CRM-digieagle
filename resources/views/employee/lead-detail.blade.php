@@ -120,13 +120,17 @@
                                     </div>
                                 </div>
                                 <div class="row">
-                                    <div class="mb-3 col-md-6">
+                                    <div class="mb-3 col-md-4">
                                         <label class="form-label" for="inputEmail4">Email</label>
                                         <input type="email" class="form-control" id="inputEmail4" value="{{$lead->email}}" disabled placeholder="Email">
                                     </div>
-                                    <div class="mb-3 col-md-6">
+                                    <div class="mb-3 col-md-4">
                                         <label class="form-label" for="inputEmail4">Phone</label>
                                         <input type="number" class="form-control" id="inputphone" value="{{$lead->phone}}" disabled placeholder="Email">
+                                    </div>
+                                    <div class="mb-3 col-md-4">
+                                        <label class="form-label" for="phone">Whatsapp No:</label>
+                                        <input type="number" class="form-control" id="whatsappphone" min="10" name="whatsappphone" placeholder="Whatsapp Phone" value="{{$lead->whatsappno}}" required>
                                     </div>
                                 </div>
                                 <div class="row">

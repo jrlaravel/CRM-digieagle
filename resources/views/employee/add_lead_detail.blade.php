@@ -80,7 +80,7 @@
 
                 {{-- Email --}}
                 <div class="row">
-                <div class="mb-3 col-md-6">
+                <div class="mb-3 col-md-4">
                     <label class="form-label" for="email">Email:</label>
                     <input type="email" class="form-control @error('email') is-invalid @enderror" id="email" name="email" placeholder="Email" value="{{ old('email') }}" required>
                     @error('email')
@@ -89,10 +89,19 @@
                 </div>
             
                 {{-- Phone --}}
-                <div class="mb-3 col-md-6">
+                <div class="mb-3 col-md-4">
                     <label class="form-label" for="phone">Phone:</label>
                     <input type="number" class="form-control @error('phone') is-invalid @enderror" id="phone" name="phone" placeholder="Phone" value="{{ old('phone') }}" required>
                     @error('phone')
+                    <p class="invalid-feedback">{{ $message }}</p>
+                    @enderror
+                </div>
+
+                 {{-- Phone --}}
+                 <div class="mb-3 col-md-4">
+                    <label class="form-label" for="phone">Whatsapp No:</label>
+                    <input type="number" class="form-control @error('whatsappphone') is-invalid @enderror" id="whatsappphone" min="10" name="whatsappphone" placeholder="Whatsapp Phone" value="{{ old('whatsappphone') }}" required>
+                    @error('whatsappphone')
                     <p class="invalid-feedback">{{ $message }}</p>
                     @enderror
                 </div>

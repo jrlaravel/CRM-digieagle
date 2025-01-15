@@ -30,14 +30,15 @@ class EmpLeadController extends Controller
             'lname' => 'required|string|max:255',
             'company_name' => 'required|string|max:255',
             'description' => 'required|string|max:255',
+            'lead_source' => 'required|string|max:255',
             'user_id' => 'required',
             'email' => 'required|email|max:255',
-            'phone' => 'required|string|max:15',
+            'phone' => 'required|numeric',
+            'whatsappno' => 'nullable|numeric',
             'city' => 'required|string|max:255',
             'state' => 'required|string|max:255',
             'status' => 'required',
             'address' => 'required|string|max:500',
-            'lead_source' => 'required|string'
         ]);
         
         if ($validator->passes()) {
@@ -51,6 +52,7 @@ class EmpLeadController extends Controller
                 'user_id' => $request->input('user_id'),
                 'email' => $request->input('email'),
                 'phone' => $request->input('phone'),
+                'whatsappno' => $request->input('whatsappphone'),
                 'city' => $request->input('city'),
                 'state' => $request->input('state'),
                 'status' => $request->input('status'),
@@ -84,12 +86,13 @@ class EmpLeadController extends Controller
             'company_name' => 'required|string|max:255',
             'description' => 'nullable|string',
             'email' => 'required|email',
+            'lead_source' => 'required|string',
             'phone' => 'required|numeric|digits:10',
+            'whatsappno' => 'nullable|numeric|digits:10',
             'city' => 'required|string|max:255',
             'state' => 'required|string|max:255',
             'address' => 'required|string|max:500',
             'status' => 'required',
-            'lead_source' => 'required|string'
         ]);
 
         // If validation fa ils
@@ -109,6 +112,7 @@ class EmpLeadController extends Controller
             'lead_source' => $request->input('lead_source'),
             'email' => $request->input('email'),
             'phone' => $request->input('phone'),
+            'whatsappno' => $request->input('whatsappno'), 
             'city' => $request->input('city'),
             'state' => $request->input('state'),
             'address' => $request->input('address'),

@@ -34,7 +34,8 @@ class LeadController extends Controller
             'lead_source' => 'required|string|max:255',
             'user_id' => 'required',
             'email' => 'required|email|max:255',
-            'phone' => 'required|string|max:15',
+            'phone' => 'required|numeric',
+            'whatsappno' => 'nullable|numeric',
             'city' => 'required|string|max:255',
             'state' => 'required|string|max:255',
             'status' => 'required',
@@ -51,6 +52,7 @@ class LeadController extends Controller
                 'user_id' => $request->input('user_id'),
                 'email' => $request->input('email'),
                 'phone' => $request->input('phone'),
+                'whatsappno' => $request->input('whatsappphone'),
                 'city' => $request->input('city'),
                 'state' => $request->input('state'),
                 'status' => $request->input('status'),
@@ -77,7 +79,6 @@ class LeadController extends Controller
 
     public function update(Request $request)
     {
-        // return $request->all();
         // Validation rules
         $validator = Validator::make($request->all(), [
             'id' => 'required',
@@ -88,20 +89,22 @@ class LeadController extends Controller
             'email' => 'required|email',
             'lead_source' => 'required|string',
             'phone' => 'required|numeric|digits:10',
+            'whatsappno' => 'nullable|numeric|digits:10',
             'city' => 'required|string|max:255',
             'state' => 'required|string|max:255',
             'address' => 'required|string|max:500',
             'status' => 'required',
         ]);
-
+        
         // If validation fa ils
         if ($validator->fails()) {
             return redirect()->back()->withErrors($validator)->withInput();
         }
+        // return $request->all();
 
         // Find the lead by ID
         $lead = Lead::findOrFail($request->id);
-
+        
         // Update the lead data
         $lead->update([
             'first_name' => $request->input('first_name'),
@@ -111,6 +114,7 @@ class LeadController extends Controller
             'lead_source' => $request->input('lead_source'),
             'email' => $request->input('email'),
             'phone' => $request->input('phone'),
+            'whatsappno' => $request->input('whatsappno'), 
             'city' => $request->input('city'),
             'state' => $request->input('state'),
             'address' => $request->input('address'),

@@ -58,7 +58,8 @@
                                     <th>Description</th>
                                     <th>Source</th>
                                     <th>Email</th>
-                                    <th>Phone</th>
+                                    <th>Phone No.</th>
+                                    <th>Whatsapp No.</th>
                                     <th>City</th>
                                     <th>State</th>
                                     <th>Address</th>
@@ -75,7 +76,8 @@
                                     <td>{{ $lead->description }}</td>
                                     <td>{{ $lead->lead_source}}</td>
                                     <td>{{ $lead->email }}</td>
-                                    <td>{{ $lead->phone }}</td>
+                                    <td><a href="tel:{{$lead->phone}}">{{ $lead->phone }}</a></td>
+                                    <td><a href="https://wa.me/{{$lead->whatsappno}}">{{ $lead->whatsappno }}</a></td>
                                     <td>{{ $lead->city }}</td>
                                     <td>{{ $lead->state }}</td>
                                     <td>{{ $lead->address }}</td>
@@ -105,6 +107,7 @@
                                                 data-description="{{ $lead->description }}"
                                                 data-email="{{ $lead->email }}"
                                                 data-phone="{{ $lead->phone }}"
+                                                data-whatsappno="{{ $lead->whatsappno }}"
                                                 data-city="{{ $lead->city }}"
                                                 data-state="{{ $lead->state }}"
                                                 data-address="{{ $lead->address }}"
@@ -112,37 +115,37 @@
                                             Edit
                                         </button>
                                        <!-- Delete Button -->
-<a href="javascript:void(0);" 
-class="btn btn-danger" 
-data-bs-toggle="modal" 
-data-bs-target="#deleteConfirmModal" 
-onclick="setDeleteUrl('{{ route('emp/lead-delete', $lead->id) }}')">Delete</a>
+                                        <a href="javascript:void(0);" 
+                                        class="btn btn-danger" 
+                                        data-bs-toggle="modal" 
+                                        data-bs-target="#deleteConfirmModal" 
+                                        onclick="setDeleteUrl('{{ route('emp/lead-delete', $lead->id) }}')">Delete</a>
 
-<!-- Delete Confirmation Modal -->
-<div class="modal fade" id="deleteConfirmModal" tabindex="-1" aria-labelledby="deleteConfirmModalLabel" aria-hidden="true">
- <div class="modal-dialog">
-     <div class="modal-content">
-         <div class="modal-header">
-             <h5 class="modal-title" id="deleteConfirmModalLabel">Confirm Delete</h5>
-             <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-         </div>
-         <div class="modal-body">
-             Are you sure you want to delete this lead?
-         </div>
-         <div class="modal-footer">
-             <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
-             <a id="confirmDeleteBtn" href="#" class="btn btn-danger">Delete</a>
-         </div>
-     </div>
- </div>
-</div>
+                                        <!-- Delete Confirmation Modal -->
+                                        <div class="modal fade" id="deleteConfirmModal" tabindex="-1" aria-labelledby="deleteConfirmModalLabel" aria-hidden="true">
+                                        <div class="modal-dialog">
+                                            <div class="modal-content">
+                                                <div class="modal-header">
+                                                    <h5 class="modal-title" id="deleteConfirmModalLabel">Confirm Delete</h5>
+                                                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                                                </div>
+                                                <div class="modal-body">
+                                                    Are you sure you want to delete this lead?
+                                                </div>
+                                                <div class="modal-footer">
+                                                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+                                                    <a id="confirmDeleteBtn" href="#" class="btn btn-danger">Delete</a>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        </div>
 
-<!-- JavaScript -->
-<script>
- function setDeleteUrl(url) {
-     document.getElementById('confirmDeleteBtn').setAttribute('href', url);
- }
-</script>
+                                        <!-- JavaScript -->
+                                        <script>
+                                        function setDeleteUrl(url) {
+                                            document.getElementById('confirmDeleteBtn').setAttribute('href', url);
+                                        }
+                                        </script>
 
                                     </td>
                                 </tr>
@@ -198,14 +201,18 @@ onclick="setDeleteUrl('{{ route('emp/lead-delete', $lead->id) }}')">Delete</a>
                 </div>
 
                 <div class="row">
-                    <div class="mb-3 col-md-6">
+                    <div class="mb-3 col-md-4">
                         <label for="email" class="form-label">Email</label>
                         <input type="email" class="form-control" id="email" name="email">
                     </div>
     
-                    <div class="mb-3 col-md-6">
+                    <div class="mb-3 col-md-4">
                         <label for="phone" class="form-label">Phone</label>
                         <input type="text" class="form-control" id="phone" name="phone">
+                    </div>
+                    <div class="mb-3 col-md-4">
+                        <label for="phone" class="form-label">Whatsapp Number</label>
+                        <input type="text" class="form-control" id="whatsappno" name="whatsappno">
                     </div>
                 </div>
 
@@ -245,14 +252,14 @@ onclick="setDeleteUrl('{{ route('emp/lead-delete', $lead->id) }}')">Delete</a>
 
                 <div class="mb-3">
                     <label for="status" class="form-label">Status</label>
-                    <select id="status-filter" name="status" class="form-select">
+                    <select id="status" name="status" required class="form-select">
                         <option value="">&#11044; All Status</option>
                         <option value="No Response" class="text-secondary">&#11044; No Response</option>
                         <option value="Not interested" class="text-danger"> &#11044; Not interested</option>
                         <option value="Prospect" class="text-warning"> &#11044; Prospect</option>
-                        <option value="lead" class="text-info"> &#11044; Lead</option>
-                        <option value="hot lead" class="text-primary"> &#11044; Hot Lead</option>
-                        <option value="client" class="text-success"> &#11044; Client</option>
+                        <option value="Lead" class="text-info"> &#11044; Lead</option>
+                        <option value="Hot Lead" class="text-primary"> &#11044; Hot Lead</option>
+                        <option value="Client" class="text-success"> &#11044; Client</option>
                     </select>   
                 </div>
 
@@ -296,6 +303,7 @@ onclick="setDeleteUrl('{{ route('emp/lead-delete', $lead->id) }}')">Delete</a>
         let description = $(this).data('description');
         let email = $(this).data('email');
         let phone = $(this).data('phone');
+        let whatsappno = $(this).data('whatsappno'); // Whatsapp number
         let city = $(this).data('city');
         let state = $(this).data('state');
         let address = $(this).data('address');
@@ -315,6 +323,7 @@ onclick="setDeleteUrl('{{ route('emp/lead-delete', $lead->id) }}')">Delete</a>
         $('#description').val(description);
         $('#email').val(email);
         $('#phone').val(phone);
+        $('#whatsappno').val(whatsappno); // Set Whatsapp number
         $('#city').val(city);
         $('#state').val(state);
         $('#address').val(address);

@@ -19,6 +19,7 @@ class Lead extends Model
         'user_id',
         'email',
         'phone',
+        'whatsappno',
         'lead_source',
         'status',
         'address',

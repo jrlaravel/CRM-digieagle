@@ -56,7 +56,8 @@
                                     <th>Description</th>
                                     <th>Source</th>
                                     <th>Email</th>
-                                    <th>Phone</th>
+                                    <th>Phone No.</th>
+                                    <th>Whatsapp No.</th>
                                     <th>City</th>
                                     <th>State</th>
                                     <th>Address</th>
@@ -75,6 +76,7 @@
                                     <td>{{ $lead->lead_source}}</td>
                                     <td>{{ $lead->email }}</td>
                                     <td><a href="tel:{{$lead->phone}}">{{ $lead->phone }}</a></td>
+                                    <td><a href="https://wa.me/{{$lead->whatsappno}}">{{ $lead->whatsappno }}</a></td>
                                     <td>{{ $lead->city }}</td>
                                     <td>{{ $lead->state }}</td>
                                     <td>{{ $lead->address }}</td>
@@ -104,6 +106,7 @@
                                                 data-description="{{ $lead->description }}"
                                                 data-email="{{ $lead->email }}"
                                                 data-phone="{{ $lead->phone }}"
+                                                data-whatsappno="{{ $lead->whatsappno }}"
                                                 data-city="{{ $lead->city }}"
                                                 data-state="{{ $lead->state }}"
                                                 data-address="{{ $lead->address }}"
@@ -190,14 +193,19 @@
                 </div>
 
                 <div class="row">
-                    <div class="mb-3 col-md-6">
+                    <div class="mb-3 col-md-4">
                         <label for="email" class="form-label">Email</label>
                         <input type="email" class="form-control" id="email" name="email">
                     </div>
     
-                    <div class="mb-3 col-md-6">
+                    <div class="mb-3 col-md-4">
                         <label for="phone" class="form-label">Phone</label>
                         <input type="text" class="form-control" id="phone" name="phone">
+                    </div>
+
+                    <div class="mb-3 col-md-4">
+                        <label for="phone" class="form-label">WhatsApp Number</label>
+                        <input type="text" class="form-control" id="whatsappno" name="whatsappno">
                     </div>
                 </div>
 
@@ -237,14 +245,14 @@
 
                 <div class="mb-3">
                     <label for="status" class="form-label">Status</label>
-                    <select id="status-filter" name="status" required class="form-select">
+                    <select id="status" name="status" required class="form-select">
                         <option value="">&#11044; All Status</option>
                         <option value="No Response" class="text-secondary">&#11044; No Response</option>
                         <option value="Not interested" class="text-danger"> &#11044; Not interested</option>
                         <option value="Prospect" class="text-warning"> &#11044; Prospect</option>
-                        <option value="lead" class="text-info"> &#11044; Lead</option>
-                        <option value="hot lead" class="text-primary"> &#11044; Hot Lead</option>
-                        <option value="client" class="text-success"> &#11044; Client</option>
+                        <option value="Lead" class="text-info"> &#11044; Lead</option>
+                        <option value="Hot Lead" class="text-primary"> &#11044; Hot Lead</option>
+                        <option value="Client" class="text-success"> &#11044; Client</option>
                     </select>   
                 </div>
 
@@ -281,7 +289,8 @@
 
 <!-- jQuery Script to handle modal and populate values -->
 <script>
-    $(document).on('click', '.edit-lead', function() {
+ $(document).on('click', '.edit-lead', function () {
+
         let leadId = $(this).data('id');
         let firstName = $(this).data('first_name');
         let lastName = $(this).data('last_name');
@@ -290,29 +299,34 @@
         let lead_source = $(this).data('lead_source');
         let email = $(this).data('email');
         let phone = $(this).data('phone');
+        let whatsappNo = $(this).data('whatsappno');
         let city = $(this).data('city');
         let state = $(this).data('state');
         let address = $(this).data('address');
         let status = $(this).data('status');
-        let insLink = $(this).data('inslink'); 
+        let insLink = $(this).data('inslink');
         let facebookLink = $(this).data('facebooklink');
-        let webLink = $(this).data('weblink'); 
-    
+        let webLink = $(this).data('weblink');
+
+        console.log(status);
+
+        // Set form values
         $('#lead-id').val(leadId);
         $('#first_name').val(firstName);
         $('#last_name').val(lastName);
         $('#company_name').val(companyName);
         $('#description').val(description);
-        $('#lead_source').val(lead_source);  // Assuming lead_source is the same as description for now.
+        $('#lead_source').val(lead_source);
         $('#email').val(email);
         $('#phone').val(phone);
+        $('#whatsappno').val(whatsappNo);
         $('#city').val(city);
         $('#state').val(state);
         $('#address').val(address);
-        $('#status-filter').val(status);
-        $('#instagram').val(insLink); 
+        $('#status').val(status); // Corrected ID for dropdown
+        $('#instagram').val(insLink);
         $('#facebook').val(facebookLink);
-        $('#website').val(webLink); 
+        $('#website').val(webLink);
     
         $('#editLeadModal').modal('show');
     });

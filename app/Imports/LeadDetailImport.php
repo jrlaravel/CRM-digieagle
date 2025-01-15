@@ -18,7 +18,7 @@ class LeadDetailImport implements ToModel, WithHeadingRow
     public function model(array $row)
     {
         // Check if a lead with this email already exists
-        $lead = Lead::where('email', $row['email'])->first();
+        $lead = Lead::where('company_name', $row['company_name'])->first();
 
         if ($lead) {
             // If lead exists, update the record
