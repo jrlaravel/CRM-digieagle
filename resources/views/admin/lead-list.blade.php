@@ -74,7 +74,7 @@
                                     <td>{{ $lead->description }}</td>
                                     <td>{{ $lead->lead_source}}</td>
                                     <td>{{ $lead->email }}</td>
-                                    <td><a href="tel:{{$lead->phone}}"></a>{{ $lead->phone }}</td>
+                                    <td><a href="tel:{{$lead->phone}}">{{ $lead->phone }}</a></td>
                                     <td>{{ $lead->city }}</td>
                                     <td>{{ $lead->state }}</td>
                                     <td>{{ $lead->address }}</td>
