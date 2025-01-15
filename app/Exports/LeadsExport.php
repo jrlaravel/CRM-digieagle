@@ -13,7 +13,7 @@ class LeadsExport implements FromCollection, WithHeadings
     */
     public function collection()
     {
-        return Lead::select('first_name', 'last_name', 'company_name','lead_source', 'description', 'email', 'phone','city','state', 'address', 'status')->get();
+        return Lead::select('first_name', 'last_name', 'company_name','lead_source', 'description', 'email', 'phone','whatsappno','city','state', 'address', 'status')->get();
     }
 
     /**
@@ -30,6 +30,7 @@ class LeadsExport implements FromCollection, WithHeadings
             'Description', 
             'Email', 
             'Phone',
+            'Whatsappno',
             'City', 
             'State', 
             'Address', 
