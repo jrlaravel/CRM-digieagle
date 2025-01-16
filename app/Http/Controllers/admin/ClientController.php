@@ -94,7 +94,8 @@ public function company_service()
         company_detail.name, 
         company_detail.industry, 
         company_detail.description, 
-        company_detail.note;
+        company_detail.note
+    ORDER BY company_detail.id DESC;
     ");
     return view('admin/company_service',compact('department','details'));
 }

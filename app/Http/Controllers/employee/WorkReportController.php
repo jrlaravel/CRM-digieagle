@@ -197,7 +197,7 @@ class WorkReportController extends Controller
         $today = Carbon::today()->format('Y-m-d');
         
         // Fetch company data
-        $companydata = DB::select('SELECT id, name FROM company_detail');
+        $companydata = DB::select('SELECT * FROM `company_detail` join company_services on company_detail.id = company_services.company_id WHERE company_services.department_id = ' .session('employee')->department);
         
         // Fetch report data only if the report's date matches today's date
         $data = DB::select("

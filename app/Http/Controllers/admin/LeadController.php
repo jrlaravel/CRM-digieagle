@@ -73,7 +73,7 @@ class LeadController extends Controller
     
     public function show()
     {
-        $data = Lead::get();
+        $data = Lead::orderBy('id', 'desc')->get();
         return view('admin/lead-list',compact('data'));
     }
 

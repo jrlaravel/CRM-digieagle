@@ -109,7 +109,7 @@
                                         <select class="form-control choices-single" name="company_name[]" required id="company-dropdown">
                                             <option value="">Select a Company</option>
                                             @foreach($companydata as $data)
-                                                <option value="{{ $data->id }}">{{ $data->name }}</option>
+                                                <option value="{{ $data->company_id }}">{{ $data->name }}</option>
                                             @endforeach
                                         </select>
                             
@@ -170,7 +170,7 @@
                                         <select class="form-control choices-single" name="company_name" required id="add-company-dropdown">
                                             <option value="">Select a Company</option>
                                             @foreach($companydata as $data)
-                                                <option value="{{ $data->id }}">{{ $data->name }}</option>
+                                                <option value="{{ $data->company_id }}">{{ $data->name }}</option>
                                             @endforeach
                                         </select>
                     
