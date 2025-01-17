@@ -244,8 +244,9 @@ class WorkReportController extends Controller
             return redirect()->back()->with('error', 'Report not found');
         }
         else{
+            $data = WorkReport::where('user_id',$request->user_id)->get();
             $workReportDetail = new Work_report_detail();
-            $workReportDetail->date_id = $workReport->id;
+            $workReportDetail->date_id = $data[0]->id;
             $workReportDetail->company_id = $request->company_name;
             $workReportDetail->service_id = $request->service;
             $workReportDetail->status = $request->status;

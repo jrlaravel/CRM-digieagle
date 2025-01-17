@@ -150,8 +150,8 @@
                         </div>
                         <div class="card-body">
                             @if(Session::has('success'))
-									<div class="alert alert-success">{{Session::get('success')}}</div>
-									@endif
+                            <div class="alert alert-success">{{Session::get('success')}}</div>
+                            @endif
                             <!-- Add work report form -->
                             <form id="workReportAddForm" action="{{route('emp/add-task-report')}}" method="post">
                                 @csrf

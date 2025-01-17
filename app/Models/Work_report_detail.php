@@ -18,5 +18,6 @@ class Work_report_detail extends Model
         'start_time',
         'end_time',
         'total_time',
+        'user_id'
     ];
 }
