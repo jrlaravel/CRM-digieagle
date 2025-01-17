@@ -338,7 +338,7 @@ public function show() {
             ->get();
     
         // Create the PDF
-        $pdf = PDF::loadView('admin/activity_log_pdf', compact('data'));
+        $pdf = PDF::loadView('admin/activity_log_pdf', ['data' => $data]);
     
         // Define the file path and name
         $directory = storage_path('app/public/temp');
