@@ -15,7 +15,7 @@ use App\Models\Notification;
 use App\Models\Festival_leave;
 use Illuminate\Database\QueryException;
 use Illuminate\Support\Carbon;
-use Barryvdh\DomPDF\Facades\PDF;
+use PDF;
 use Illuminate\Support\Facades\File;
 use Illuminate\Support\Facades\Storage;
 
