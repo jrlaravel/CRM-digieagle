@@ -68,6 +68,7 @@ Route::prefix('emp')->group(function () {
     
 
     Route::group(['middleware' => 'emp.auth'],function () {
+        Route::post('changepassword', [LoginController::class , 'changepassword'])->name('emp/changepassword');
         Route::get('logout', [LoginController::class, 'logout'])->name('emp/logout'); 
         Route::get('dashboard', [EmployeeDashboardController::class, 'index'])->name('emp/dashboard'); 
         Route::get('calendar', [EmployeeDashboardController::class, 'calendar'])->name('emp/calendar'); 

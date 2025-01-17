@@ -179,42 +179,53 @@ if (is_array($decodedSkills) && isset($decodedSkills[0])) {
                     <h5 class="card-title mb-0">Change Password</h5>
                 </div>
                     <div class="card-body h-100">
-                        <form method="POST" action="#">
+                        <form method="POST" action="{{ route('emp/changepassword') }}">
                             @csrf
                             @if(Session::has('success_password'))
-                            <div class="alert alert-success">{{Session::get('success_password')}}</div>
+                                <div class="alert alert-success">{{ Session::get('success_password') }}</div>
                             @endif
                             @if(Session::has('error_password'))
-                            <div class="alert alert-danger">{{Session::get('error_password')}}</div>
+                                <div class="alert alert-danger">{{ Session::get('error_password') }}</div>
                             @endif
-                            <input type="hidden" name="id" value="{{session('employee')->id}}">
-    
+                        
                             <div class="mb-3">
-                                <label class="form-label" for="inputPassword4">Current Password</label>
-                                <input type="password" class="form-control @error('password') is-invalid @enderror" name="password" id="password" placeholder="Current Password">
-                                @error('password')
-                                <p class="invalid-feedback">{{$message}}</p>
+                                <label class="form-label" for="current_password">Current Password</label>
+                                <input type="password" 
+                                       class="form-control @error('current_password') is-invalid @enderror" 
+                                       name="current_password" 
+                                       id="current_password" 
+                                       placeholder="Current Password">
+                                @error('current_password')
+                                    <p class="invalid-feedback">{{ $message }}</p>
                                 @enderror
                             </div>
-                                                
+                        
                             <div class="mb-3">
-                                <label class="form-label" for="inputPassword4">New Password</label>
-                                <input type="password" class="form-control @error('new_password') is-invalid @enderror" name="new_password" id="new_password" placeholder="New Password">
+                                <label class="form-label" for="new_password">New Password</label>
+                                <input type="password" 
+                                       class="form-control @error('new_password') is-invalid @enderror" 
+                                       name="new_password" 
+                                       id="new_password" 
+                                       placeholder="New Password">
                                 @error('new_password')
-                                <p class="invalid-feedback">{{$message}}</p>
+                                    <p class="invalid-feedback">{{ $message }}</p>
                                 @enderror
                             </div>
-                                                    
+                        
                             <div class="mb-3">
-                                <label class="form-label" for="inputPassword4">Confirm New Password</label>
-                                <input type="password" class="form-control @error('confirm_password') is-invalid @enderror" name="confirm_password" id="confirm_password" placeholder="Confirm New Password">
-                                @error('confirm_password')
-                                <p class="invalid-feedback">{{$message}}</p>
+                                <label class="form-label" for="new_password_confirmation">Confirm New Password</label>
+                                <input type="password" 
+                                       class="form-control @error('new_password_confirmation') is-invalid @enderror" 
+                                       name="new_password_confirmation" 
+                                       id="new_password_confirmation" 
+                                       placeholder="Confirm New Password">
+                                @error('new_password_confirmation')
+                                    <p class="invalid-feedback">{{ $message }}</p>
                                 @enderror
                             </div>
-    
-                        <button type="submit" class="btn btn-primary">Change Password</button>
-                    </form>
+                        
+                            <button type="submit" class="btn btn-primary">Change Password</button>
+                        </form>       
             </div>
         </div>
 </div>

@@ -170,4 +170,28 @@ class LoginController extends Controller
         Auth::logout();
         return redirect()->route('emp/login');
     }
+
+    public function changepassword(Request $request)
+    {
+        $validator = Validator::make($request->all(), [
+            'current_password' => 'required|string|min:6',
+            'new_password' => 'required|string|min:6|confirmed',
+            'new_password_confirmation' => 'required'
+        ]);
+    
+        if ($validator->fails()) {
+            return back()->withInput()->withErrors($validator);
+        }
+    
+        $user = Auth::guard('web')->user();
+    
+        if (Hash::check($request->current_password, $user->password)) {
+            $user->password = Hash::make($request->new_password);
+            $user->save();
+    
+            return back()->with('success_password', 'Password changed successfully!');
+        } else {
+            return back()->with('error_password', 'Current password does not match!');
+        }
+    }    
 }
