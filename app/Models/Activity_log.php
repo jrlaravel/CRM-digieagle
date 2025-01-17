@@ -12,5 +12,7 @@ class Activity_log extends Model
     protected $fillable = [
         'user_id',
         'description',
+        'ip_address',
+        'throttle_key',
     ];
 }

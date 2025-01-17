@@ -27,7 +27,7 @@ Route::get('/', [LoginController::class, 'index'])->name('emp/login');
 Route::prefix('emp')->group(function () {
 
     Route::group(['middleware' => 'emp.guest'],function () {
-        Route::post('authenticate', [LoginController::class, 'authenticate'])->name('emp/authenticate');
+            Route::post('authenticate', [LoginController::class, 'authenticate'])->name('emp/authenticate');
         Route::get('/resetpassword', [LoginController::class, 'resetpassword'])->name('emp/resetpassword');
         Route::post('/varify-email', [LoginController::class, 'varifyemail'])->name('emp/varify-email');
         Route::get('/new-password/{token}', [LoginController::class, 'newpassword'])->name('emp/new-password');
@@ -187,6 +187,7 @@ Route::prefix('admin')->group(function () {
         Route::get('/work-report-detail/{date}/{id}', [EmployeeController::class, 'getWorkReportByDate'])->name('admin/work-report-detail');
         Route::post('report-download', [EmployeeController::class, 'report_download'])->name('admin/report-download');
         Route::get('activity_log', [EmployeeController::class, 'activity_log'])->name('admin/activity_log');
+        Route::post('activity-log/download', [EmployeeController::class, 'downloadActivityLogPDF'])->name('admin/activity_log/download');
     });
 });
 

@@ -94,36 +94,35 @@
 
 <!-- Modal -->
 <div class="modal fade" id="workReportModal" tabindex="-1" aria-labelledby="workReportModalLabel" aria-hidden="true">
-    <div class="modal-dialog">
+    <div class="modal-dialog modal-lg"> <!-- Use modal-lg for a wider modal -->
         <div class="modal-content">
             <div class="modal-header">
                 <h5 class="modal-title" id="workReportModalLabel">Work Report Details</h5>
                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
             <div class="modal-body">
-                <h4 id="modalReportDate"></h4>
+                <h4 id="modalReportDate" class="mb-3"></h4>
                 <hr>
-                <table id="datatables-reponsive" class="table table-striped" style="width:100%">
-                    <thead>
-                        <tr>
-                            <th>Client Name</th>
-                            <th>Task Name</th>
-                            <th>Start Time</th>
-                            <th>End Time</th>
-                            <th>Status</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        <!-- Dynamic content will be inserted here -->
-                    </tbody>
-                </table>
+                <div class="table-responsive"> <!-- Make the table container scrollable -->
+                    <table id="datatables-reponsive" class="table table-striped table-bordered">
+                        <thead>
+                            <tr>
+                                <th>Client Name</th>
+                                <th>Task Name</th>
+                                <th>Start Time</th>
+                                <th>End Time</th>
+                                <th>Status</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <!-- Dynamic content will be inserted here -->
+                        </tbody>
+                    </table>
+                </div>
             </div>
         </div>
     </div>
 </div>
-
-
-
 @endsection
 
 @section('scripts')

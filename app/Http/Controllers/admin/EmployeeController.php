@@ -15,6 +15,9 @@ use App\Models\Notification;
 use App\Models\Festival_leave;
 use Illuminate\Database\QueryException;
 use Illuminate\Support\Carbon;
+use Barryvdh\DomPDF\Facade\PDF;
+use Illuminate\Support\Facades\File;
+use Illuminate\Support\Facades\Storage;
 
 class EmployeeController extends Controller
 {
@@ -316,8 +319,42 @@ public function show() {
 
     public function activity_log()
     {
-        $data = Activity_log::paginate(10);
+        $data = Activity_log::all();
         return view('admin/activity_log', compact('data'));
     }
 
+    
+    public function downloadActivityLogPDF(Request $request)
+    {
+        // Validate the incoming request
+        $request->validate([
+            'fdate' => 'required|date',
+            'tdate' => 'required|date|after_or_equal:fdate',
+        ]);
+    
+        // Fetch data from the activity_log table within the date range
+        $data = DB::table('activity_log')
+            ->whereBetween('created_at', [$request->fdate, $request->tdate])
+            ->get();
+    
+        // Create the PDF
+        $pdf = PDF::loadView('admin.activity_log_pdf', compact('data'));
+    
+        // Define the file path and name
+        $directory = storage_path('app/public/temp');
+        $fileName = 'activity_log_' . now()->format('Y_m_d_His') . '.pdf';
+        $filePath = $directory . '/' . $fileName;
+    
+        // Check if the directory exists, if not, create it
+        if (!File::exists($directory)) {
+            File::makeDirectory($directory, 0755, true); // Permissions set to 755, recursively create directories
+        }
+    
+        // Save the PDF to the directory
+        $pdf->save($filePath);
+    
+        // Return the file as a download response
+        return response()->download($filePath)->deleteFileAfterSend(true);
+    }
+    
 }

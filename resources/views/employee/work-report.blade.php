@@ -17,103 +17,100 @@
 
 @section('content')
 <meta name="csrf-token" content="{{ csrf_token() }}">
-    <main class="content">
-        <div class="container-fluid p-0">
-            <div class="row">
-                <!-- Card for Form Section -->
-                <div class="col-md-6">
-                    <div class="card">
-                        <div class="card-header">
-                            <h5 class="card-title">Add Work Report</h5>
+<main>
+    <div class="container-fluid p-0">
+        <div class="row">
+            <!-- Card for Form Section -->
+            <div class="col-lg-6 col-md-12 mb-3">
+                <div class="card">
+                    <div class="card-header">
+                        <h5 class="card-title">Add Work Report</h5>
+                    </div>
+                    <div class="card-body">
+                        <div class="mb-3">
+                            <label class="form-label">Select Date</label>
+                            <input type="text" class="form-control" id="report-date" value="date()" placeholder="Select date.." />
                         </div>
-                        <div class="card-body">
-                            <div class="mb-3">
-                                <label class="form-label">Select Date</label>
-                                <input type="text" class="form-control" id="report-date" value="date()" placeholder="Select date.." />
-                            </div>
-                                                
-            
-                            <!-- Work report form -->
-                            <form id="workReportForm">
-                                <div id="work-report-container">
-                                    <div class="mb-3 work-report-item">
-                                        <label class="form-label">Client Name</label>
-                                        <select class="form-control choices-single" name="company_name[]" required id="company-dropdown">
-                                            <option value="">Select a Company</option>
-                                            @foreach($companydata as $data)
-                                                <option value="{{ $data->company_id }}">{{ $data->name }}</option>
+
+                        <!-- Work report form -->
+                        <form id="workReportForm">
+                            <div id="work-report-container">
+                                <div class="mb-3 work-report-item">
+                                    <label class="form-label">Client Name</label>
+                                    <select class="form-control choices-single" name="company_name[]" required id="company-dropdown">
+                                        <option value="">Select a Company</option>
+                                        @foreach($companydata as $data)
+                                            <option value="{{ $data->company_id }}">{{ $data->name }}</option>
+                                        @endforeach
+                                    </select>
+
+                                    <label class="form-label">Client Service list</label>
+                                    <select name="service[]" class="form-control" id="service" required>
+                                        <option value="">Select Service</option>
+                                    </select>
+
+                                    <label class="form-label">Start Time</label>
+                                    <input type="time" name="start_time[]" class="form-control start-time" id="start-time" required />
+
+                                    <label class="form-label">End Time</label>
+                                    <input type="time" name="end_time[]" class="form-control end-time" id="end-time" required />
+
+                                    <label for="form-label">Status</label>
+                                    <select name="status[]" class="form-control" required id="status">
+                                        <option value="">Select Status</option>
+                                            @forEach($status as $data)
+                                                <option value="{{$data->name}}">{{$data->name}}</option>
                                             @endforeach
-                                        </select>
-            
-                                        <label class="form-label">Client Service list</label>
-                                        <select name="service[]" class="form-control" id="service"  required>
-                                            <option value="">Select Service</option>
-                                        </select>
-            
-                                        <label class="form-label">Start Time</label>
-                                        <input type="time" name="start_time[]" class="form-control start-time" id="start-time"  required />
-            
-                                        <label class="form-label">End Time</label>
-                                        <input type="time" name="end_time[]" class="form-control end-time" id="end-time"  required />
-            
-                                        <label for="form-label">Status</label>
-                                        <select name="status[]" class="form-control" required  id="status">
-                                            <option value="">Select Status</option>
-                                                @forEach($status as $data)
-                                                    <option value="{{$data->name}}">{{$data->name}}</option>
-                                                @endforeach
-                                        </select>
-            
-                                        <label class="form-label">Note</label>
-                                        <textarea class="form-control" id="note" name="note[]" rows="3" placeholder="Enter note"></textarea>
+                                    </select>
 
-                                        <label class="form-label">Total Time Taken (hours)</label>
-                                        <input type="time" name="total_time[]" class="form-control total-time" id="total-time"  disabled readonly />
-                                    </div>
+                                    <label class="form-label">Note</label>
+                                    <textarea class="form-control" id="note" name="note[]" rows="3" placeholder="Enter note"></textarea>
+
+                                    <label class="form-label">Total Time Taken (hours)</label>
+                                    <input type="time" name="total_time[]" class="form-control total-time" id="total-time" disabled readonly />
                                 </div>
-                                <button type="button" class="btn btn-success mt-3" id="addServiceBtn" >Add More Services</button>
-                            </form>
-                        </div>
-                    </div>
-                </div>
-            
-                <!-- Card for Table Section -->
-                <div class="col-md-6">
-                    <div class="card">
-                        <div class="card-header">
-                            <h5 class="card-title">Submitted Work Reports</h5>
-                        </div>
-                        <div class="card-body">
-                            <div class="table-responsive">
-                                <thead>
-                                    <table class="table table-bordered" id="workReportTable">
-                                        <tr>
-                                            <th>Client name</th>
-                                            <th>Client service</th>
-                                            <th>Start Time</th>
-                                            <th>End Time</th>
-                                            <th>Status</th>
-                                            <th>Note</th>
-                                            <th>Total Time</th>
-                                            <th>Action</th>
-                                        </tr>
-                                    </thead>
-                                    <tbody>
-                                        <!-- Dynamically added rows will appear here -->
-                                    </tbody>
-                                </table>
-                                
-                                <button type="button" id="submitReportBtn" class="btn btn-primary mt-3 float-end">Submit Report</button>
-                                <!-- Table to display the work reports -->
                             </div>
-                        </div>
+                            <button type="button" class="btn btn-success mt-3 w-20" id="addServiceBtn">Add More Task</button>
+                        </form>
                     </div>
                 </div>
-            </div> 
-        </div>
-    </main>
+            </div>
 
-    <!-- Confirmation Modal -->
+            <!-- Card for Table Section -->
+            <div class="col-lg-6 col-md-12">
+                <div class="card">
+                    <div class="card-header">
+                        <h5 class="card-title">Submitted Work Reports</h5>
+                    </div>
+                    <div class="card-body">
+                        <div class="table-responsive overflow-auto">
+                            <table class="table table-bordered" id="workReportTable">
+                                <thead>
+                                    <tr>
+                                        <th>Client name</th>
+                                        <th>Client service</th>
+                                        <th>Start Time</th>
+                                        <th>End Time</th>
+                                        <th>Status</th>
+                                        <th>Note</th>
+                                        <th>Total Time</th>
+                                        <th>Action</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <!-- Dynamically added rows will appear here -->
+                                </tbody>
+                            </table>
+                        </div>
+                        <button type="button" id="submitReportBtn" class="btn btn-primary mt-3 w-20">Submit Report</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</main>
+
+<!-- Confirmation Modal -->
 <div class="modal fade" id="confirmationModal" tabindex="-1" role="dialog" aria-hidden="true">
     <div class="modal-dialog modal-dialog-centered modal-dialog-zoom" role="document">
         <div class="modal-content">

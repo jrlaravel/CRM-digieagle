@@ -53,7 +53,7 @@
 										@csrf
 										<div class="mb-3">
 											<label class="form-label">Username</label>
-											<input class="form-control form-control-lg @error('username') is-invalid @enderror" type="text" name="username" value="{{old('username')}}" placeholder="Enter your username" />
+											<input class="form-control form-control-lg @error('username') is-invalid @enderror" type="text" required name="username" value="{{old('username')}}" placeholder="Enter your username" />
 											@error('username')
 											<p class="invalid-feedback">{{$message}}</p>
 											@enderror
@@ -65,7 +65,8 @@
 												class="form-control form-control-lg @error('password') is-invalid @enderror" 
 												type="password" 
 												name="password" 
-												placeholder="Enter your password" 
+												placeholder="Enter your password"
+												required 
 											/>
 											<i 
 												id="toggleIcon" 

@@ -15,6 +15,8 @@ use App\Models\Designation;
 use App\Models\Department;
 use Illuminate\Support\Str;
 use Illuminate\Support\Facades\Mail;
+use Illuminate\Support\Facades\RateLimiter;
+use Illuminate\Validation\ValidationException;
 
 
 class LoginController extends Controller
@@ -23,8 +25,12 @@ class LoginController extends Controller
         return view('employee.login');
     }
 
+    
     public function authenticate(Request $request)
     {
+        // Ensure the login attempt is not rate-limited
+        $this->ensureIsNotRateLimited($request);
+    
         $validator = Validator::make($request->all(), [
             'username' => 'required',
             'password' => 'required',
@@ -35,46 +41,85 @@ class LoginController extends Controller
         }
     
         if (Auth::guard('web')->attempt(['username' => $request->username, 'password' => $request->password])) {
+            // Clear throttle count on successful login
+            RateLimiter::clear($this->throttleKey($request));
+    
             $user = Auth::guard('web')->user();
             $department = Department::find($user->department);
-            // dd($department);
             $user->department_name = $department->name;
-            // Check if the user's role is either employee or HR
+    
             if ($user->role == 'employee' || $user->role == 'hr') {
                 session()->put('employee', $user);
     
                 $designation = Designation::find($user->designation);
     
                 if ($designation && $designation->name == 'BDE') {
-                    session()->put('has_bde_features', true); 
+                    session()->put('has_bde_features', true);
                 } else {
                     session()->put('has_bde_features', false);
                 }
     
-                // Check if the user is HR and store HR-related session data if needed
                 if ($user->role == 'hr') {
-                    session()->put('has_hr_features', true); 
+                    session()->put('has_hr_features', true);
                 } else {
                     session()->put('has_hr_features', false);
                 }
-                
-                // Log activity
+    
                 $activity_log = new Activity_log();
                 $activity_log->user_id = $user->id;
                 $activity_log->description = 'Logged in successfully';
                 $activity_log->save();
-                // dd($activity_log);
-
+    
                 return redirect()->route('emp/dashboard');
             } else {
                 Auth::guard('web')->logout();
                 return redirect()->route('emp/login')->withInput()->with(['error' => 'You are not authorized to access this area']);
             }
         } else {
-            return redirect()->route('emp/login')->withInput()->with(['error' => 'Invalid credentials']);
+            // Increment the throttle count
+            RateLimiter::hit($this->throttleKey($request), 60); // 1 minute decay
+            
+    
+            throw ValidationException::withMessages([
+                'username' => [__('Invalid credentials')],
+            ]);
         }
     }
+    
+    /**
+     * Ensure the login attempt is not rate-limited.
+     */
+    protected function ensureIsNotRateLimited(Request $request)
+    {
+        if (RateLimiter::tooManyAttempts($this->throttleKey($request), 3)) {
+            $seconds = RateLimiter::availableIn($this->throttleKey($request));
+            Activity_log::create([
+                'user_id' => $this->getUserIdByUsername($request->input('username')),
+                'description' => 'Rate-limited login attempt - Too many failed login attempts.',
+                'ip_address' => $request->ip(),
+                'throttle_key' => $this->throttleKey($request),
+                'created_at' => now(),
+            ]);
+    
+            throw ValidationException::withMessages([
+                'username' => [__('Too many login attempts. Please try again in ' . $seconds . ' seconds.')],
+            ]);
+        }
+    }
+    
+    protected function getUserIdByUsername($username)
+    {
+        $user = User::where('username', $username)->first(); // Adjust to your actual user model and field
+        return $user ? $user->id : null;  // Return null if user not found
+    }
 
+    /**
+     * Generate a unique throttle key for the request.
+     */
+    protected function throttleKey(Request $request)
+    {
+        return strtolower($request->input('username')) . '|' . $request->ip();
+    }
 
     public function resetpassword()
     {
@@ -188,6 +233,12 @@ class LoginController extends Controller
         if (Hash::check($request->current_password, $user->password)) {
             $user->password = Hash::make($request->new_password);
             $user->save();
+
+            // Log activity
+            $activity_log = new Activity_log();
+            $activity_log->user_id = $user->id;
+            $activity_log->description = 'Password changed successfully';
+            $activity_log->save();
     
             return back()->with('success_password', 'Password changed successfully!');
         } else {

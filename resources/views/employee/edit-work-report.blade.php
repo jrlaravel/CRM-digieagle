@@ -17,7 +17,7 @@
 
 @section('content')
 <meta name="csrf-token" content="{{ csrf_token() }}">
-<main class="content">
+<main class="">
         <div class="container-fluid p-0">
             <div class="row">
                 <!-- Card for Table Section -->
