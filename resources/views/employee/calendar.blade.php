@@ -39,7 +39,7 @@
 <script src="{{asset('js/fullcalendar.js')}}"></script>
 
 <script>
-document.addEventListener("DOMContentLoaded", function() {
+document.addEventListener("DOMContentLoaded", function () {
     var calendarEl = document.getElementById("fullcalendar");
 
     var birthdays = @json($data);
@@ -51,12 +51,12 @@ document.addEventListener("DOMContentLoaded", function() {
             const [day, month] = item.start.split('-');
             const formattedDate = `${year}-${month}-${day}`;
             return {
-                id: 'birthday-' + item.id, // Unique ID for filtering
+                id: 'birthday-' + item.id,
                 title: item.name + "'s birthday",
                 start: formattedDate,
                 backgroundColor: '#ff9f89',
                 borderColor: '#ff9f89',
-                type: 'birthday' // Custom property for filtering
+                type: 'birthday'
             };
         });
     }
@@ -64,14 +64,14 @@ document.addEventListener("DOMContentLoaded", function() {
     function transformLeaveData(leaves) {
         return leaves.map(item => {
             return {
-                id: 'leave-' + item.id, // Unique ID for filtering
+                id: 'leave-' + item.id,
                 title: item.name,
                 start: item.start_date,
                 end: item.end_date,
                 description: item.reason,
                 backgroundColor: '#1e90ff',
                 borderColor: '#1e90ff',
-                type: 'leave' // Custom property for filtering
+                type: 'leave'
             };
         });
     }
@@ -85,21 +85,28 @@ document.addEventListener("DOMContentLoaded", function() {
         initialView: "dayGridMonth",
         initialDate: new Date(),
         events: allEvents,
-        eventDidMount: function(info) {
-            if (info.event.extendedProps.description) {
-                $(info.el).tooltip({
-                    title: info.event.extendedProps.description,
-                    placement: 'top',
-                    trigger: 'hover',
-                    container: 'body'
-                });
+        eventDidMount: function (info) {
+            // Check if it's a birthday event
+            if (info.event.extendedProps.type === 'birthday') {
+                // Append the GIF to the event's cell
+                const gifElement = document.createElement('img');
+                gifElement.src = "{{ asset('storage/gifs/birthday.gif') }}"; // Path to the birthday GIF
+                gifElement.style.width = '100px'; // Adjust size as needed
+                gifElement.style.height = '100px'; // Adjust size as needed
+                gifElement.style.position = 'absolute';
+                gifElement.style.top = '30px';
+                gifElement.style.right = '57px';
+                gifElement.alt = "Happy Birthday!";
+                
+                // Append GIF inside the event cell
+                info.el.appendChild(gifElement);
             }
         }
     });
 
     calendar.render();
 
-    // Event filtering function
+    // Event filtering logic
     function filterEvents() {
         var showBirthdays = document.getElementById('birthdayFilter').checked;
         var showLeaves = document.getElementById('leaveFilter').checked;
@@ -122,5 +129,6 @@ document.addEventListener("DOMContentLoaded", function() {
     document.getElementById('birthdayFilter').addEventListener('change', filterEvents);
     document.getElementById('leaveFilter').addEventListener('change', filterEvents);
 });
+
 </script>
 @endsection

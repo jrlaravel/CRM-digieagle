@@ -77,7 +77,7 @@
                                     <td>{{ $leave->first_name }} {{ $leave->last_name }}</td>
                                     <td>{{ $leave->name }}</td>
                                     <td>{{ $leave->start_date ? \Carbon\Carbon::parse($leave->start_date)->format('d-m-Y') : 'N/A' }}</td>
-                                    <td>{{ $leave->end_date ? \Carbon\Carbon::parse($leave->end_date)->format('d-m-Y') : 'N/A' }}</
+                                    <td>{{ $leave->end_date ? \Carbon\Carbon::parse($leave->end_date)->format('d-m-Y') : 'N/A' }}</td>
                                     <td>{{ $leave->total_days }}</td>
                                     <td class="reason-cell" data-reason="{{ $leave->reason }}">{{ $leave->reason }}</td>
                                     <td>
