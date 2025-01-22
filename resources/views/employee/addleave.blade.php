@@ -1,3 +1,8 @@
+@php 
+if(Session::has('leave_date'))
+echo Session::get('leave_date')
+@endphp
+
 @extends('layout/employee-sidebar')
 @section('profile')
 <div class="d-flex justify-content-center">
@@ -177,6 +182,40 @@
     </div>  
 </div>
 
+@if ($errors->has('leave_date'))
+    <script>
+        // Trigger the modal to open when there is an error
+        document.addEventListener("DOMContentLoaded", function() {
+            var myModal = new bootstrap.Modal(document.getElementById('leaveDateModal'));
+            myModal.show();
+        });
+    </script>
+    
+    {{-- <div class="alert alert-danger">
+        {{ $errors->first('leave_date') }}
+    </div> --}}
+@endif
+
+<!-- Modal Structure for Leave Date Error -->
+<div class="modal fade" id="leaveDateModal" tabindex="-1" aria-labelledby="leaveDateModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="leaveDateModalLabel">Leave Application Error</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                {{ $errors->first('leave_date') }}
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+<!-- Your Default Modal for Leave Form -->
 <div class="modal fade" id="defaultModalSuccess" tabindex="-1" role="dialog" aria-hidden="true">
     <div class="modal-dialog" role="document">
         <div class="modal-content">
@@ -185,47 +224,52 @@
                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
             <div class="modal-body m-3">
-             <form action="{{route('emp/leave-store')}}" method="post" enctype="multipart/form-data">
-                @csrf
-                <input type="text" value="{{session('employee')->id}}" name="id" hidden>
-                <div class="mb-3">
-                    <label for="leaveName" class="form-label">Leave Type</label>
-                    <select name="leave" class="form-control" id="leaveType">
-                        <option value="">Select Leave</option>
-                        @foreach($leavetype as $data) 
-                        <option value="{{$data->id}}" data-name="{{$data->name}}">{{$data->name}}</option>
-                        @endforeach
-                    </select>
-                </div>
-                <div class="mb-3">
-                    <label for="from" class="form-label">From</label>
-                    <input type="date" class="form-control" id="from" name="from" required>
-                </div>
-                <div class="mb-3">
-                    <label for="to" class="form-label">To</label>
-                    <input type="date" class="form-control" id="to" name="to" required>
-                </div>
-                <div class="mb-3">
-                    <label for="reason" class="form-label">Reason</label>
-                    <input type="text" class="form-control" id="reason" name="reason" placeholder="Reason" required>
-                        </input>
-                </div>
-                <div class="mb-3">
-                    <label for="reason" class="form-label">Other</label>
-                    <input type="text"  class="form-control" id="other" name="other" placeholder="Other" required>
-                        </input>
-                </div>
+                <form action="{{route('emp/leave-store')}}" method="post" enctype="multipart/form-data">
+                    @csrf
+                    <input type="text" value="{{session('employee')->id}}" name="id" hidden>
 
-                <div class="mb-3" id="reportInput" style="display: none;">
-                    <label for="report" class="form-label">Upload Medical Report (PDF)</label>
-                    <input type="file" class="form-control" name="report" id="report" accept="application/pdf">
-                </div>
-                                
-                <div class="modal-footer">
-                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-                    <button type="submit" class="btn btn-primary">Save</button>
-                </div>  
-             </form>
+                    <div class="mb-3">
+                        <label for="leaveName" class="form-label">Leave Type</label>
+                        <select name="leave" class="form-control" id="leaveType">
+                            <option value="">Select Leave</option>
+                            @foreach($leavetype as $data) 
+                                <option value="{{$data->id}}" data-name="{{$data->name}}" data-description="{{$data->description}}">
+                                    {{$data->name}}
+                                </option>
+                            @endforeach
+                        </select>
+                    </div>                    
+
+                    <div class="mb-3">
+                        <label for="from" class="form-label">From</label>
+                        <input type="date" class="form-control" id="from" name="from" required>
+                    </div>
+
+                    <div class="mb-3">
+                        <label for="to" class="form-label">To</label>
+                        <input type="date" class="form-control" id="to" name="to" required>
+                    </div>
+
+                    <div class="mb-3">
+                        <label for="reason" class="form-label">Reason</label>
+                        <input type="text" class="form-control" id="reason" name="reason" placeholder="Reason" required>
+                    </div>
+
+                    <div class="mb-3">
+                        <label for="other" class="form-label">Other</label>
+                        <input type="text" class="form-control" id="other" name="other" placeholder="Other" required>
+                    </div>
+
+                    <div class="mb-3" id="reportInput" style="display: none;">
+                        <label for="report" class="form-label">Upload Medical Report (PDF)</label>
+                        <input type="file" class="form-control" name="report" id="report" accept="application/pdf">
+                    </div>
+
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                        <button type="submit" class="btn btn-primary">Save</button>
+                    </div>  
+                </form>
             </div>
         </div>
     </div>
@@ -294,8 +338,13 @@
             }
 
             if (selectedLeave === 'Half Day') {
-                // Restrict to the same date for both 'from' and 'to'
-                $('#reportInput').hide(); // Show the report input field
+                var today = new Date().toISOString().split('T')[0]; // Get today's date in ISO format
+                $('#reportInput').hide(); // Hide the report input field
+
+                // Set the 'from' field to disable past dates
+                $('#from').attr('min', today);
+
+                // Restrict 'to' to the same date as 'from'
                 $('#to').attr('disabled', true); // Disable 'to' field initially
                 $('#from').change(function () {
                     var selectedDate = $(this).val();
@@ -308,6 +357,7 @@
                 // Enable 'to' field for other leave types
                 $('#to').removeAttr('disabled');
             }
+
 
             // Reapply the current month restrictions if the leave type is not Casual, Sick, or Half Day
             setMonthRestrictions();

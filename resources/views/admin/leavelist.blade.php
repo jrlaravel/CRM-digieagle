@@ -97,42 +97,57 @@
                                                 </button>
                                                 <ul class="dropdown-menu" aria-labelledby="dropdownMenuButton">
                                                     <li>
-                                                        <form action="{{ route('admin/leave-update', $leave->id) }}" method="POST" style="display:inline;">
-                                                            @csrf
-                                                            <input type="hidden" name="status" value="1"> <!-- Approve -->
-                                                            <button type="submit" class="dropdown-item text-success">Approve</button>
-                                                        </form>
+                                                        <a href="#" 
+                                                           class="dropdown-item text-success" 
+                                                           data-bs-toggle="modal" 
+                                                           data-bs-target="#leaveModal" 
+                                                           data-id="{{ $leave->id }}" 
+                                                           data-status="1" 
+                                                           data-title="Approve Leave"
+                                                           data-button="Approve Leave"
+                                                           data-label="Enter Approval Reason">Approve</a>
                                                     </li>
                                                     <li>
-                                                        <a href="#" class="dropdown-item text-danger" data-bs-toggle="modal" data-bs-target="#rejectModal{{ $leave->id }}">Reject</a>
+                                                        <a href="#" 
+                                                           class="dropdown-item text-danger" 
+                                                           data-bs-toggle="modal" 
+                                                           data-bs-target="#leaveModal" 
+                                                           data-id="{{ $leave->id }}" 
+                                                           data-status="2" 
+                                                           data-title="Reject Leave"
+                                                           data-button="Reject Leave"
+                                                           data-label="Enter Rejection Reason">Reject</a>
                                                     </li>
                                                     <li>
                                                         <a href="{{ route('admin/leave-delete', $leave->id) }}" class="dropdown-item text-danger">Delete</a>
                                                     </li>
                                                 </ul>
+                                                
                                             </div>
 
-                                            <div class="modal fade" id="rejectModal{{ $leave->id }}" tabindex="-1" aria-labelledby="rejectModalLabel{{ $leave->id }}" aria-hidden="true">
+                                            <div class="modal fade" id="leaveModal" tabindex="-1" aria-labelledby="leaveModalLabel" aria-hidden="true">
                                                 <div class="modal-dialog">
                                                     <div class="modal-content">
                                                         <div class="modal-header">
-                                                            <h5 class="modal-title" id="rejectModalLabel{{ $leave->id }}">Reject Leave</h5>
+                                                            <h5 class="modal-title" id="leaveModalLabel">Leave Action</h5>
                                                             <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                                                         </div>
                                                         <div class="modal-body">
-                                                            <form action="{{ route('admin/leave-update', $leave->id) }}" method="POST">
+                                                            <form id="leaveActionForm" method="POST">
                                                                 @csrf
-                                                                <input type="hidden" name="status" value="2"> <!-- Reject -->
+                                                                <input type="hidden" name="status" id="action_status">
+                                                                <input type="hidden" name="leave_id" id="leave_id">
                                                                 <div class="mb-3">
-                                                                    <label for="rejection_reason" class="form-label">Enter Rejection Reason</label>
-                                                                    <input type="text" name="rejection_reason" class="form-control" id="rejection_reason" required>
+                                                                    <label for="action_reason" class="form-label" id="modalLabel">Enter Reason</label>
+                                                                    <input type="text" name="action_reason" class="form-control" id="action_reason" required>
                                                                 </div>
-                                                                <button type="submit" class="btn btn-danger">Reject Leave</button>
+                                                                <button type="submit" class="btn btn-primary" id="modalSubmitButton">Submit</button>
                                                             </form>
                                                         </div>
                                                     </div>
                                                 </div>
                                             </div>
+                                            
                                         
                                             &nbsp;&nbsp;
                                         @endif
@@ -163,19 +178,28 @@
 
 <script>
   
-    document.addEventListener('DOMContentLoaded', function () {
-        var rejectionReasonModal = document.getElementById('rejectionReasonModal');
+  document.addEventListener('DOMContentLoaded', function () {
+    var leaveModal = document.getElementById('leaveModal');
+    leaveModal.addEventListener('show.bs.modal', function (event) {
+        var button = event.relatedTarget; // Button that triggered the modal
+        var leaveId = button.getAttribute('data-id'); // Leave ID
+        var status = button.getAttribute('data-status'); // Action status (1 for approve, 2 for reject)
+        var title = button.getAttribute('data-title'); // Modal title
+        var buttonText = button.getAttribute('data-button'); // Submit button text
+        var label = button.getAttribute('data-label'); // Label for input field
 
-        rejectionReasonModal.addEventListener('show.bs.modal', function (event) {
-            var button = event.relatedTarget; // Button that triggered the modal
-            var leaveId = button.getAttribute('data-id'); // Extract the leave ID
+        // Update modal title, label, and button text
+        document.getElementById('leaveModalLabel').textContent = title;
+        document.getElementById('modalLabel').textContent = label;
+        document.getElementById('modalSubmitButton').textContent = buttonText;
 
-            // Update the form action to include the leave ID
-            var actionUrl = "{{ url('leave-update') }}"; // Update this to match your route
-            document.getElementById('rejectionReasonForm').setAttribute('action', actionUrl + '/' + leaveId + '/2');
-            document.getElementById('leave_id').value = leaveId; // Optionally store leave ID in a hidden input
-        });
+        // Update form action and hidden inputs
+        var actionUrl = "{{ route('admin/leave-update', ':id') }}".replace(':id', leaveId);
+        document.getElementById('leaveActionForm').setAttribute('action', actionUrl);
+        document.getElementById('action_status').value = status;
+        document.getElementById('leave_id').value = leaveId;
     });
+});
 
 console.log(typeof jQuery);
 </script>

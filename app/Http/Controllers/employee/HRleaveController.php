@@ -76,6 +76,7 @@ class HRleaveController extends Controller
    {
        $leave = Leave::find($id);
        $statusText = '';
+       $reason = $request->input('reason'); // Get the reason from the request
    
        // Retrieve status from the request
        $status = $request->input('status');
@@ -89,21 +90,18 @@ class HRleaveController extends Controller
                'user_id' => $leave->user_id,
                'title' => 'Leave approved',
                'url' => 'leave',
-               'message' => 'Your leave has been approved.',
+               'message' => 'Your leave has been approved. Reason: ' . $reason,
            ]);
        } else {
            // Reject the leave
            $statusText = 'rejected';
            $leave->status = 2;
    
-           // Get the rejection reason from the request
-           $rejectionReason = $request->input('rejection_reason');
-   
            Notification::create([
                'user_id' => $leave->user_id,
                'title' => 'Leave rejected',
                'url' => 'leave',
-               'message' => 'Your leave has been rejected. Reason: ' . $rejectionReason,
+               'message' => 'Your leave has been rejected. Reason: ' . $reason,
            ]);
        }
    
@@ -112,11 +110,11 @@ class HRleaveController extends Controller
    
        $user  = User::find($leave->user_id);
    
-       // Send email to employee, passing the rejection reason if applicable
-       Mail::to($user->email)->send(new LeaveStatusMail($leave, $statusText, $user, $status == 2 ? $rejectionReason : null));
+       // Send email to employee, passing the reason
+       Mail::to($user->email)->send(new LeaveStatusMail($leave, $statusText, $user, $reason));
    
        return redirect()->back()->with(['success' => 'Leave status updated successfully']);
-   }
+   }    
    
 
 //     public function festival_leave()

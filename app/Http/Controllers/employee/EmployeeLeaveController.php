@@ -14,6 +14,7 @@ use App\Mail\LeaveRequestMail;
 use App\Models\Designation;
 use Illuminate\Support\Facades\Mail;
 use Carbon\Carbon;
+use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Storage;
 
 class EmployeeLeaveController extends Controller
@@ -30,9 +31,18 @@ class EmployeeLeaveController extends Controller
         return view('employee/addleave', compact('leavetype', 'leaves','appleave', 'rejleave','totalleave','pendingleave'));
     }
 
-    
     public function store(Request $request)
     {
+        $today = Carbon::now()->format('Y-m-d');
+        $startDate = Carbon::parse($request->from);
+        $endDate = Carbon::parse($request->to);
+        
+        // Calculate the total days for the leave
+        $totalDays = $startDate->diffInDays($endDate) + 1; 
+        
+        // Apply the 2x rule to calculate the minimum date from startDate
+        $minDateFromStart = $startDate->subDays(($totalDays * 2) + 1)->format('Y-m-d');
+        
         // Validate the request
         $validator = Validator::make($request->all(), [
             'leave' => 'required',
@@ -44,16 +54,25 @@ class EmployeeLeaveController extends Controller
         
         // Check if validation passes
         if ($validator->passes()) { 
-            // Parse the dates
-            $startDate = Carbon::parse($request->from);
-            $endDate = Carbon::parse($request->to);
-            $totalDays = $startDate->diffInDays($endDate) + 1; 
             
+            // If the leave type is Casual Leave, perform the check
+            $data = LeaveType::find($request->leave);
+            // dd($data);
+            if ($data->name == 'Casual Leave') {
+                // Check if today's date is either on or after the calculated min date
+                if ($today > $minDateFromStart) {
+                    Log::info("Leave request is rejected: Apply at least " . ($totalDays * 2) . " days in advance.");
+                    return redirect()->back()->withErrors(['leave_date' => 'You must apply for leave at least ' . ($totalDays * 2) . ' days in advance.']);
+                } else {
+                    Log::info("Leave request is accepted.");
+                }                
+                
+            }
             // Prepare leave data
             $leaveData = [
                 'leave_type_id' => $request->leave,
                 'user_id' => $request->id,
-                'apply_date' => Carbon::now()->format('Y-m-d'),
+                'apply_date' => $today,
                 'start_date' => $request->from,
                 'end_date' => $request->to,
                 'total_days' => $totalDays,
@@ -61,25 +80,26 @@ class EmployeeLeaveController extends Controller
                 'other' => $request->other,
                 'status' => '0', // Pending status
             ];
-    
+
             // Handle PDF file upload for Sick Leave
             if ($request->hasFile('report')) {
-                // Store the uploaded file in 'sick_leave_reports' folder within the 'public' disk
                 $pdf = $request->file('report');
-                $pdfPath = $pdf->store('sick_leave_reports', 'public'); // Store file in the 'sick_leave_reports' folder
-                $leaveData['report'] = $pdfPath; // Save file path in the database
+                $pdfPath = $pdf->store('sick_leave_reports', 'public');
+                $leaveData['report'] = $pdfPath;
             }
             
             // Create the leave record
             Leave::create($leaveData);
-    
+
             // Send notification or email to HR (optional)
             $user = User::find($request->id);
             $designation = Designation::find($user->designation);
-    
+            $email = $user->email;
+
             // Send mail to HR (optional)
             $leaveDetails = [
                 'name' => $request->input('name'),
+                'email' => $email,
                 'start_date' => $request->from,
                 'end_date' => $request->to,
                 'reason' => $request->reason,
@@ -88,16 +108,16 @@ class EmployeeLeaveController extends Controller
                 'last_name' => $user->last_name,
                 'designation' => $designation->name
             ];
-    
-           // Define the list of email recipients
-            $mailRecipients = [
-                'hr.digieagleinc@gmail.com',
-                'ceo.digieagleinc@gmail.com',
-                'manager.digieagleinc@gmail.com',
-            ];
 
-            // Send the email
-            Mail::to($mailRecipients)->send(new LeaveRequestMail($leaveDetails));
+            $mailRecipients = [
+                'jrlaravel.digieagleinc@gmail.com',
+                // 'ceo.digieagleinc@gmail.com',
+                // 'manager.digieagleinc@gmail.com',
+            ];
+            
+            Mail::to($mailRecipients)
+            ->send(new LeaveRequestMail($leaveDetails,$email));
+            
             
             // Redirect back with success message
             return redirect()->back()->with('success', 'Leave request submitted successfully and HR has been notified.');
@@ -107,6 +127,7 @@ class EmployeeLeaveController extends Controller
             return redirect()->back()->withErrors($validator);
         }
     }
+
     
     
     public function delete($id)
