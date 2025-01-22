@@ -10,14 +10,14 @@ class LeaveRequestMail extends Mailable
 {
     use Queueable, SerializesModels;
 
-    public $leaveDetails,$email;
+    public $leaveDetails;
 
     /**
      * Create a new message instance.
      *
      * @return void
      */
-    public function __construct($leaveDetails,$email)
+    public function __construct($leaveDetails)
     {
         $this->leaveDetails = $leaveDetails;
     }

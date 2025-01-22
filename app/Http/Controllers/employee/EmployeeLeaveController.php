@@ -110,13 +110,13 @@ class EmployeeLeaveController extends Controller
             ];
 
             $mailRecipients = [
-                'jrlaravel.digieagleinc@gmail.com',
-                // 'ceo.digieagleinc@gmail.com',
-                // 'manager.digieagleinc@gmail.com',
+                'hr.digieagleinc@gmail.com',
+                'ceo.digieagleinc@gmail.com',
+                'manager.digieagleinc@gmail.com',
             ];
             
             Mail::to($mailRecipients)
-            ->send(new LeaveRequestMail($leaveDetails,$email));
+            ->send(new LeaveRequestMail($leaveDetails));
             
             
             // Redirect back with success message
