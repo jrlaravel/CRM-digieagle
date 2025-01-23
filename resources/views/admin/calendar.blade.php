@@ -25,12 +25,14 @@
                     <label style="margin-right: 2rem; font-size: 16px"><input type="checkbox" id="festivalLeaveFilter" checked> Show Festival Leaves</label>
                 </div>
 
-                <div id="fullcalendar"></div>
+                <div id="fullcalendar" class="mt-3"></div>
             </div>
         </div>
     </div>
-    
-    <script src="{{asset('js/fullcalendar.js')}}"></script>
+@endsection
+
+@section('scripts') 
+<script src="{{asset('js/fullcalendar.js')}}"></script>
 
     <script>
     document.addEventListener("DOMContentLoaded", function() {
