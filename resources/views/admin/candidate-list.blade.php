@@ -43,7 +43,7 @@
                                             <td>{{$candidate->name }}</td>
                                             <td>{{$candidate->link}}</td>
                                             <td>
-                                                <a href="{{route('emp/delete-link',$candidate->id)}}" class="btn btn-danger">Delete</a>
+                                                <a href="{{route('admin/delete-link',$candidate->id)}}" class="btn btn-danger">Delete</a>
                                             </td>
                                         </tr>
                                     @endforeach

@@ -1,19 +1,3 @@
-<?php 
-// Decode the JSON string
-$decodedSkills = json_decode($data[0]->skills, true);
-$decodedSkills = json_decode($decodedSkills, true);
-
-if (is_array($decodedSkills) && isset($decodedSkills[0])) {
-    $skillsArray = array_map('trim', explode(',', $decodedSkills[0]));
-
-    foreach ($skillsArray as $skill) {
-        
-    }
-} else {
-    echo "No skills available.";
-}
-
-?>
 @extends('layout/employee-sidebar')
 @section('content')
 <style>
@@ -62,12 +46,6 @@ if (is_array($decodedSkills) && isset($decodedSkills[0])) {
                     <input type="file" name="profile_photo" class="form-control mt-3" required accept="image/*"/>
                     <button type="submit" class="btn btn-primary mt-2">Upload Photo</button>
                 </form>
-                
-
-                <div class="mt-2">
-                    <a class="btn btn-primary btn-sm" href="#">Follow</a>
-                    <a class="btn btn-primary btn-sm" href="#"><span data-feather="message-square"></span> Message</a>
-                </div>
             </div>
             <hr class="my-0" />
             <div class="card-body">
