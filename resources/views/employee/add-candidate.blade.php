@@ -13,7 +13,7 @@
             <div class="col-12">    
                 <div class="card">
                     <div class="col-12 d-flex flex-column flex-sm-row justify-content-between align-items-center text-center text-sm-start flex-wrap">
-                        <img src="{{ asset('storage/img/logo/Digieagle-Favicon.png') }}" class="mb-3 mb-sm-0" width="150px" alt="Logo">
+                        <img src="{{ asset('storage/logo/logo/Digieagle-Favicon.png') }}" class="mb-3 mb-sm-0" width="150px" alt="Logo">
                         <h3 class="mb-0">Applicant's Interview Form</h3>
                         <h6 class="mb-0 mt-3 mt-sm-0">Date: {{ \Carbon\Carbon::now()->format('d-m-Y') }}</h6>
                     </div>                                                        
