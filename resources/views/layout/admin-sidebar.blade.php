@@ -7,7 +7,7 @@
 	<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
 	<link rel="icon" type="image/x-icon" href="{{asset('storage\logo\Digieagle-Favicon.png')}}">
 	<link rel="preconnect" href="https://fonts.gstatic.com/">
-
+	<link rel="stylesheet" href="https://cdn.datatables.net/1.13.5/css/jquery.dataTables.min.css">
 	<title>Dashboard | Digieagle INC</title>
 
 	<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600&amp;display=swap" rel="stylesheet">
@@ -138,6 +138,17 @@
 							</li>
 						</ul>
 					</li>	
+					<li class="sidebar-item">
+						<a data-bs-target="#requirment" data-bs-toggle="collapse" class="sidebar-link {{ request()->routeIs('admin/candidate-list') || request()->routeIs('admin/candidate-details') ? 'active' : 'collapsed' }}">
+							<i class="fa fa-user-circle" aria-hidden="true"></i> <span class="align-middle">Requirment And Selection</span>
+						</a>
+						<ul id="requirment" class="sidebar-dropdown list-unstyled collapse" data-bs-parent="#sidebar">
+							<li class="sidebar-item"><a class='sidebar-link {{ request()->routeIs('admin/candidate-list') ? 'active' : '' }}' href='{{ route('admin/candidate-list') }}'>Candidate List</a></li>
+						</ul>
+						<ul id="requirment" class="sidebar-dropdown list-unstyled collapse" data-bs-parent="#sidebar">
+							<li class="sidebar-item"><a class='sidebar-link {{ request()->routeIs('admin/candidate-details') ? 'active' : '' }}' href='{{ route('admin/candidate-details') }}'>Candidate Details</a></li>
+						</ul>
+					</li>
 
 					{{-- <li class="sidebar-item">
 						<a data-bs-target="#project" data-bs-toggle="collapse" class="sidebar-link {{ request()->routeIs('admin/project-type') || request()->routeIs('admin/add-project-detail') || request()->routeIs('admin/list-project-detail')  ? 'active' : 'collapsed' }}">
@@ -150,6 +161,10 @@
 						</ul>
 					</li> --}}
 				
+					<a data-bs-target="#dashboards" href="{{route('admin/hosting_data')}}" class="sidebar-link {{request()->routeIs('admin/hosting_data') ? 'active' : ''}}">
+						<i class="fa-solid fa-server {{ request()->routeIs('admin/hosting_data') ? 'text-white' : '' }}" aria-hidden="true"></i><span class="align-middle">Hosting & Domain</span>
+					</a>
+
 					<a data-bs-target="#dashboards" href="{{ route('admin/Calender') }}" class="sidebar-link {{ request()->routeIs('admin/Calender') ? 'active' : '' }}">
 						<i class="fa fa-birthday-cake {{ request()->routeIs('admin/Calender') ? 'text-white' : '' }}" aria-hidden="true"></i><span class="align-middle">Birthdays / Leaves</span>
 					</a>
@@ -310,6 +325,10 @@
 
 	<script src="{{asset('js/app.js')}}"></script>
 	<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+	<script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.16.2/xlsx.full.min.js"></script>
+	<script src="https://cdn.jsdelivr.net/npm/exceljs@latest/dist/exceljs.min.js"></script>
+	<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+	<script src="https://cdn.datatables.net/1.13.5/js/jquery.dataTables.min.js"></script>
 
 <script>
 

@@ -21,13 +21,20 @@ use App\Http\Controllers\employee\ProjectController as EmployeeProjectController
 use App\Http\Controllers\employee\HRleaveController;
 use App\Http\Controllers\employee\HREmployeeController;
 use App\Http\Controllers\employee\WorkReportController;
+use App\Http\Controllers\employee\HRRequirmentController;
+use App\Http\Controllers\admin\RequirmentController;
+
 
 
 Route::get('/', [LoginController::class, 'index'])->name('emp/login'); 
+
+Route::get('add-candidate/{token}', [HRRequirmentController::class, 'add_candidate'])->name('add-candidate');
+Route::post('add-candidate-data', [HRRequirmentController::class, 'store_candidate'])->name('add-candidate-data');
+
 Route::prefix('emp')->group(function () {
 
     Route::group(['middleware' => 'emp.guest'],function () {
-            Route::post('authenticate', [LoginController::class, 'authenticate'])->name('emp/authenticate');
+        Route::post('authenticate', [LoginController::class, 'authenticate'])->name('emp/authenticate');
         Route::get('/resetpassword', [LoginController::class, 'resetpassword'])->name('emp/resetpassword');
         Route::post('/varify-email', [LoginController::class, 'varifyemail'])->name('emp/varify-email');
         Route::get('/new-password/{token}', [LoginController::class, 'newpassword'])->name('emp/new-password');
@@ -63,9 +70,14 @@ Route::prefix('emp')->group(function () {
         Route::get('delete-emp-data/{id}', [HREmployeeController::class, 'delete'])->name('emp/delete-emp-data'); 
         Route::get('edit-emp-data/{id}', [HREmployeeController::class, 'edit'])->name('emp/edit-emp-data'); 
         Route::post('update-emp-data', [HREmployeeController::class, 'update'])->name('emp/update-emp-data');
+        Route::get('candidate-list', [HRRequirmentController::class, 'index'])->name('emp/candidate-list');
+        Route::post('generate-link', [HRRequirmentController::class, 'add'])->name('emp/generate-link');
+        Route::get('delete-link/{id}', [HRRequirmentController::class, 'delete'])->name('emp/delete-link');
+        Route::get('candidate-details', [HRRequirmentController::class, 'candidate_details'])->name('emp/candidate-details');
+        Route::get('view-candidate/{id}', [HRRequirmentController::class, 'view_candidate'])->name('emp/view-candidate');
+        Route::get('delete-candidate-details/{id}', [HRRequirmentController::class, 'candidate_details_delete'])->name('emp/delete-candidate-details');
     });
-    
-    
+
 
     Route::group(['middleware' => 'emp.auth'],function () {
         Route::post('changepassword', [LoginController::class , 'changepassword'])->name('emp/changepassword');
@@ -188,6 +200,16 @@ Route::prefix('admin')->group(function () {
         Route::post('report-download', [EmployeeController::class, 'report_download'])->name('admin/report-download');
         Route::get('activity_log', [EmployeeController::class, 'activity_log'])->name('admin/activity_log');
         Route::post('activity-log/download', [EmployeeController::class, 'downloadActivityLogPDF'])->name('admin/activity_log/download');
+        Route::get('candidate-list', [RequirmentController::class, 'index'])->name('admin/candidate-list');
+        Route::post('generate-link', [RequirmentController::class, 'add'])->name('admin/generate-link');
+        Route::get('delete-link/{id}', [RequirmentController::class, 'delete'])->name('admin/delete-link');
+        Route::get('candidate-details', [RequirmentController::class, 'candidate_details'])->name('admin/candidate-details');
+        Route::get('view-candidate/{id}', [RequirmentController::class, 'view_candidate'])->name('admin/view-candidate');
+        Route::get('delete-candidate-details/{id}', [RequirmentController::class, 'candidate_details_delete'])->name('admin/delete-candidate-details');
+        Route::get('hosting_data', [ClientController::class, 'hosting_data'])->name('admin/hosting_data');
+        Route::post('add-hosting-data', [ClientController::class, 'hosting_data_store'])->name('admin/add-hosting-data');
+        Route::delete('delete-hosting-data', [ClientController::class, 'hosting_data_delete'])->name('admin/delete-hosting-data');
+        Route::post('update-hosting-data', [ClientController::class, 'update_hosting_data'])->name('admin/update-hosting-data');
     });
 });
 

@@ -100,6 +100,18 @@
 							<li class="sidebar-item"><a class='sidebar-link {{ request()->routeIs('emp/list-emp') ? 'active' : '' }}' href='{{ route('emp/list-emp') }}'>List Employee</a></li>
 						</ul>
 					</li>
+
+					<li class="sidebar-item">
+						<a data-bs-target="#requirment" data-bs-toggle="collapse" class="sidebar-link {{ request()->routeIs('emp/candidate-list') ? 'active' : 'collapsed' }}">
+							<i class="fa fa-user-circle" aria-hidden="true"></i> <span class="align-middle">Requirment And Selection</span>
+						</a>
+						<ul id="requirment" class="sidebar-dropdown list-unstyled collapse" data-bs-parent="#sidebar">
+							<li class="sidebar-item"><a class='sidebar-link {{ request()->routeIs('emp/candidate-list') ? 'active' : '' }}' href='{{ route('emp/candidate-list') }}'>Candidate List</a></li>
+						</ul>
+						<ul id="requirment" class="sidebar-dropdown list-unstyled collapse" data-bs-parent="#sidebar">
+							<li class="sidebar-item"><a class='sidebar-link {{ request()->routeIs('emp/candidate-details') ? 'active' : '' }}' href='{{ route('emp/candidate-details') }}'>Candidate Details</a></li>
+						</ul>
+					</li>
 					@endif	
 		
 					<a href="{{ route('emp/attendance') }}" class="sidebar-link {{ request()->routeIs('emp/attendance') ? 'active' : '' }}">

@@ -122,7 +122,7 @@ class LoginController extends Controller
     }
 
     public function resetpassword()
-    {
+    {      
         return view('employee/resetpassword');
     }
 
