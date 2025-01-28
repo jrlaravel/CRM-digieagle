@@ -35,14 +35,14 @@
                                     <th>No.</th>
                                     <th>Client Logo</th>
                                     <th>Client Name</th>
+                                    <th>Domain Expire Date</th>
+                                    <th>Hosting Expire Date</th>
                                     {{-- <th>Domain Name</th>
                                     <th>Domain Purchase From</th>
-                                    <th>Domain Purchase Date</th>
-                                    <th>Domain Expire Date</th>
+                                    <th>Domain Purchase Date</th> 
                                     <th>Domain Amount</th>
                                     <th>Hosting Purchase From</th>
                                     <th>Hosting Purchase Date</th>
-                                    <th>Hosting Expire Date</th>
                                     <th>Hosting Amount</th> --}}
                                     <th>Action</th>
                                 </tr>
@@ -57,6 +57,8 @@
                                         @endif
                                     </td>
                                     <td>{{ $value->client_name }}</td>
+                                    <td class="text-danger">{{ $value->domain_expire_date }}</td>
+                                    <td class="text-danger">{{ $value->hosting_expire_date }}</td>
                                     <td>
                                         <button type="button" class="btn btn-info view-btn" data-id="{{ $value->id }}"
                                             data-client_name="{{ $value->client_name }}"
@@ -196,7 +198,8 @@
                                 <small class="text-danger">{{ $message }}</small>
                             @enderror
                         </div>
-            
+                        
+                        <hr>
                         <!-- Domain Information -->
                         <h5 class="mt-3">Domain Information</h5>
                         <div class="col-md-6">
@@ -256,6 +259,7 @@
                             @enderror
                         </div>
             
+                        <hr>
                         <!-- Hosting Information -->
                         <h5 class="mt-3">Hosting Information</h5>
                         <div class="col-md-6">
