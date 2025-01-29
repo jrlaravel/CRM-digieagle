@@ -15,6 +15,7 @@
 @endsection
 
 @section('content')
+<meta name="csrf-token" content="{{ csrf_token() }}">
 <div class="container-fluid p-0">
     <div class="mb-3">
         <h1 class="h3 d-inline align-middle">Candidate Details</h1> 
@@ -45,9 +46,16 @@
                                     <td>{{$value['designation']}}</td>
                                     <td>
                                         <!-- View Button with data for the candidate -->
-                                        <button type="button" class="btn btn-primary view-btn" data-id="{{ $value['id'] }}" data-name="{{ $value['name'] }}" data-email="{{ $value['email'] }}" data-phone="{{ $value['phone'] }}" data-address="{{ $value['address'] }}" data-designation="{{ $value['designation'] }}" data-experience="{{ $value['experience'] }}" data-reference_name="{{ $value['reference_name'] }}" data-reference_phone="{{ $value['reference_phone'] }}" data-organization_name="{{ $value['organization_name'] }}" data-position_name="{{ $value['position_name'] }}" data-notice_period="{{ $value['notice_period'] }}" data-expected_date="{{ $value['expected_date'] }}" data-current_ctc="{{ $value['current_ctc'] }}" data-expected_ctc="{{ $value['expected_ctc'] }}" data-strengths="{{ $value['strengths'] }}" data-weaknesses="{{ $value['weaknesses'] }}" data-career_goal="{{ $value['career_goal'] }}" data-position_responsibilities="{{ $value['position_responsibilities'] }}" data-areas_of_expertise="{{ $value['areas_of_expertise'] }}" data-improve_your_knowledge="{{ $value['improve_your_knowledge'] }}" data-service_are_we_providing="{{ $value['service_are_we_providing'] }}" data-reason_for_leaving="{{ $value['reason_for_leaving'] }}" data-reason_for_applying="{{ $value['reason_for_applying'] }}">
+                                        <button type="button" class="btn btn-info view-btn" data-id="{{ $value['id'] }}" data-name="{{ $value['name'] }}" data-email="{{ $value['email'] }}" data-phone="{{ $value['phone'] }}" data-address="{{ $value['address'] }}" data-designation="{{ $value['designation'] }}" data-experience="{{ $value['experience'] }}" data-reference_name="{{ $value['reference_name'] }}" data-reference_phone="{{ $value['reference_phone'] }}" data-organization_name="{{ $value['organization_name'] }}" data-position_name="{{ $value['position_name'] }}" data-notice_period="{{ $value['notice_period'] }}" data-expected_date="{{ $value['expected_date'] }}" data-current_ctc="{{ $value['current_ctc'] }}" data-expected_ctc="{{ $value['expected_ctc'] }}" data-strengths="{{ $value['strengths'] }}" data-weaknesses="{{ $value['weaknesses'] }}" data-career_goal="{{ $value['career_goal'] }}" data-position_responsibilities="{{ $value['position_responsibilities'] }}" data-areas_of_expertise="{{ $value['areas_of_expertise'] }}" data-improve_your_knowledge="{{ $value['improve_your_knowledge'] }}" data-service_are_we_providing="{{ $value['service_are_we_providing'] }}" data-reason_for_leaving="{{ $value['reason_for_leaving'] }}" data-reason_for_applying="{{ $value['reason_for_applying'] }}">
                                             View
                                         </button>
+                                        @if($value['assign_to'] == '0')
+                                        <a href="#" class="btn btn-primary assign-btn" data-bs-toggle="modal" data-id="{{ $value['id'] }}" data-bs-target="#assignCandidateModal">
+                                            Assign Candidate
+                                        </a>                           
+                                        @else
+                                        <span class="badge bg-primary">Assigned</span>
+                                        @endif             
                                         <a href="#" data-id="{{ $value['id'] }}" class="btn btn-danger delete-btn" data-bs-toggle="modal" data-bs-target="#confirmDeleteModal">Delete</a>
                                     </td>
                                 </tr>
@@ -156,6 +164,39 @@
     </div>
 </div>
 
+<!-- Assign Candidate Modal -->
+<div class="modal fade" id="assignCandidateModal" tabindex="-1" aria-labelledby="assignCandidateModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="assignCandidateModalLabel">Assign Candidate</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <form id="assignCandidateForm">
+                    @csrf
+
+                    <input type="hidden" name="candidate_id" id="candidate_id">
+                    
+                    <div class="mb-3">
+                        <label for="assignTo" class="form-label">Assign To</label>
+                        <select name="assign_to" id="assignTo" class="form-select">
+                            <option value="">Select User</option>
+                            @foreach ($users as $user)
+                                <option value="{{ $user->id }}">{{ $user->first_name }}</option>
+                            @endforeach
+                        </select>
+                    </div>
+                    <div class="text-end">
+                        <button type="button" id="assignCandidateBtn" class="btn btn-success">Assign</button>
+                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
 
 @endsection
 
@@ -240,6 +281,47 @@
             });
         });
     });
+
+
+   $(document).ready(function () {
+    // Open modal and set candidate ID
+    $(document).on("click", ".assign-btn", function () {
+        let candidateId = $(this).data("id");
+        console.log("Candidate ID:", candidateId); // Debugging step
+        $("#candidate_id").val(candidateId);
+    });
+
+    // AJAX request on button click
+    $("#assignCandidateBtn").click(function () {
+        let candidateId = $("#candidate_id").val();
+        let assignTo = $("#assignTo").val();
+        let token = $('meta[name="csrf-token"]').attr('content');
+
+        if (!candidateId) {
+            alert("Candidate ID not found!");
+            return;
+        }
+
+        $.ajax({
+            url: "{{ route('emp.assign-candidate-details') }}",
+            type: "POST",
+            data: {
+                _token: token,
+                id: candidateId,
+                assign_to: assignTo
+            },
+            success: function (response) {
+                alert("Candidate assigned successfully!");
+                location.reload();
+            },
+            error: function (xhr) {
+                alert("Something went wrong!");
+            }
+        });
+    });
+});
+
+
 </script>
 
 

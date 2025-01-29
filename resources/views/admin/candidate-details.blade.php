@@ -49,6 +49,14 @@
                                         <button type="button" class="btn btn-primary view-btn" data-id="{{ $value['id'] }}" data-name="{{ $value['name'] }}" data-email="{{ $value['email'] }}" data-phone="{{ $value['phone'] }}" data-address="{{ $value['address'] }}" data-designation="{{ $value['designation'] }}" data-experience="{{ $value['experience'] }}" data-reference_name="{{ $value['reference_name'] }}" data-reference_phone="{{ $value['reference_phone'] }}" data-organization_name="{{ $value['organization_name'] }}" data-position_name="{{ $value['position_name'] }}" data-notice_period="{{ $value['notice_period'] }}" data-expected_date="{{ $value['expected_date'] }}" data-current_ctc="{{ $value['current_ctc'] }}" data-expected_ctc="{{ $value['expected_ctc'] }}" data-strengths="{{ $value['strengths'] }}" data-weaknesses="{{ $value['weaknesses'] }}" data-career_goal="{{ $value['career_goal'] }}" data-position_responsibilities="{{ $value['position_responsibilities'] }}" data-areas_of_expertise="{{ $value['areas_of_expertise'] }}" data-improve_your_knowledge="{{ $value['improve_your_knowledge'] }}" data-service_are_we_providing="{{ $value['service_are_we_providing'] }}" data-reason_for_leaving="{{ $value['reason_for_leaving'] }}" data-reason_for_applying="{{ $value['reason_for_applying'] }}">
                                             View
                                         </button>
+                                        @if($value['assign_to'] == '0')
+                                        <a href="#" class="btn btn-primary assign-btn" data-bs-toggle="modal" data-id="{{ $value['id'] }}" data-bs-target="#assignCandidateModal">
+                                            Assign Candidate
+                                        </a>                           
+                                        @else
+                                        <span class="badge bg-primary">Assigned</span>
+                                        @endif  
+
                                         <a href="#" data-id="{{ $value['id'] }}" class="btn btn-danger delete-btn" data-bs-toggle="modal" data-bs-target="#confirmDeleteModal">Delete</a>
                                     </td>
                                 </tr>

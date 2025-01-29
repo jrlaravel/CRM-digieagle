@@ -127,12 +127,16 @@ class RequirmentController extends Controller
 
     public function candidate_details()
     {
-        $data = candidate_details::all();
+        $data = candidate_details::where(function ($query) {
+            $query->where('assign_to', '=', session('user')->id)  // Candidate assigned to the logged-in user
+                  ->orWhere('assign_to', '=', 0);                  // Candidate not assigned to anyone
+        })->get();
+        // dd($data);
         return view('admin/candidate-details',compact('data'));
     }
 
     public function candidate_details_delete($id)
-    {
+    { 
         $data = candidate_details::find($id);
         $data->delete();
         return back()->with('success', 'Candidate details deleted successfully.');

@@ -76,6 +76,8 @@ Route::prefix('emp')->group(function () {
         Route::get('candidate-details', [HRRequirmentController::class, 'candidate_details'])->name('emp/candidate-details');
         Route::get('view-candidate/{id}', [HRRequirmentController::class, 'view_candidate'])->name('emp/view-candidate');
         Route::get('delete-candidate-details/{id}', [HRRequirmentController::class, 'candidate_details_delete'])->name('emp/delete-candidate-details');
+        Route::post('assign-candidate-details', [HRRequirmentController::class, 'assign_candidate_details'])->name('emp.assign-candidate-details');
+
     });
 
 

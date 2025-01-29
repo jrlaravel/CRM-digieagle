@@ -6,6 +6,7 @@ use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Http;
 use App\Models\Candidate_link;
+use App\Models\User;
 use App\Models\Candidate_details;
 use Illuminate\Support\Facades\Validator;
 
@@ -128,7 +129,8 @@ class HRRequirmentController extends Controller
     public function candidate_details()
     {
         $data = candidate_details::all();
-        return view('employee/candidate-details',compact('data'));
+        $users = User::where('role', 'admin')->select('id', 'first_name')->get();
+        return view('employee/candidate-details',compact('data','users'));
     }
 
     public function candidate_details_delete($id){
@@ -136,4 +138,23 @@ class HRRequirmentController extends Controller
         $data->delete();
         return back()->with('success', 'Candidate details deleted successfully.');
     }
+
+    public function assign_candidate_details(Request $request)
+    {
+        $request->validate([
+            'id' => 'required|exists:candidate_details,id',
+            'assign_to' => 'required',
+        ]);
+    
+        $candidate = Candidate_details::find($request->id);
+        if (!$candidate) {
+            return response()->json(['error' => 'Candidate not found'], 404);
+        }
+    
+        $candidate->assign_to = $request->assign_to;
+        $candidate->save();
+    
+        return response()->json(['success' => 'Candidate assigned successfully!']);
+    }    
+    
 }

@@ -12,6 +12,7 @@ class Candidate_details extends Model
     use HasFactory;
     protected $fillable = [
         'name',
+        'assign_to',
         'email',
         'phone',
         'address',

@@ -28,7 +28,7 @@ class DomainExpriremail extends Command
      */
     public function handle()
     {
-        $adminEmail = 'nilay.chotaliya119538@marwadiuniversity.ac.in'; // Replace with your admin's email address
+        $adminEmail = 'manager.digieagleinc@gmail.com'; // Replace with your admin's email address
         $thresholdDate = Carbon::now()->addDays(5);
 
         // Get records where domain or hosting is about to expire in 5 days

@@ -30,61 +30,62 @@ class LoginController extends Controller
     {
         // Ensure the login attempt is not rate-limited
         $this->ensureIsNotRateLimited($request);
-    
+        
         $validator = Validator::make($request->all(), [
             'username' => 'required',
             'password' => 'required',
         ]);
-    
+        
         if ($validator->fails()) {
             return redirect()->route('emp/login')->withInput()->withErrors($validator);
         }
-    
+        
+        // Attempt login with credentials
         if (Auth::guard('web')->attempt(['username' => $request->username, 'password' => $request->password])) {
             // Clear throttle count on successful login
             RateLimiter::clear($this->throttleKey($request));
-    
+            
             $user = Auth::guard('web')->user();
-            $department = Department::find($user->department);
-            $user->department_name = $department->name;
+            
+            // Check if the user is an admin
+            if ($user->role == 'admin') {
+                Auth::guard('web')->logout();
+                return redirect()->route('emp/login')->withInput()->with(['error' => 'You are not authorized to access this panel']);
+            }
     
+            // For employee or HR roles
             if ($user->role == 'employee' || $user->role == 'hr') {
                 session()->put('employee', $user);
     
+                $department = Department::find($user->department);
+                $user->department_name = $department ? $department->name : 'Unknown';
+    
                 $designation = Designation::find($user->designation);
+                session()->put('has_bde_features', $designation && $designation->name == 'BDE');
+                session()->put('has_hr_features', $user->role == 'hr');
     
-                if ($designation && $designation->name == 'BDE') {
-                    session()->put('has_bde_features', true);
-                } else {
-                    session()->put('has_bde_features', false);
-                }
-    
-                if ($user->role == 'hr') {
-                    session()->put('has_hr_features', true);
-                } else {
-                    session()->put('has_hr_features', false);
-                }
-    
+                // Log the activity
                 $activity_log = new Activity_log();
                 $activity_log->user_id = $user->id;
                 $activity_log->description = 'Logged in successfully';
                 $activity_log->save();
     
                 return redirect()->route('emp/dashboard');
-            } else {
-                Auth::guard('web')->logout();
-                return redirect()->route('emp/login')->withInput()->with(['error' => 'You are not authorized to access this area']);
             }
+    
+            // If the user role doesn't match 'employee' or 'hr'
+            Auth::guard('web')->logout();
+            return redirect()->route('emp/login')->withInput()->with(['error' => 'You are not authorized to access this area']);
         } else {
-            // Increment the throttle count
+            // Increment the throttle count on failed login
             RateLimiter::hit($this->throttleKey($request), 60); // 1 minute decay
-            
     
             throw ValidationException::withMessages([
                 'username' => [__('Invalid credentials')],
             ]);
         }
     }
+    
     
     /**
      * Ensure the login attempt is not rate-limited.
