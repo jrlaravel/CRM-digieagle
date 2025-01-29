@@ -115,8 +115,7 @@ class EmployeeLeaveController extends Controller
                 'manager.digieagleinc@gmail.com',
             ];
             
-            Mail::to($mailRecipients)
-            ->send(new LeaveRequestMail($leaveDetails));
+            Mail::to($mailRecipients)->send(new LeaveRequestMail($leaveDetails));
             
             
             // Redirect back with success message
