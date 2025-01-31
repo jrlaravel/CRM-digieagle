@@ -174,7 +174,6 @@
                                                     </div>
                                                 </div>
                                             </div>
-                                        @endif
                                     </td>  
                                     <td>
                                         @if($leave->report)
