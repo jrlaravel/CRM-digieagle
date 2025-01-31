@@ -44,6 +44,13 @@ class EmployeeDashboardController extends Controller
             return view('employee.employeedashboard',compact('presentDaysCount', 'absentDaysCount','cards','follow_ups'));
         }
 
+        if(session('has_hr_features'))
+        {
+            $interviewdata = DB::select("SELECT interview_details.id, candidate_id, name, interview_type, interview_date, interview_time FROM interview_details JOIN cv_details ON interview_details.candidate_id = cv_details.id WHERE interview_date BETWEEN CURDATE() AND CURDATE() + INTERVAL 3 DAY AND interview_details.status = '0';");
+            $cards = DB::select('SELECT card.name,card.image,ac.message,ac.date FROM `assign_card` as ac join card on ac.card_id = card.id WHERE ac.user_id = '.session('employee')->id);
+            return view('employee.employeedashboard',compact('presentDaysCount', 'absentDaysCount','cards','interviewdata'));
+        }
+
         $cards = DB::select('SELECT card.name,card.image,ac.message,ac.date FROM `assign_card` as ac join card on ac.card_id = card.id WHERE ac.user_id = '.session('employee')->id);
         return view('employee.employeedashboard',compact('presentDaysCount', 'absentDaysCount','cards'));
     }

@@ -103,15 +103,13 @@
                                                 data-bs-target="#editModal">
                                             Edit
                                         </button>
-                                
-
                                         <a href="#" data-id="{{ $value->id }}" class="btn btn-danger delete-btn" data-bs-toggle="modal" data-bs-target="#confirmDeleteModal">Delete</a>
                                     </td>
                                 </tr>
                             
                                 <!-- Hidden row for showing client details -->
                                 <tr class="client-details" id="details-{{ $value->id }}" style="display: none;">
-                                    <td colspan="4">
+                                    <td colspan="6">
                                         <div class="card shadow-sm rounded" style="background-color: #f9f9f9;">
                                             <div class="card-body">
                                                 <h5 class="card-title text-primary">Client Details</h5>

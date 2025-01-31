@@ -6,7 +6,10 @@ use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Http;
 use App\Models\Candidate_link;
+use App\Models\User;
+use App\Models\CandidateFollowup;
 use App\Models\Candidate_details;
+use App\Models\InterviewDetail;
 use Illuminate\Support\Facades\Validator;
 
 class RequirmentController extends Controller
@@ -115,7 +118,6 @@ class RequirmentController extends Controller
             if ($link) {
                 $link->delete();
             }
-
           return view('layout/success');
         }
 
@@ -131,8 +133,8 @@ class RequirmentController extends Controller
             $query->where('assign_to', '=', session('user')->id)  // Candidate assigned to the logged-in user
                   ->orWhere('assign_to', '=', 0);                  // Candidate not assigned to anyone
         })->get();
-        // dd($data);
-        return view('admin/candidate-details',compact('data'));
+        $users = User::where('role', 'admin')->select('id', 'first_name')->get();
+        return view('admin/candidate-details',compact('data','users'));
     }
 
     public function candidate_details_delete($id)
@@ -141,4 +143,48 @@ class RequirmentController extends Controller
         $data->delete();
         return back()->with('success', 'Candidate details deleted successfully.');
     }
+
+    public function assign_candidate_details(Request $request)
+    {
+        $request->validate([
+            'id' => 'required|exists:candidate_details,id',
+            'assign_to' => 'required',
+        ]);
+    
+        $candidate = Candidate_details::find($request->id);
+        if (!$candidate) {
+            return response()->json(['error' => 'Candidate not found'], 404);
+        }
+    
+        $candidate->assign_to = $request->assign_to;
+        $candidate->save();
+    
+        return response()->json(['success' => 'Candidate assigned successfully!']);
+    }
+    
+    public function add_followup(Request $request)
+    {   
+        // Validate the incoming request
+        $request->validate([
+            'candidate_id' => 'required|exists:cv_details,id',
+            'notes' => 'required|string|max:500',
+        ]);
+    
+        // Create a new follow-up record
+        $followup = CandidateFollowup::create([
+            'candidate_id' => $request->candidate_id,
+            'follow_up' => $request->notes,
+        ]);
+
+        $data = InterviewDetail::find($request->interview_id);
+        $data->status = "1";
+        $data->save();
+    
+        // Return success response
+        return response()->json([
+            'success' => true,
+            'message' => 'Follow-up added successfully!',
+        ]);
+    }
+    
 }

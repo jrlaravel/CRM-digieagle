@@ -21,8 +21,10 @@ class AdminDashboardController extends Controller
         ->where(DB::raw('DATE(follow_up.call_date)'), '=', DB::raw('CURDATE()')) // Use CURDATE() for today's date
         ->get();
 
+        $interviewdata = DB::select("SELECT interview_details.id, candidate_id, name, interview_type, interview_date, interview_time FROM interview_details JOIN cv_details ON interview_details.candidate_id = cv_details.id WHERE interview_date BETWEEN CURDATE() AND CURDATE() + INTERVAL 3 DAY AND interview_details.status = '0';");
+
         $totalUsers = User::where('role','employee')->count();
-        return view('admin.admindashboard',compact('totalUsers','follow_ups'));
+        return view('admin.admindashboard',compact('totalUsers','follow_ups','interviewdata'));
     }
 
     public function adminProfile(){

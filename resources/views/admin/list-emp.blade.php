@@ -212,20 +212,15 @@
 
     $(document).ready(function () {
         $('#datatables-reponsive').DataTable({
-            paging: true,
+            paging: false,
             searching: true,
             ordering: true,
             info: true,
-            pageLength: 10
-        });
-    });
-
-    document.addEventListener("DOMContentLoaded", function() {
-        // Datatables Responsive
-        $("#datatables-reponsive").DataTable({
+            pageLength: 10,
             responsive: true
         });
     });
+
 
     function openpostmethod(id)
     {

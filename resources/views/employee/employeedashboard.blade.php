@@ -168,101 +168,333 @@
     </div>
 </div>
 
+{{-- bde features --}}
 @if(session('has_bde_features'))
+    <div class="card mt-4">
+        <div class="card-body">
+            <h5 class="card-title">Call Reminder List</h5>
+            <table id="employee-table" class="table table-striped" style="width:100%">
+                <thead>
+                    <tr>
+                        <th>No.</th>
+                        <th>Name</th>
+                        <th>Company Name</th>
+                        <th>Status</th>
+                        <th>Phone No.</th>
+                        <th>Call Date</th>
+                        <th>Action</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach ($follow_ups as $item)
+                    <tr>
+                        <td>{{ $loop->index + 1 }}</td>
+                        <td>{{ $item->first_name . ' ' . $item->last_name }}</td>
+                        <td>{{ $item->company_name }}</td>
+                        <td>{{ $item->status }}</td>
+                        <td>{{ $item->phone }}</td>
+                        <td>{{ \Carbon\Carbon::parse($item->call_date)->format('d-m-Y') }}</td>
+                        <td>
+                            <button type="button" class="btn btn-primary edit-followup" data-lead-id="{{ $item->lead_id }}" data-bs-toggle="modal" data-bs-target="#exampleModal">
+                                Update
+                            </button>
+                        </td>
+                    </tr>
+                    @endforeach
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+    <div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+            <h1 class="modal-title fs-5" id="exampleModalLabel">Modal title</h1>
+            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <form action="{{ route('admin/add-followup') }}" method="post">
+                    @csrf
+
+                    <input type="hidden" id="lead_Id" name="lead_id">
+                
+                    <input type="text" class="form-control" value="call reminder update" hidden name="title" id="inputTitle">
+                    
+                    <input type="date" name="date" id="dateInput" class="form-control" hidden value="<?php echo date('Y-m-d'); ?>">
+                
+                    <div class="mb-3">
+                        <label class="form-label" for="message">Update Message</label>
+                        <input type="text" name="message" class="form-control"  id="message">
+                    </div>
+
+                    
+                    <div class="mb-3">
+                        <label for="status">Status</label>
+                        <div class="select-container">
+                            <select id="status-filter" name="status" class="form-select">
+                                <option value="">&#11044; All Status</option>
+                                <option value="No Response" class="text-secondary">&#11044; No Response</option>
+                                <option value="Not interested" class="text-danger"> &#11044; Not interested</option>
+                                <option value="Prospect" class="text-warning"> &#11044; Prospect</option>
+                                <option value="lead" class="text-info"> &#11044; Lead</option>
+                                <option value="hot lead" class="text-primary"> &#11044; Hot Lead</option>
+                                <option value="client" class="text-success"> &#11044; Client</option>
+                            </select>   
+                        </div>
+                    </div>
+                    <button type="submit" class="btn btn-primary">Save changes</button>
+                </form>
+            </div>
+        </div>
+        </div>
+    </div>
+
+    <script>
+        $(document).ready(function() {
+            $('#exampleModal').on('show.bs.modal', function (event) {
+                var button = $(event.relatedTarget); // Button that triggered the modal
+                var leadId = button.data('lead-id'); // Extract lead_id from data-* attributes  
+                // Update the modal's content
+                var modal = $(this);
+                modal.find('#lead_Id').val(leadId); // Set the lead_id
+            });
+        });
+
+    </script>
+@endif
+
+{{-- HR feature --}}
+@if(session('has_hr_features'))
 <div class="card mt-4">
     <div class="card-body">
-        <h5 class="card-title">Call Reminder List</h5>
+        <div class="d-flex align-items-center justify-content-between">
+            <h5 class="card-title mb-0">Interview Reminder List</h5>
+            <a  href="{{route('emp/candidate-cv-list')}}" class="btn btn-primary ms-auto">Schedule Interview</a>
+        </div>        
         <table id="employee-table" class="table table-striped" style="width:100%">
             <thead>
                 <tr>
                     <th>No.</th>
                     <th>Name</th>
-                    <th>Company Name</th>
-                    <th>Status</th>
-                    <th>Phone No.</th>
-                    <th>Call Date</th>
+                    <th>Interview type</th>
+                    <th>Date and time</th>
                     <th>Action</th>
                 </tr>
             </thead>
             <tbody>
-                @foreach ($follow_ups as $item)
+              @foreach ($interviewdata as $item)
                 <tr>
                     <td>{{ $loop->index + 1 }}</td>
-                    <td>{{ $item->first_name . ' ' . $item->last_name }}</td>
-                    <td>{{ $item->company_name }}</td>
-                    <td>{{ $item->status }}</td>
-                    <td>{{ $item->phone }}</td>
-                    <td>{{ \Carbon\Carbon::parse($item->call_date)->format('d-m-Y') }}</td>
-                    <td>
-                        <button type="button" class="btn btn-primary edit-followup" data-lead-id="{{ $item->lead_id }}" data-bs-toggle="modal" data-bs-target="#exampleModal">
-                            Update
-                        </button>
+                    <td>{{ $item->name }}</td>
+                    <td>{{ $item->interview_type }}</td>
+                    <td>{{ $item->interview_date }} {{ $item->interview_time }}</td>
+                    <td>             
+                        <a href="javascript:void(0)" class="btn btn-primary edit-interview-btn"
+                            data-id="{{ $item->id }}"
+                            data-type="{{ $item->interview_type }}"
+                            data-date="{{ $item->interview_date }}"
+                            data-time="{{ $item->interview_time }}"
+                            data-bs-toggle="modal"
+                            data-bs-target="#editInterviewModal">
+                            Edit
+                        </a>
+                    
+                        <a href="#" class="addfollow btn btn-info" data-id="{{$item->candidate_id}}" data-interview_id="{{$item->id}}" data-bs-toggle="modal" data-bs-target="#addFollowUpModal">
+                            Add Follow Up
+                        </a>
                     </td>
                 </tr>
-                @endforeach
+              @endforeach
             </tbody>
         </table>
     </div>
 </div>
 
-<div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+  <!-- Add Follow Up Modal -->
+<div class="modal fade" id="addFollowUpModal" tabindex="-1" aria-labelledby="addFollowUpModalLabel" aria-hidden="true">
     <div class="modal-dialog">
-      <div class="modal-content">
-        <div class="modal-header">
-          <h1 class="modal-title fs-5" id="exampleModalLabel">Modal title</h1>
-          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-        </div>
-        <div class="modal-body">
-            <form action="{{ route('admin/add-followup') }}" method="post">
-                @csrf
-
-                <input type="hidden" id="lead_Id" name="lead_id">
-            
-                <input type="text" class="form-control" value="call reminder update" hidden name="title" id="inputTitle">
-                 
-                <input type="date" name="date" id="dateInput" class="form-control" hidden value="<?php echo date('Y-m-d'); ?>">
-            
-                <div class="mb-3">
-                    <label class="form-label" for="message">Update Message</label>
-                    <input type="text" name="message" class="form-control"  id="message">
-                </div>
-
-                
-                <div class="mb-3">
-                    <label for="status">Status</label>
-                    <div class="select-container">
-                        <select id="status-filter" name="status" class="form-select">
-                            <option value="">&#11044; All Status</option>
-                            <option value="No Response" class="text-secondary">&#11044; No Response</option>
-                            <option value="Not interested" class="text-danger"> &#11044; Not interested</option>
-                            <option value="Prospect" class="text-warning"> &#11044; Prospect</option>
-                            <option value="lead" class="text-info"> &#11044; Lead</option>
-                            <option value="hot lead" class="text-primary"> &#11044; Hot Lead</option>
-                            <option value="client" class="text-success"> &#11044; Client</option>
-                        </select>   
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="addFollowUpModalLabel">Add Follow Up</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <form id="followUpForm">
+                    @csrf
+                    <input type="hidden" id="candidate_id" name="candidate_id">
+                    <input type="hidden" name="interview_id" id="interview_id">
+                    <div class="mb-3">
+                        <label for="followUpNotes" class="form-label">Notes</label>
+                        <textarea class="form-control" id="followUpNotes" rows="3" placeholder="Add notes..."></textarea>
                     </div>
-                </div>
-                <button type="submit" class="btn btn-primary">Save changes</button>
-            </form>
+                    <button type="submit" class="btn btn-primary w-100">Save Follow Up</button>
+                </form>
+            </div>
         </div>
-      </div>
     </div>
-  </div>
+</div>
+    
+<!-- Edit Interview Modal -->
+<div class="modal fade" id="editInterviewModal" tabindex="-1" aria-labelledby="editInterviewModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="editInterviewModalLabel">Edit Interview</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <form id="editInterviewForm">
+                    @csrf
+                    <input type="hidden" id="edit_interview_id" name="interview_id">
 
-  <script>
-    $(document).ready(function() {
-        $('#exampleModal').on('show.bs.modal', function (event) {
-            var button = $(event.relatedTarget); // Button that triggered the modal
-            var leadId = button.data('lead-id'); // Extract lead_id from data-* attributes  
-            // Update the modal's content
-            var modal = $(this);
-            modal.find('#lead_Id').val(leadId); // Set the lead_id
+                    <div class="mb-3">
+                        <label for="edit_interview_type" class="form-label">Interview Type</label>
+                        <select id="edit_interview_type" name="interview_type" class="form-select" required>
+                            <option value="">Select Interview Type</option>
+                            <option value="HR">HR</option>
+                            <option value="Mock round">Mock round</option>
+                            <option value="Technical">Technical</option>
+                        </select>
+                    </div>
+
+                    <div class="mb-3">
+                        <label for="edit_interview_date" class="form-label">Interview Date</label>
+                        <input type="date" class="form-control" id="edit_interview_date" name="interview_date" required>
+                    </div>
+
+                    <div class="mb-3">
+                        <label for="edit_interview_time" class="form-label">Interview Time</label>
+                        <input type="time" class="form-control" id="edit_interview_time" name="interview_time" required>
+                    </div>
+
+                    <button type="submit" class="btn btn-primary w-20">Update Interview</button>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    // Wait for the document to fully load
+    document.addEventListener("DOMContentLoaded", function () {
+        // Add event listeners for the edit buttons dynamically
+        document.querySelectorAll(".edit-interview-btn").forEach(button => {
+            button.addEventListener("click", function () {
+                // Get data attributes from the clicked button
+                let interviewId = this.getAttribute("data-id");
+                let interviewType = this.getAttribute("data-type");
+                let interviewDate = this.getAttribute("data-date");
+                let interviewTime = this.getAttribute("data-time");
+
+                // Fill the modal form fields with the retrieved data
+                document.getElementById("edit_interview_id").value = interviewId;
+                document.getElementById("edit_interview_type").value = interviewType;
+                document.getElementById("edit_interview_date").value = interviewDate;
+                document.getElementById("edit_interview_time").value = interviewTime;
+
+                // Show the modal using Bootstrap's modal instance
+                let editModal = new bootstrap.Modal(document.getElementById('editInterviewModal'));
+                editModal.show();
+            });
+        });
+
+        // Handle form submission via AJAX
+        document.getElementById("editInterviewForm").addEventListener("submit", function (event) {
+            event.preventDefault();  // Prevent page reload
+
+            // Get form data
+            let interviewId = document.getElementById("edit_interview_id").value;
+            let interviewType = document.getElementById("edit_interview_type").value;
+            let interviewDate = document.getElementById("edit_interview_date").value;
+            let interviewTime = document.getElementById("edit_interview_time").value;
+
+            console.log("Updating Interview:", { interviewId, interviewType, interviewDate, interviewTime });
+
+            // Send data to Laravel backend via AJAX
+            $.ajax({
+                url: "{{ route('emp/edit-interview-schedule') }}",  // Laravel route
+                method: "POST",  // HTTP method
+                data: {
+                    _token: "{{ csrf_token() }}",  // CSRF token for security
+                    id: interviewId,
+                    interview_type: interviewType,
+                    interview_date: interviewDate,
+                    interview_time: interviewTime
+                },
+                success: function (data) {
+                    console.log("Response:", data);
+
+                    // Close modal after success (using Bootstrap's modal instance)
+                    let editModal = new bootstrap.Modal(document.getElementById('editInterviewModal'));
+                    editModal.hide();
+
+                    // Reload page or update row in table dynamically
+                    location.reload();
+                },
+                error: function (error) {
+                    console.error("Error:", error);
+                }
+            });
         });
     });
 
+    // add follow up
+    document.addEventListener("DOMContentLoaded", function () {
+        // Get all "Add Follow Up" buttons
+            document.querySelectorAll('.btn-info').forEach(button => {
+                button.addEventListener("click", function () {
+                let candidateId = this.getAttribute("data-id"); // Get candidate_id from button
+                let interviewId = this.getAttribute("data-interview_id"); // Get interview_id from button
+                document.getElementById("candidate_id").value = candidateId; // Set in hidden input
+                document.getElementById("interview_id").value = interviewId; // Set in hidden input
+            });
+        });
+
+        // Handle form submission
+        document.getElementById("followUpForm").addEventListener("submit", function (event) {
+            event.preventDefault(); // Prevent page reload
+            
+            // Get form data
+            let candidateId = document.getElementById("candidate_id").value;
+            let interviewId = document.getElementById("interview_id").value;   
+            let notes = document.getElementById("followUpNotes").value;
+
+            // Send data via AJAX to Laravel backend
+            fetch("{{route('emp/add-candidate-followup')}}", {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json",
+                    "X-CSRF-TOKEN": "{{ csrf_token() }}"
+                },
+                body: JSON.stringify({ candidate_id: candidateId, notes: notes, interview_id: interviewId})
+            })
+            .then(response => response.json())
+            .then(data => {
+                // Close add follow-up modal
+                let addFollowUpModal = bootstrap.Modal.getInstance(document.getElementById('addFollowUpModal'));
+                addFollowUpModal.hide();
+
+                // Reset form
+                document.getElementById("followUpForm").reset();
+
+                // Open success modal
+                let successModal = new bootstrap.Modal(document.getElementById('successModal'));
+                successModal.show();
+
+                // Wait for the success modal to be fully shown before reloading
+                successModal._element.addEventListener('hidden.bs.modal', function () {
+                    location.reload(); // Refresh the page after success modal is closed
+                });
+            })
+
+            .catch(error => console.error("Error:", error));
+        });
+    });
 </script>
 @endif
 
+{{-- cards section --}}
 <div class="row mb-2 mb-xl-3"> 
     <div class="col-auto d-none d-sm-block">
         <h3>Cards</h3>
@@ -307,8 +539,14 @@
     </div>
 </div>
 
+@endsection
+
+@section('script')
+<!-- Ensure jQuery and Bootstrap JS are loaded before this script -->
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js"></script>
 <script>
-   document.addEventListener("DOMContentLoaded", function() {
+document.addEventListener("DOMContentLoaded", function() {
     const checkboxes = document.querySelectorAll('input[type="checkbox"]');
     const cards = document.querySelectorAll('.card-item');
     const counts = {}; // Object to store counts for each color
@@ -397,9 +635,7 @@
     }, 1);
 });
 
+
+
 </script>
-
-
-
-
 @endsection

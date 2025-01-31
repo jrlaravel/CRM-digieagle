@@ -77,6 +77,12 @@ Route::prefix('emp')->group(function () {
         Route::get('view-candidate/{id}', [HRRequirmentController::class, 'view_candidate'])->name('emp/view-candidate');
         Route::get('delete-candidate-details/{id}', [HRRequirmentController::class, 'candidate_details_delete'])->name('emp/delete-candidate-details');
         Route::post('assign-candidate-details', [HRRequirmentController::class, 'assign_candidate_details'])->name('emp.assign-candidate-details');
+        Route::get('candidate-cv-list', [HRRequirmentController::class, 'cv_list'])->name('emp/candidate-cv-list');
+        Route::post('add-cv',[HRRequirmentController::class, 'store_cv'])->name('emp/add-cv');
+        Route::get('website-cv-list', [HRRequirmentController::class, 'website_cv_list'])->name('emp/website-cv-list');    
+        Route::post('interview-schedule',[HRRequirmentController::class, 'interview_schedule'])->name('emp/interview-schedule');
+        Route::post('edit-interview-schedule',[HRRequirmentController::class ,'edit_interview_schedule'])->name('emp/edit-interview-schedule');
+        Route::post('add-candidate-followup', [HRRequirmentController::class, 'add_followup'])->name('emp/add-candidate-followup');
 
     });
 
@@ -212,6 +218,8 @@ Route::prefix('admin')->group(function () {
         Route::post('add-hosting-data', [ClientController::class, 'hosting_data_store'])->name('admin/add-hosting-data');
         Route::delete('delete-hosting-data', [ClientController::class, 'hosting_data_delete'])->name('admin/delete-hosting-data');
         Route::post('update-hosting-data', [ClientController::class, 'update_hosting_data'])->name('admin/update-hosting-data');
+        Route::post('assign-candidate-details', [RequirmentController::class, 'assign_candidate_details'])->name('admin.assign-candidate-details');
+        Route::post('add-candidate-followup', [RequirmentController::class, 'add_followup'])->name('admin/add-candidate-followup');
     });
 });
 

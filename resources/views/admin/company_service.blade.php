@@ -252,13 +252,8 @@
         $('#datatables-reponsive').DataTable({
             responsive: true,
             pageLength: 5, // Number of rows per page
-        });
-    });
-
-    document.addEventListener("DOMContentLoaded", function() {
-        // Datatables Responsive
-        $("#datatables-reponsive").DataTable({
-            responsive: true
+            paging: false,
+            searching: false
         });
     });
 

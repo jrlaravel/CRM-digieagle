@@ -90,9 +90,17 @@ class EmployeeLeaveController extends Controller
             
             // Create the leave record
             Leave::create($leaveData);
+            $user = User::find($request->id);
+
+            Notification::create([
+                'user_id' => session('user')->id,
+                'title' => 'Leave Request',
+                'url' => 'leave',
+                'message' => $user->first_name . ' has been requested for leave, Reason: ' . $request->reason,
+            ]);
+            
 
             // Send notification or email to HR (optional)
-            $user = User::find($request->id);
             $designation = Designation::find($user->designation);
             $email = $user->email;
 
