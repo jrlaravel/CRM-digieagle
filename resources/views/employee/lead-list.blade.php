@@ -16,36 +16,27 @@
 @section('content')
 <meta name="csrf-token" content="{{ csrf_token() }}">
 <div class="container-fluid p-0">
-    <div class="d-flex flex-wrap align-items-center gap-2 mb-3">
-        <!-- Download Excel Button -->
-        <button id="download-excel" class="btn btn-success">Download Excel</button>
-        
-        <!-- Hidden Input for Uploading Excel -->
-        <input type="file" id="excel-file" name="excel_file" class="form-control d-none" accept=".xlsx, .xls">
-        
-        <!-- Upload Excel Button -->
-        <button id="upload-excel" class="btn btn-success">Upload Excel</button>
-        
-        <!-- Search Input -->
-        <input type="text" id="searchInput" placeholder="Search" 
-               class="form-control flex-grow-1 flex-md-grow-0 w-auto" onkeyup="filterTable()">
-        
-        <!-- Status Filter Dropdown -->
-        <select id="status-filter" class="form-select w-auto">
-            <option value="">&#11044; All Status</option>
-            <option value="No Response" class="text-secondary">&#11044; No Response</option>
-            <option value="Not interested" class="text-danger">&#11044; Not interested</option>
-            <option value="Prospect" class="text-warning">&#11044; Prospect</option>
-            <option value="lead" class="text-info">&#11044; Lead</option>
-            <option value="hot lead" class="text-primary">&#11044; Hot Lead</option>
-            <option value="client" class="text-success">&#11044; Client</option>
-        </select>
+    <div class="mb-3 d-flex flex-column flex-md-row justify-content-between align-items-md-center">
+        <h1 class="h3 d-inline align-middle mb-2 mb-md-0">Lead List</h1>
+        <div class="d-flex flex-column flex-md-row align-items-md-center">
+            <button id="download-excel" class="btn btn-success mb-2 mb-md-0 me-md-2">Download Excel</button>
+            <input type="file" id="excel-file" name="excel_file" class="form-control d-none" accept=".xlsx, .xls">
+            <button id="upload-excel" class="btn btn-success mb-2 mb-md-0 me-md-2">Upload Excel</button>
+            {{-- <input type="text" id="searchInput" placeholder="Search" class="form-control me-md-2 mb-2 mb-md-0 w-100 w-md-auto" onkeyup="filterTable()"> --}}
+            <select id="status-filter" class="form-select w-100 w-md-auto">
+                <option value="">&#11044; All Status</option>
+                <option value="No Response" class="text-secondary">&#11044; No Response</option>
+                <option value="Not interested" class="text-danger"> &#11044; Not interested</option>
+                <option value="Prospect" class="text-warning"> &#11044; Prospect</option>
+                <option value="lead" class="text-info"> &#11044; Lead</option>
+                <option value="hot lead" class="text-primary"> &#11044; Hot Lead</option>
+                <option value="client" class="text-success"> &#11044; Client</option>
+            </select>
+        </div>
     </div>
-    
-        
-    </div>
+
     <div class="row">
-        <div class="col-12">
+        <div class="col-12">    
             <div class="card">
                 <div class="card-body">
                     <div class="table-responsive">
@@ -63,11 +54,12 @@
                                     <th>City</th>
                                     <th>State</th>
                                     <th>Address</th>
+                                    <th>Date</th>
                                     <th>Status</th>
                                     <th>Action</th>
                                 </tr>
                             </thead>
-                            <tbody>
+                            <tbody>                                
                                 @foreach ($data as $key => $lead)
                                 <tr data-status="{{ $lead->status }}">
                                     <td>{{ ++$key }}</td>
@@ -76,11 +68,12 @@
                                     <td>{{ $lead->description }}</td>
                                     <td>{{ $lead->lead_source}}</td>
                                     <td>{{ $lead->email }}</td>
-                                    <td><a href="tel:{{$lead->phone}}">{{ $lead->phone }}</a></td>
-                                    <td><a href="https://wa.me/{{$lead->whatsappno}}">{{ $lead->whatsappno }}</a></td>
+                                    <td><a target="_blank" href="tel:{{$lead->phone}}">{{ $lead->phone }}</a></td>
+                                    <td><a target="_blank" href="https://wa.me/{{$lead->whatsappno}}">{{ $lead->whatsappno }}</a></td>
                                     <td>{{ $lead->city }}</td>
                                     <td>{{ $lead->state }}</td>
                                     <td>{{ $lead->address }}</td>
+                                    <td>{{ \Carbon\Carbon::parse($lead->created_at)->format('d-m-Y H:i') }}</td>
                                     <td>
                                         @if($lead->status == 'Prospect')
                                             <span class="badge bg-warning">Prospect</span>
@@ -160,115 +153,116 @@
 
 
 <div class="modal fade" id="editLeadModal" tabindex="-1" aria-labelledby="editLeadModalLabel" aria-hidden="true">
-<div class="modal-dialog">
-    <div class="modal-content">
-        <div class="modal-header">
-            <h5 class="modal-title" id="editLeadModalLabel">Edit Lead</h5>
-            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-        </div>
-        <div class="modal-body">
-            <form id="editLeadForm" action="{{route('emp/lead-update')}}" method="post">
-                @csrf
-                <input type="hidden" name="id" id="lead-id">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="editLeadModalLabel">Edit Lead</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <form id="editLeadForm" action="{{route('emp/lead-update')}}" method="post">
+                    @csrf
+                    <input type="hidden" name="id" id="lead-id">
 
-                <div class="row">
-                    <div class="mb-3 col-md-6">
-                        <label for="first_name" class="form-label">First Name</label>
-                        <input type="text" class="form-control" id="first_name" name="first_name">
-                    </div>
-    
-                    <div class="mb-3 col-md-6">
-                        <label for="last_name" class="form-label">Last Name</label>
-                        <input type="text" class="form-control" id="last_name" name="last_name">
-                    </div>
-                </div>
-
-                <div class="mb-3">
-                    <label for="company_name" class="form-label">Company Name</label>
-                    <input type="text" class="form-control" id="company_name" name="company_name">
-                </div>
-
-                <div class="row">
-                    <div class="mb-3 col-md-6">
-                        <label for="description" class="form-label">Description</label>
-                        <input type="text" class="form-control" id="description" name="description">
+                    <div class="row">
+                        <div class="mb-3 col-md-6">
+                            <label for="first_name" class="form-label">First Name</label>
+                            <input type="text" class="form-control" id="first_name" name="first_name">
+                        </div>
+        
+                        <div class="mb-3 col-md-6">
+                            <label for="last_name" class="form-label">Last Name</label>
+                            <input type="text" class="form-control" id="last_name" name="last_name">
+                        </div>
                     </div>
 
-                    <div class="mb-3 col-md-6">
-                        <label for="description" class="form-label">Lead Source</label>
-                        <input type="text" class="form-control" id="lead_source" name="lead_source">
-                    </div>
-                </div>
-
-                <div class="row">
-                    <div class="mb-3 col-md-4">
-                        <label for="email" class="form-label">Email</label>
-                        <input type="email" class="form-control" id="email" name="email">
-                    </div>
-    
-                    <div class="mb-3 col-md-4">
-                        <label for="phone" class="form-label">Phone</label>
-                        <input type="text" class="form-control" id="phone" name="phone">
-                    </div>
-                    <div class="mb-3 col-md-4">
-                        <label for="phone" class="form-label">Whatsapp Number</label>
-                        <input type="text" class="form-control" id="whatsappno" name="whatsappno">
-                    </div>
-                </div>
-
-                <div class="row">
-                    <div class="mb-3 col-md-4">
-                        <label for="email" class="form-label">Instagram</label>
-                        <input type="text" class="form-control" id="instagram" name="instagram">
-                    </div>
-    
-                    <div class="mb-3 col-md-4">
-                        <label for="phone" class="form-label">Facebook</label>
-                        <input type="text" class="form-control" id="facebook" name="facebook">
+                    <div class="mb-3">
+                        <label for="company_name" class="form-label">Company Name</label>
+                        <input type="text" class="form-control" id="company_name" name="company_name">
                     </div>
 
-                    <div class="mb-3 col-md-4">
-                        <label for="phone" class="form-label">Website</label>
-                        <input type="text" class="form-control" id="website" name="website">
-                    </div>
-                </div>
-                
-                <div class="row">
-                    <div class="mb-3 col-md-6">
-                        <label for="city" class="form-label">City</label>
-                        <input type="text" class="form-control" id="city" name="city">
-                    </div>
-    
-                    <div class="mb-3 col-md-6">
-                        <label for="state" class="form-label">State</label>
-                        <input type="text" class="form-control" id="state" name="state">
-                    </div>
-                </div>
+                    <div class="row">
+                        <div class="mb-3 col-md-6">
+                            <label for="description" class="form-label">Description</label>
+                            <input type="text" class="form-control" id="description" name="description">
+                        </div>
 
-                <div class="mb-3">
-                    <label for="address" class="form-label">Address</label>
-                    <textarea class="form-control" id="address" name="address"></textarea>
-                </div>
+                        <div class="mb-3 col-md-6">
+                            <label for="description" class="form-label">Lead Source</label>
+                            <input type="text" class="form-control" id="lead_source" name="lead_source">
+                        </div>
+                    </div>
 
-                <div class="mb-3">
-                    <label for="status" class="form-label">Status</label>
-                    <select id="status" name="status" required class="form-select">
-                        <option value="">&#11044; All Status</option>
-                        <option value="No Response" class="text-secondary">&#11044; No Response</option>
-                        <option value="Not interested" class="text-danger"> &#11044; Not interested</option>
-                        <option value="Prospect" class="text-warning"> &#11044; Prospect</option>
-                        <option value="Lead" class="text-info"> &#11044; Lead</option>
-                        <option value="Hot Lead" class="text-primary"> &#11044; Hot Lead</option>
-                        <option value="Client" class="text-success"> &#11044; Client</option>
-                    </select>   
-                </div>
+                    <div class="row">
+                        <div class="mb-3 col-md-4">
+                            <label for="email" class="form-label">Email</label>
+                            <input type="email" class="form-control" id="email" name="email">
+                        </div>
+        
+                        <div class="mb-3 col-md-4">
+                            <label for="phone" class="form-label">Phone</label>
+                            <input type="text" class="form-control" id="phone" name="phone">
+                        </div>
+                        <div class="mb-3 col-md-4">
+                            <label for="phone" class="form-label">Whatsapp Number</label>
+                            <input type="text" class="form-control" id="whatsappno" name="whatsappno">
+                        </div>
+                    </div>
 
-                <button type="submit" class="btn btn-primary">Save changes</button>
-            </form>
+                    <div class="row">
+                        <div class="mb-3 col-md-4">
+                            <label for="email" class="form-label">Instagram</label>
+                            <input type="text" class="form-control" id="instagram" name="instagram">
+                        </div>
+        
+                        <div class="mb-3 col-md-4">
+                            <label for="phone" class="form-label">Facebook</label>
+                            <input type="text" class="form-control" id="facebook" name="facebook">
+                        </div>
+
+                        <div class="mb-3 col-md-4">
+                            <label for="phone" class="form-label">Website</label>
+                            <input type="text" class="form-control" id="website" name="website">
+                        </div>
+                    </div>
+                    
+                    <div class="row">
+                        <div class="mb-3 col-md-6">
+                            <label for="city" class="form-label">City</label>
+                            <input type="text" class="form-control" id="city" name="city">
+                        </div>
+        
+                        <div class="mb-3 col-md-6">
+                            <label for="state" class="form-label">State</label>
+                            <input type="text" class="form-control" id="state" name="state">
+                        </div>
+                    </div>
+
+                    <div class="mb-3">
+                        <label for="address" class="form-label">Address</label>
+                        <textarea class="form-control" id="address" name="address"></textarea>
+                    </div>
+
+                    <div class="mb-3">
+                        <label for="status" class="form-label">Status</label>
+                        <select id="status" name="status" required class="form-select">
+                            <option value="">&#11044; All Status</option>
+                            <option value="No Response" class="text-secondary">&#11044; No Response</option>
+                            <option value="Not interested" class="text-danger"> &#11044; Not interested</option>
+                            <option value="Prospect" class="text-warning"> &#11044; Prospect</option>
+                            <option value="Lead" class="text-info"> &#11044; Lead</option>
+                            <option value="Hot Lead" class="text-primary"> &#11044; Hot Lead</option>
+                            <option value="Client" class="text-success"> &#11044; Client</option>
+                        </select>   
+                    </div>
+
+                    <button type="submit" class="btn btn-primary">Save changes</button>
+                </form>
+            </div>
         </div>
     </div>
 </div>
-</div>
+
 <div class="modal fade" id="successModal" tabindex="-1" role="dialog" aria-labelledby="successModalLabel" aria-hidden="true">
     <div class="modal-dialog" role="document">
       <div class="modal-content">
@@ -286,7 +280,7 @@
         </div>
       </div>
     </div>
-  </div>
+</div>
 
 <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.16.2/xlsx.full.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/exceljs@latest/dist/exceljs.min.js"></script>
@@ -294,6 +288,20 @@
 
 <!-- jQuery Script to handle modal and populate values -->
 <script>
+    $(document).ready(function () {
+        $('#datatables-reponsive').DataTable({
+            responsive: true,
+            pageLength: 5, // Number of rows per page
+        });
+    });
+
+    document.addEventListener("DOMContentLoaded", function() {
+        // Datatables Responsive
+        $("#datatables-reponsive").DataTable({
+            responsive: true
+        });
+    });
+
     $(document).on('click', '.edit-lead', function() {
         let leadId = $(this).data('id');
         let firstName = $(this).data('first_name');

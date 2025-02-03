@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use App\Models\Lead;
 use App\Models\Followup;
+use App\Models\ClientMeetingDetail;
 use Illuminate\Support\Facades\DB;
 use App\Models\Notification;
 use Illuminate\Support\Facades\Validator;
@@ -28,17 +29,8 @@ class EmpLeadController extends Controller
         $validator = Validator::make($request->all(), [
             'fname' => 'required|string|max:255',
             'lname' => 'required|string|max:255',
-            'company_name' => 'required|string|max:255',
-            'description' => 'required|string|max:255',
-            'lead_source' => 'required|string|max:255',
-            'user_id' => 'required',
-            'email' => 'required|email|max:255',
             'phone' => 'required|numeric',
-            'whatsappno' => 'nullable|numeric',
-            'city' => 'required|string|max:255',
-            'state' => 'required|string|max:255',
             'status' => 'required',
-            'address' => 'required|string|max:500',
         ]);
         
         if ($validator->passes()) {
@@ -241,4 +233,73 @@ public function uploadExcel(Request $request)
         return Excel::download(new LeadsExport, 'leads.xlsx');
     }
 
+    public function meetingDetails()
+    {
+        $lead = Lead::select('id','first_name','last_name')->get();
+        $meetings = DB::table('client_meeting_details')
+            ->join('lead_detail', 'client_meeting_details.lead_id', '=', 'lead_detail.id')
+            ->select('client_meeting_details.*', 'lead_detail.first_name', 'lead_detail.last_name')
+            ->get();
+        return view('employee/meeting-details',compact('lead','meetings'));
+    }
+
+    public function meetingStore(Request $request)
+    {
+        // dd($request->all());
+        ClientMeetingDetail::create([
+            'lead_id' => $request->input('lead_id'),
+            'meeting_date' => $request->input('meeting_date'),
+            'start_time' => $request->input('start_time'),
+            'description' => $request->input('description'),
+        ]);
+
+        return response()->json(
+            [
+               'message' => 'Meeting details saved successfully.',
+               'status' => 'success',
+            ]
+        );
+    }
+
+    public function meetingDelete($id)
+    {
+
+        $meeting = ClientMeetingDetail::find($id);
+        $meeting->delete();
+        return response()->json(
+            [
+               'message' => 'Meeting details deleted successfully.',
+               'status' =>'success',
+            ]
+        );
+    }
+
+    public function meetingUpdate(Request $request)
+    {
+        // Find the meeting using the meeting_id from the request
+        $meeting = ClientMeetingDetail::where('id', '=', $request->input('meeting_id'))->first();
+    
+        // If the meeting is not found, return an error
+        if (!$meeting) {
+            return response()->json([
+                'status' => 'error',
+                'message' => 'Meeting not found.',
+            ], 404);
+        }
+    
+        // Update the meeting details
+        $meeting->lead_id = $request->input('lead_id');
+        $meeting->meeting_date = $request->input('meeting_date');
+        $meeting->start_time = $request->input('start_time');
+        $meeting->description = $request->input('description');
+    
+        // Save the updated meeting
+        $meeting->save();
+    
+        // Return a success response
+        return response()->json([
+            'status' => 'success',
+            'message' => 'Meeting details updated successfully.',
+        ]);
+    }    
 }

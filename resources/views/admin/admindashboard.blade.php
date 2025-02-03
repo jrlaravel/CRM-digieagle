@@ -57,38 +57,24 @@
     <div class="col-md-6 col-12">
         <div class="card mt-4 shadow-lg rounded">
             <div class="card-body">
-                <h5 class="card-title text-primary fw-bold">Call Reminder List</h5>
+                <h5 class="card-title text-primary fw-bold">Meeting List</h5>
                 <div class="table-responsive">
                     <table class="table table-striped table-hover align-middle">
                         <thead class="">
                             <tr>
                                 <th>No.</th>
-                                <th>Name</th>
-                                <th>Company Name</th>
-                                <th>Status</th>
-                                <th>Phone No.</th>
-                                <th>Call Date</th>
-                                <th>Action</th>
+                                <th>Client Name</th>
+                                <th>Date</th>
+                                <th>Time</th>
                             </tr>
                         </thead>
                         <tbody>
-                            @foreach ($follow_ups as $item)
+                            @foreach ($meetings as $item)
                             <tr>
                                 <td>{{ $loop->index + 1 }}</td>
                                 <td>{{ $item->first_name . ' ' . $item->last_name }}</td>
-                                <td>{{ $item->company_name }}</td>
-                                <td>
-                                    <span class="badge bg-success">{{ $item->status }}</span>
-                                </td>
-                                <td>{{ $item->phone }}</td>
-                                <td>{{ \Carbon\Carbon::parse($item->call_date)->format('d-m-Y') }}</td>
-                                <td>
-                                    <button type="button" class="btn btn-sm btn-outline-primary edit-followup"
-                                        data-lead-id="{{ $item->lead_id }}" data-bs-toggle="modal"
-                                        data-bs-target="#exampleModal">
-                                        <i class="fa fa-edit"></i> Update
-                                    </button>
-                                </td>
+                                <td>{{ \Carbon\Carbon::parse($item->meeting_date)->format('d-m-Y') }}</td>
+                                <td>{{ $item->start_time }}</td>
                             </tr>
                             @endforeach
                         </tbody>

@@ -9,6 +9,7 @@
 	<meta http-equiv="X-UA-Compatible" content="IE=edge">
 	<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
 	<link rel="icon" type="image/x-icon" href="{{asset('storage\logo\Digieagle-Favicon.png')}}">
+	<link rel="stylesheet" href="https://cdn.datatables.net/1.13.5/css/jquery.dataTables.min.css">
 	<link rel="preconnect" href="https://fonts.gstatic.com/">
 
 	<title>Dashboard | Digieagle INC</title>
@@ -16,6 +17,8 @@
 	<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600&amp;display=swap" rel="stylesheet">
 
 	<link class="js-stylesheet" href="{{asset('css/light.css')}}" rel="stylesheet">
+	<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+	<script src="https://cdn.datatables.net/1.13.5/js/jquery.dataTables.min.js"></script>
 	<script src="{{asset('js/datatables.js')}}"></script>
 	<style>
 		body {
@@ -65,17 +68,19 @@
 		
 					@if(session('has_bde_features'))
 					<li class="sidebar-item">
-						<a data-bs-target="#lead" data-bs-toggle="collapse" class="sidebar-link {{ request()->routeIs('emp/lead') || request()->routeIs('emp/lead-list') ? 'active' : 'collapsed' }}">
-							<i class="fas fa-poll {{ request()->routeIs('emp/lead') || request()->routeIs('emp/lead-list') ? 'text-white' : '' }}"></i> 
+						<a data-bs-target="#lead" data-bs-toggle="collapse" class="sidebar-link {{ request()->routeIs('emp/lead') || request()->routeIs('emp/lead-list') || request()->routeIs('emp/meeting_details') ? 'active' : 'collapsed' }}">
+							<i class="fas fa-poll {{ request()->routeIs('emp/lead') || request()->routeIs('emp/lead-list') || request()->routeIs('emp/meeting_details') ? 'text-white' : '' }}"></i> 
 							<span class="align-middle">Lead Management</span>
 						</a>
 						<ul id="lead" class="sidebar-dropdown list-unstyled collapse {{ request()->routeIs('emp/lead') || request()->routeIs('emp/lead-list') ? 'show' : '' }}" data-bs-parent="#sidebar">
 							<li class="sidebar-item">
+								<a class="sidebar-link {{ request()->routeIs('emp/lead-list') ? 'active' : '' }}" href="{{ route('emp/lead-list') }}">Lead List</a>
+							</li>
+							<li class="sidebar-item">
 								<a class="sidebar-link {{ request()->routeIs('emp/lead') ? 'active' : '' }}" href="{{ route('emp/lead') }}">Add Lead</a>
 							</li>
 							<li class="sidebar-item">
-								<a class="sidebar-link {{ request()->routeIs('emp/lead-list') ? 'active' : '' }}" href="{{ route('emp/lead-list') }}">Lead List</a>
-							</li>
+								<a href="{{ route('emp/meeting_details') }}" class="sidebar-link {{ request()->routeIs('emp/meeting_details') ? 'active' : '' }}">Schedule Meeting</a>
 						</ul>
 					</li>
 					@endif

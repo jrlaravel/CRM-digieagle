@@ -53,6 +53,10 @@ Route::prefix('emp')->group(function () {
         Route::post('update-followup', [EmpLeadController::class, 'createOrUpdateFollowup'])->name('emp/update-followup');
         Route::post('/upload-excel', [EmpLeadController::class, 'uploadExcel'])->name('emp/uploadexcel');
         Route::get('download-excel', [EmpLeadController::class, 'downloadExcel'])->name('emp/downloadexcel');
+        Route::get('meeting_details', [EmpLeadController::class, 'meetingDetails'])->name('emp/meeting_details');
+        Route::post('/client-meeting-store', [EmpLeadController::class, 'meetingStore'])->name('emp/client-meeting-store');
+        Route::get('/client-meeting-delete/{id}', [EmpLeadController::class, 'meetingDelete'])->name('emp/client-meeting-delete');
+        Route::post('emp/client-meeting-update', [EmpLeadController::class, 'meetingUpdate'])->name('emp/client-meeting-update');
     });
 
     Route::group(['middleware' => ['emp.auth', 'check.hr']], function () {

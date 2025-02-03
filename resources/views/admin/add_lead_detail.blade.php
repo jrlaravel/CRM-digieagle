@@ -79,7 +79,7 @@
                 <div class="row">
                     <div class="mb-3 col-md-6">
                         <label class="form-label" for="company_name">Company Name:</label>
-                        <input type="text" class="form-control @error('company_name') is-invalid @enderror" id="company_name" name="company_name" placeholder="Company name" value="{{ old('company_name') }}" required>
+                        <input type="text" class="form-control @error('company_name') is-invalid @enderror" id="company_name" name="company_name" placeholder="Company name" value="{{ old('company_name') }}" >
                         @error('company_name')
                         <p class="invalid-feedback">{{ $message }}</p>
                         @enderror
@@ -87,7 +87,7 @@
 
                     <div class="mb-3 col-md-6">
                         <label class="form-label" for="company_name">Description</label>
-                        <input type="text" class="form-control @error('description') is-invalid @enderror" id="description" name="description" placeholder="description" value="{{ old('description') }}" required>
+                        <input type="text" class="form-control @error('description') is-invalid @enderror" id="description" name="description" placeholder="description" value="{{ old('description') }}" >
                         @error('description')
                         <p class="invalid-feedback">{{ $message }}</p>
                         @enderror
@@ -109,7 +109,7 @@
                     </div>
                     <div class="mb-3 col-md-6">
                         <label class="form-label" for="company_name">Lead Source</label>
-                        <input type="text" class="form-control @error('lead_source') is-invalid @enderror" id="lead_source" name="lead_source" placeholder="Lead_source" value="{{ old('lead_source') }}" required>
+                        <input type="text" class="form-control @error('lead_source') is-invalid @enderror" id="lead_source" name="lead_source" placeholder="Lead_source" value="{{ old('lead_source') }}" >
                         @error('lead_source')
                         <p class="invalid-feedback">{{ $message }}</p>
                         @enderror
@@ -120,7 +120,7 @@
                 <div class="row">
                 <div class="mb-3 col-md-4">
                     <label class="form-label" for="email">Email:</label>
-                    <input type="email" class="form-control @error('email') is-invalid @enderror" id="email" name="email" placeholder="Email" value="{{ old('email') }}" required>
+                    <input type="email" class="form-control @error('email') is-invalid @enderror" id="email" name="email" placeholder="Email" value="{{ old('email') }}">
                     @error('email')
                     <p class="invalid-feedback">{{ $message }}</p>
                     @enderror
@@ -138,7 +138,7 @@
                  {{-- Phone --}}
                  <div class="mb-3 col-md-4">
                     <label class="form-label" for="phone">Whatsapp No:</label>
-                    <input type="number" class="form-control @error('whatsappphone') is-invalid @enderror" id="whatsappphone" min="10" name="whatsappphone" placeholder="Whatsapp Phone" value="{{ old('whatsappphone') }}" required>
+                    <input type="number" class="form-control @error('whatsappphone') is-invalid @enderror" id="whatsappphone" min="10" name="whatsappphone" placeholder="Whatsapp Phone" value="{{ old('whatsappphone') }}" >
                     @error('whatsappphone')
                     <p class="invalid-feedback">{{ $message }}</p>
                     @enderror
@@ -149,7 +149,7 @@
                 <div class="row">
                     <div class="mb-3 col-md-6">
                         <label class="form-label" for="city">City:</label>
-                        <input type="text" class="form-control @error('city') is-invalid @enderror" id="city" name="city" placeholder="City" value="{{ old('city') }}" required>
+                        <input type="text" class="form-control @error('city') is-invalid @enderror" id="city" name="city" placeholder="City" value="{{ old('city') }}" >
                         @error('city')
                         <p class="invalid-feedback">{{ $message }}</p>
                         @enderror
@@ -158,7 +158,7 @@
                     {{-- State --}}
                     <div class="mb-3 col-md-6">
                         <label class="form-label" for="state">State:</label>
-                        <input type="text" class="form-control @error('state') is-invalid @enderror" id="state" name="state" placeholder="State" value="{{ old('state') }}" required>
+                        <input type="text" class="form-control @error('state') is-invalid @enderror" id="state" name="state" placeholder="State" value="{{ old('state') }}" >
                         @error('state')
                         <p class="invalid-feedback">{{ $message }}</p>
                         @enderror
