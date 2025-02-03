@@ -131,8 +131,8 @@ public function show() {
         return response($data);
     }
 
-    public function update(Request $request){
-        
+    public function update(Request $request)
+    {
         $user = User::find($request->id);
         if($user->role == 'admin'){
             $user->first_name = $request->input('fname');
@@ -149,20 +149,23 @@ public function show() {
             }
         }
 
-       
-        $user->first_name = $request->input('fname');
-        $user->last_name = $request->input('lname');
-        $user->email = $request->input('email');
-        $user->phone = $request->input('phone');
-        $user->address = $request->input('address');
-        $user->birth_date = $request->input('date');
-        $user->designation = $request->input('designation');
-        $user->department = $request->input('department');
-        $user->empcode = $request->input('code');
-        $user->save();
-
-        return redirect()->route('admin/list-emp');  
-    
+        else{
+            $user->first_name = $request->input('fname');
+            $user->last_name = $request->input('lname');
+            $user->email = $request->input('email');
+            $user->phone = $request->input('phone');
+            $user->address = $request->input('address');
+            $user->birth_date = $request->input('date');
+            $user->designation = $request->input('designation');
+            $user->department = $request->input('department');
+            $user->empcode = $request->input('code');
+            if($request->password != null)
+            {
+                $user->password = Hash::make($request->password);
+            }  
+            $user->save();
+            return redirect()->route('admin/list-emp');  
+        }
     }
 
     public function delete($id){

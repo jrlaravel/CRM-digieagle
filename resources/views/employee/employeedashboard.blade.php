@@ -266,232 +266,250 @@
 
 {{-- HR feature --}}
 @if(session('has_hr_features'))
-<div class="card mt-4">
-    <div class="card-body">
-        <div class="d-flex align-items-center justify-content-between">
-            <h5 class="card-title mb-0">Interview Reminder List</h5>
-            <a  href="{{route('emp/candidate-cv-list')}}" class="btn btn-primary ms-auto">Schedule Interview</a>
-        </div>        
-        <table id="employee-table" class="table table-striped" style="width:100%">
-            <thead>
-                <tr>
-                    <th>No.</th>
-                    <th>Name</th>
-                    <th>Interview type</th>
-                    <th>Date and time</th>
-                    <th>Action</th>
-                </tr>
-            </thead>
-            <tbody>
-              @foreach ($interviewdata as $item)
-                <tr>
-                    <td>{{ $loop->index + 1 }}</td>
-                    <td>{{ $item->name }}</td>
-                    <td>{{ $item->interview_type }}</td>
-                    <td>{{ $item->interview_date }} {{ $item->interview_time }}</td>
-                    <td>             
-                        <a href="javascript:void(0)" class="btn btn-primary edit-interview-btn"
-                            data-id="{{ $item->id }}"
-                            data-type="{{ $item->interview_type }}"
-                            data-date="{{ $item->interview_date }}"
-                            data-time="{{ $item->interview_time }}"
-                            data-bs-toggle="modal"
-                            data-bs-target="#editInterviewModal">
-                            Edit
-                        </a>
-                    
-                        <a href="#" class="addfollow btn btn-info" data-id="{{$item->candidate_id}}" data-interview_id="{{$item->id}}" data-bs-toggle="modal" data-bs-target="#addFollowUpModal">
-                            Add Follow Up
-                        </a>
-                    </td>
-                </tr>
-              @endforeach
-            </tbody>
-        </table>
+    <div class="card mt-4">
+        <div class="card-body">
+            <div class="d-flex align-items-center justify-content-between">
+                <h5 class="card-title mb-0">Interview Reminder List</h5>
+                <a  href="{{route('emp/candidate-cv-list')}}" class="btn btn-primary ms-auto">Schedule Interview</a>
+            </div>        
+            <table id="employee-table" class="table table-striped" style="width:100%">
+                <thead>
+                    <tr>
+                        <th>No.</th>
+                        <th>Name</th>
+                        <th>Interview type</th>
+                        <th>Date and time</th>
+                        <th>Action</th>
+                    </tr>
+                </thead>
+                <tbody>
+                @foreach ($interviewdata as $item)
+                    <tr>
+                        <td>{{ $loop->index + 1 }}</td>
+                        <td>{{ $item->name }}</td>
+                        <td>{{ $item->interview_type }}</td>
+                        <td>{{ $item->interview_date }} {{ $item->interview_time }}</td>
+                        <td>             
+                            <a href="javascript:void(0)" class="btn btn-primary edit-interview-btn"
+                                data-id="{{ $item->id }}"
+                                data-type="{{ $item->interview_type }}"
+                                data-date="{{ $item->interview_date }}"
+                                data-time="{{ $item->interview_time }}"
+                                data-bs-toggle="modal"
+                                data-bs-target="#editInterviewModal">
+                                Edit
+                            </a>
+                        
+                            <a href="#" class="addfollow btn btn-info" data-id="{{$item->candidate_id}}" data-interview_id="{{$item->id}}" data-bs-toggle="modal" data-bs-target="#addFollowUpModal">
+                                Add Follow Up
+                            </a>
+                        </td>
+                    </tr>
+                @endforeach
+                </tbody>
+            </table>
+        </div>
     </div>
-</div>
 
-  <!-- Add Follow Up Modal -->
-<div class="modal fade" id="addFollowUpModal" tabindex="-1" aria-labelledby="addFollowUpModalLabel" aria-hidden="true">
-    <div class="modal-dialog">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h5 class="modal-title" id="addFollowUpModalLabel">Add Follow Up</h5>
-                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-            </div>
-            <div class="modal-body">
-                <form id="followUpForm">
-                    @csrf
-                    <input type="hidden" id="candidate_id" name="candidate_id">
-                    <input type="hidden" name="interview_id" id="interview_id">
-                    <div class="mb-3">
-                        <label for="followUpNotes" class="form-label">Notes</label>
-                        <textarea class="form-control" id="followUpNotes" rows="3" placeholder="Add notes..."></textarea>
-                    </div>
-                    <button type="submit" class="btn btn-primary w-100">Save Follow Up</button>
-                </form>
+    <!-- Add Follow Up Modal -->
+    <div class="modal fade" id="addFollowUpModal" tabindex="-1" aria-labelledby="addFollowUpModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="addFollowUpModalLabel">Add Follow Up</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <form id="followUpForm">
+                        @csrf
+                        <input type="hidden" id="candidate_id" name="candidate_id">
+                        <input type="hidden" name="interview_id" id="interview_id">
+                        <div class="mb-3">
+                            <label for="followUpNotes" class="form-label">Notes</label>
+                            <textarea class="form-control" id="followUpNotes" rows="3" placeholder="Add notes..."></textarea>
+                        </div>
+                        <button type="submit" class="btn btn-primary w-100">Save Follow Up</button>
+                    </form>
+                </div>
             </div>
         </div>
     </div>
-</div>
-    
-<!-- Edit Interview Modal -->
-<div class="modal fade" id="editInterviewModal" tabindex="-1" aria-labelledby="editInterviewModalLabel" aria-hidden="true">
-    <div class="modal-dialog">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h5 class="modal-title" id="editInterviewModalLabel">Edit Interview</h5>
-                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-            </div>
-            <div class="modal-body">
-                <form id="editInterviewForm">
-                    @csrf
-                    <input type="hidden" id="edit_interview_id" name="interview_id">
+        
+    <!-- Edit Interview Modal -->
+    <div class="modal fade" id="editInterviewModal" tabindex="-1" aria-labelledby="editInterviewModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="editInterviewModalLabel">Edit Interview</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <form id="editInterviewForm">
+                        @csrf
+                        <input type="hidden" id="edit_interview_id" name="interview_id">
 
-                    <div class="mb-3">
-                        <label for="edit_interview_type" class="form-label">Interview Type</label>
-                        <select id="edit_interview_type" name="interview_type" class="form-select" required>
-                            <option value="">Select Interview Type</option>
-                            <option value="HR">HR</option>
-                            <option value="Mock round">Mock round</option>
-                            <option value="Technical">Technical</option>
-                        </select>
-                    </div>
+                        <div class="mb-3">
+                            <label for="edit_interview_type" class="form-label">Interview Type</label>
+                            <select id="edit_interview_type" name="interview_type" class="form-select" required>
+                                <option value="">Select Interview Type</option>
+                                <option value="HR">HR</option>
+                                <option value="Mock round">Mock round</option>
+                                <option value="Technical">Technical</option>
+                            </select>
+                        </div>
 
-                    <div class="mb-3">
-                        <label for="edit_interview_date" class="form-label">Interview Date</label>
-                        <input type="date" class="form-control" id="edit_interview_date" name="interview_date" required>
-                    </div>
+                        <div class="mb-3">
+                            <label for="edit_interview_date" class="form-label">Interview Date</label>
+                            <input type="date" class="form-control" id="edit_interview_date" name="interview_date" required>
+                        </div>
 
-                    <div class="mb-3">
-                        <label for="edit_interview_time" class="form-label">Interview Time</label>
-                        <input type="time" class="form-control" id="edit_interview_time" name="interview_time" required>
-                    </div>
+                        <div class="mb-3">
+                            <label for="edit_interview_time" class="form-label">Interview Time</label>
+                            <input type="time" class="form-control" id="edit_interview_time" name="interview_time" required>
+                        </div>
 
-                    <button type="submit" class="btn btn-primary w-20">Update Interview</button>
-                </form>
+                        <button type="submit" class="btn btn-primary w-20">Update Interview</button>
+                    </form>
+                </div>
             </div>
         </div>
     </div>
-</div>
 
-<script>
-    // Wait for the document to fully load
-    document.addEventListener("DOMContentLoaded", function () {
-        // Add event listeners for the edit buttons dynamically
-        document.querySelectorAll(".edit-interview-btn").forEach(button => {
-            button.addEventListener("click", function () {
-                // Get data attributes from the clicked button
-                let interviewId = this.getAttribute("data-id");
-                let interviewType = this.getAttribute("data-type");
-                let interviewDate = this.getAttribute("data-date");
-                let interviewTime = this.getAttribute("data-time");
+    {{-- success modal --}}
+    <div class="modal fade" id="successModal" tabindex="-1" aria-labelledby="successModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="successModalLabel">Success</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    Follow-up has been added successfully!
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-success" data-bs-dismiss="modal">OK</button>
+                </div>
+            </div>
+        </div>
+    </div>
 
-                // Fill the modal form fields with the retrieved data
-                document.getElementById("edit_interview_id").value = interviewId;
-                document.getElementById("edit_interview_type").value = interviewType;
-                document.getElementById("edit_interview_date").value = interviewDate;
-                document.getElementById("edit_interview_time").value = interviewTime;
-
-                // Show the modal using Bootstrap's modal instance
-                let editModal = new bootstrap.Modal(document.getElementById('editInterviewModal'));
-                editModal.show();
-            });
-        });
-
-        // Handle form submission via AJAX
-        document.getElementById("editInterviewForm").addEventListener("submit", function (event) {
-            event.preventDefault();  // Prevent page reload
-
-            // Get form data
-            let interviewId = document.getElementById("edit_interview_id").value;
-            let interviewType = document.getElementById("edit_interview_type").value;
-            let interviewDate = document.getElementById("edit_interview_date").value;
-            let interviewTime = document.getElementById("edit_interview_time").value;
-
-            console.log("Updating Interview:", { interviewId, interviewType, interviewDate, interviewTime });
-
-            // Send data to Laravel backend via AJAX
-            $.ajax({
-                url: "{{ route('emp/edit-interview-schedule') }}",  // Laravel route
-                method: "POST",  // HTTP method
-                data: {
-                    _token: "{{ csrf_token() }}",  // CSRF token for security
-                    id: interviewId,
-                    interview_type: interviewType,
-                    interview_date: interviewDate,
-                    interview_time: interviewTime
-                },
-                success: function (data) {
-                    console.log("Response:", data);
-
-                    // Close modal after success (using Bootstrap's modal instance)
-                    let editModal = new bootstrap.Modal(document.getElementById('editInterviewModal'));
-                    editModal.hide();
-
-                    // Reload page or update row in table dynamically
-                    location.reload();
-                },
-                error: function (error) {
-                    console.error("Error:", error);
-                }
-            });
-        });
-    });
-
-    // add follow up
-    document.addEventListener("DOMContentLoaded", function () {
-        // Get all "Add Follow Up" buttons
-            document.querySelectorAll('.btn-info').forEach(button => {
+    <script>
+        // Wait for the document to fully load
+        document.addEventListener("DOMContentLoaded", function () {
+            // Add event listeners for the edit buttons dynamically
+            document.querySelectorAll(".edit-interview-btn").forEach(button => {
                 button.addEventListener("click", function () {
-                let candidateId = this.getAttribute("data-id"); // Get candidate_id from button
-                let interviewId = this.getAttribute("data-interview_id"); // Get interview_id from button
-                document.getElementById("candidate_id").value = candidateId; // Set in hidden input
-                document.getElementById("interview_id").value = interviewId; // Set in hidden input
+                    // Get data attributes from the clicked button
+                    let interviewId = this.getAttribute("data-id");
+                    let interviewType = this.getAttribute("data-type");
+                    let interviewDate = this.getAttribute("data-date");
+                    let interviewTime = this.getAttribute("data-time");
+
+                    // Fill the modal form fields with the retrieved data
+                    document.getElementById("edit_interview_id").value = interviewId;
+                    document.getElementById("edit_interview_type").value = interviewType;
+                    document.getElementById("edit_interview_date").value = interviewDate;
+                    document.getElementById("edit_interview_time").value = interviewTime;
+
+                    // Show the modal using Bootstrap's modal instance
+                    let editModal = new bootstrap.Modal(document.getElementById('editInterviewModal'));
+                    editModal.show();
+                });
+            });
+
+            // Handle form submission via AJAX
+            document.getElementById("editInterviewForm").addEventListener("submit", function (event) {
+                event.preventDefault();  // Prevent page reload
+
+                // Get form data
+                let interviewId = document.getElementById("edit_interview_id").value;
+                let interviewType = document.getElementById("edit_interview_type").value;
+                let interviewDate = document.getElementById("edit_interview_date").value;
+                let interviewTime = document.getElementById("edit_interview_time").value;
+
+                console.log("Updating Interview:", { interviewId, interviewType, interviewDate, interviewTime });
+
+                // Send data to Laravel backend via AJAX
+                $.ajax({
+                    url: "{{ route('emp/edit-interview-schedule') }}",  // Laravel route
+                    method: "POST",  // HTTP method
+                    data: {
+                        _token: "{{ csrf_token() }}",  // CSRF token for security
+                        id: interviewId,
+                        interview_type: interviewType,
+                        interview_date: interviewDate,
+                        interview_time: interviewTime
+                    },
+                    success: function (data) {
+                        console.log("Response:", data);
+
+                        // Close modal after success (using Bootstrap's modal instance)
+                        let editModal = new bootstrap.Modal(document.getElementById('editInterviewModal'));
+                        editModal.hide();
+
+                        // Reload page or update row in table dynamically
+                        location.reload();
+                    },
+                    error: function (error) {
+                        console.error("Error:", error);
+                    }
+                });
             });
         });
 
-        // Handle form submission
-        document.getElementById("followUpForm").addEventListener("submit", function (event) {
-            event.preventDefault(); // Prevent page reload
-            
-            // Get form data
-            let candidateId = document.getElementById("candidate_id").value;
-            let interviewId = document.getElementById("interview_id").value;   
-            let notes = document.getElementById("followUpNotes").value;
-
-            // Send data via AJAX to Laravel backend
-            fetch("{{route('emp/add-candidate-followup')}}", {
-                method: "POST",
-                headers: {
-                    "Content-Type": "application/json",
-                    "X-CSRF-TOKEN": "{{ csrf_token() }}"
-                },
-                body: JSON.stringify({ candidate_id: candidateId, notes: notes, interview_id: interviewId})
-            })
-            .then(response => response.json())
-            .then(data => {
-                // Close add follow-up modal
-                let addFollowUpModal = bootstrap.Modal.getInstance(document.getElementById('addFollowUpModal'));
-                addFollowUpModal.hide();
-
-                // Reset form
-                document.getElementById("followUpForm").reset();
-
-                // Open success modal
-                let successModal = new bootstrap.Modal(document.getElementById('successModal'));
-                successModal.show();
-
-                // Wait for the success modal to be fully shown before reloading
-                successModal._element.addEventListener('hidden.bs.modal', function () {
-                    location.reload(); // Refresh the page after success modal is closed
+        // add follow up
+        document.addEventListener("DOMContentLoaded", function () {
+            // Get all "Add Follow Up" buttons
+                document.querySelectorAll('.btn-info').forEach(button => {
+                    button.addEventListener("click", function () {
+                    let candidateId = this.getAttribute("data-id"); // Get candidate_id from button
+                    let interviewId = this.getAttribute("data-interview_id"); // Get interview_id from button
+                    document.getElementById("candidate_id").value = candidateId; // Set in hidden input
+                    document.getElementById("interview_id").value = interviewId; // Set in hidden input
                 });
-            })
+            });
 
-            .catch(error => console.error("Error:", error));
+            // Handle form submission
+            document.getElementById("followUpForm").addEventListener("submit", function (event) {
+                event.preventDefault(); // Prevent page reload
+                
+                // Get form data
+                let candidateId = document.getElementById("candidate_id").value;
+                let interviewId = document.getElementById("interview_id").value;   
+                let notes = document.getElementById("followUpNotes").value;
+
+                // Send data via AJAX to Laravel backend
+                fetch("{{route('emp/add-candidate-followup')}}", {
+                    method: "POST",
+                    headers: {
+                        "Content-Type": "application/json",
+                        "X-CSRF-TOKEN": "{{ csrf_token() }}"
+                    },
+                    body: JSON.stringify({ candidate_id: candidateId, notes: notes, interview_id: interviewId})
+                })
+                .then(response => response.json())
+                .then(data => {
+                    // Close add follow-up modal
+                    let addFollowUpModal = bootstrap.Modal.getInstance(document.getElementById('addFollowUpModal'));
+                    addFollowUpModal.hide();
+
+                    // Reset form
+                    document.getElementById("followUpForm").reset();
+
+                    // Open success modal
+                    let successModal = new bootstrap.Modal(document.getElementById('successModal'));
+                    successModal.show();
+
+                    // Wait for the success modal to be fully shown before reloading
+                    successModal._element.addEventListener('hidden.bs.modal', function () {
+                        location.reload(); // Refresh the page after success modal is closed
+                    });
+                })
+
+                .catch(error => console.error("Error:", error));
+            });
         });
-    });
-</script>
+    </script>
 @endif
 
 {{-- cards section --}}

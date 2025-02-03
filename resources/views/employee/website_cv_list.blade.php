@@ -126,6 +126,7 @@
                 if (response.status === 'success') {
                     // Set success message
                     $('#modalMessage').text(response.message);
+                    window.location.href = response.url;
                 } else {
                     // Set error message
                     $('#modalMessage').text(response.message);

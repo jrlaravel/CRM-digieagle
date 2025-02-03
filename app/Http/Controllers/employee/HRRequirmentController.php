@@ -231,6 +231,7 @@ class HRRequirmentController extends Controller
             return response()->json([
                 'status' => 'success',
                 'message' => 'CV Details Saved Successfully!',
+                'url' => "candidate-cv-list",
             ]);
         } 
         else
@@ -281,7 +282,7 @@ class HRRequirmentController extends Controller
         // dd($data);
         
          // Send email to admin
-        Mail::to('nilay.chotaliya119538@marwadiuniversity.ac.in')->send(new InterviewScheduledMail($interviewSchedule));
+        Mail::to('manager.digieagleinc@gmail.com')->send(new InterviewScheduledMail($interviewSchedule));
 
     
         // Return success response
@@ -326,26 +327,47 @@ class HRRequirmentController extends Controller
     
     public function add_followup(Request $request)
     {   
-        // Validate the incoming request
-        $request->validate([
-            'candidate_id' => 'required|exists:cv_details,id',
-            'notes' => 'required|string|max:500',
-        ]);
-    
-        // Create a new follow-up record
-        $followup = CandidateFollowup::create([
-            'candidate_id' => $request->candidate_id,
-            'follow_up' => $request->notes,
-        ]);
+        if($request->interview_id == null)
+        {
+            $request->validate([
+                'candidate_id' => 'required|exists:cv_details,id',
+                'notes' => 'required|string|max:500',
+            ]);
+        
+            // Create a new follow-up record
+            $followup = CandidateFollowup::create([
+                'candidate_id' => $request->candidate_id,
+                'follow_up' => $request->notes,
+            ]);
 
-        $data = InterviewDetail::find($request->interview_id);
-        $data->status = "1";
-        $data->save();
+            // Return success response
+            return response()->json([
+                'success' => true,
+                'message' => 'Follow-up added successfully!',
+            ]);
+        }
+        else{
+            // Validate the incoming request
+            $request->validate([
+                'candidate_id' => 'required|exists:cv_details,id',
+                'notes' => 'required|string|max:500',
+            ]);
+        
+            // Create a new follow-up record
+            $followup = CandidateFollowup::create([
+                'candidate_id' => $request->candidate_id,
+                'follow_up' => $request->notes,
+            ]);
     
-        // Return success response
-        return response()->json([
-            'success' => true,
-            'message' => 'Follow-up added successfully!',
-        ]);
+            $data = InterviewDetail::find($request->interview_id);
+            $data->status = "1";
+            $data->save();
+        
+            // Return success response
+            return response()->json([
+                'success' => true,
+                'message' => 'Follow-up added successfully!',
+            ]);
+        }
     }
 }

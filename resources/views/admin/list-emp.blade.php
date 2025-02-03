@@ -189,7 +189,10 @@
                             <p class="invalid-feedback">{{$message}}</p>
                             @enderror  
                     </div>
-                    
+                    <div class="mb-3">  
+                        <label class="form-label" for="password">Change Password</label>
+                        <input type="text" class="form-control" name="password" id="password" placeholder="Enter New Password">
+                    </div>
                 </div>
                 <div class="modal-footer">
                     <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
@@ -247,7 +250,6 @@
                 $('#department').val(response.department);
                 $('#designation').val(response.designation);
                 $("#code").val(response.empcode);
-
             }
             },
             error: function (error) {

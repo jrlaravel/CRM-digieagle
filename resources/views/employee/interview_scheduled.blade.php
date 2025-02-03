@@ -58,7 +58,7 @@
         <div class="content">
             <p><strong>Candidate Name:</strong> {{ $candidateName }}</p>
             <p><strong>Interview Type:</strong> {{ $interviewType }}</p>
-            <p><strong>Date:</strong> {{ \Carbon\Carbon::parse($interviewDate->format('d-m-Y')) }}</p>
+            <p><strong>Date:</strong> {{ \Carbon\Carbon::parse($interviewDate)->format('d-m-Y') }}</p>
             <p><strong>Time:</strong> {{ $interviewTime }}</p>
         </div>
 
