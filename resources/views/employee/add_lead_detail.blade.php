@@ -34,17 +34,10 @@
                 @endif
                 @csrf
                 <div class="row">
-                    <div class="mb-3 col-md-6">
-                        <label class="form-label" for="inputAddress">First Name</label>
-                        <input type="text" class="form-control @error('fname') is-invalid @enderror" name="fname" id="fname" value="{{old('fname')}}" placeholder="First name">
+                    <div class="mb-3 col-md-12">
+                        <label class="form-label" for="inputAddress">Full Name</label>
+                        <input type="text" class="form-control @error('fname') is-invalid @enderror" name="fname" id="fname" value="{{old('fname')}}" placeholder="Full name">
                         @error('fname')
-                        <p class="invalid-feedback">{{$message}}</p>
-                        @enderror
-                    </div>
-                    <div class="mb-3 col-md-6">
-                        <label class="form-label" for="inputPassword4">Last Name</label>
-                        <input type="text" class="form-control @error('lname') is-invalid @enderror" name="lname" id="lname" value="{{old('lname')}}" placeholder="Last name">
-                        @error('lname')
                         <p class="invalid-feedback">{{$message}}</p>
                         @enderror
                     </div>

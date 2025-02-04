@@ -101,10 +101,6 @@
                                         <input type="text" class="form-control" id="inputFirstName" value="{{$lead->first_name}}" disabled placeholder="First name">
                                     </div>
                                     <div class="mb-3 col-md-4">
-                                        <label class="form-label" for="inputLastName">Last name</label>
-                                        <input type="text" class="form-control" id="inputLastName" value="{{$lead->last_name}}" disabled placeholder="Last name">
-                                    </div>
-                                    <div class="mb-3 col-md-4">
                                         <label class="form-label" for="inputLastName">Status</label>
                                         <input type="text" class="form-control" id="inputLastName" value="{{$lead->status}}" disabled placeholder="Last name">
                                     </div>
@@ -170,58 +166,54 @@
                     <div class="card">
                         <div class="card-body">
                             <h5 class="card-title">Add Follow-up</h5>
+                                <form action="{{ route('emp/add-followup') }}" method="post">
+                                    @csrf
 
-                            <form action="{{ route('emp/add-followup') }}" method="post">
-                                @csrf
+                                    <input type="hidden" id="id" name="id">
 
-                                <input type="hidden" id="id" name="id">
-
-                                <input type="hidden" name="lead_id" value="{{ $lead->id }}">
-                            
-                                <div class="mb-3">
-                                    <label class="form-label" for="inputTitle">Title</label>
-                                    <input type="text" class="form-control" name="title" id="inputTitle">
-                                </div>
-                            
-                                <div class="mb-3">
-                                    <label class="form-label" for="dateInput">Date</label>
-                                    <input type="date" name="date" id="dateInput" class="form-control">
-                                </div>
-                            
-                                <div class="mb-3">
-                                    <label class="form-label" for="message">Update Message</label>
-                                    <input type="text" name="message" class="form-control" id="message">
-                                </div>
-
-                                <div class="mb-3">
-                                    <label class="form-label" for="message">Call Reminder</label>
-                                    <input type="checkbox" name="callreminder" id="callreminder">
-                                </div>
+                                    <input type="hidden" name="lead_id" value="{{ $lead->id }}">
                                 
-                                <div class="mb-3" id="callDateContainer" style="display: none;">
-                                    <label class="form-label" for="dateInput">Call Date</label>
-                                    <input type="date" name="call_date" id="call-dateInput" class="form-control">
-                                </div>
-                            
-                                <div class="mb-3">
-                                    <label for="status">Status</label>
-                                    <div class="select-container">
-                                        <select id="status-filter" class="form-select">
-                                            <option value="">&#11044; All Status</option>
-                                            <option value="No Response" class="text-secondary">&#11044; No Response</option>
-                                            <option value="Not interested" class="text-danger"> &#11044; Not interested</option>
-                                            <option value="Prospect" class="text-warning"> &#11044; Prospect</option>
-                                            <option value="lead" class="text-info"> &#11044; Lead</option>
-                                            <option value="hot lead" class="text-primary"> &#11044; Hot Lead</option>
-                                            <option value="client" class="text-success"> &#11044; Client</option>
-                                        </select>   
+                                    <div class="mb-3">
+                                        <label class="form-label" for="inputTitle">Title</label>
+                                        <input type="text" class="form-control" name="title" id="inputTitle">
                                     </div>
-                                </div>
-                            
-                                <button type="submit" class="btn btn-primary">Save changes</button>
-                            </form>
-                            
+                                
+                                    <div class="mb-3">
+                                        <label class="form-label" for="dateInput">Date</label>
+                                        <input type="date" name="date" id="dateInput" class="form-control">
+                                    </div>
+                                
+                                    <div class="mb-3">
+                                        <label class="form-label" for="message">Update Message</label>
+                                        <input type="text" name="message" class="form-control" id="message">
+                                    </div>
 
+                                    <div class="mb-3">
+                                        <label class="form-label" for="message">Call Reminder</label>
+                                        <input type="checkbox" name="callreminder" id="callreminder">
+                                    </div>
+                                    
+                                    <div class="mb-3" id="callDateContainer" style="display: none;">
+                                        <label class="form-label" for="dateInput">Call Date</label>
+                                        <input type="date" name="call_date" id="call-dateInput" class="form-control">
+                                    </div>
+                                
+                                    <div class="mb-3">
+                                        <label for="status">Status</label>
+                                        <div class="select-container">
+                                            <select id="status-filter" name="status" class="form-select">
+                                                <option value="">&#11044; All Status</option>
+                                                <option value="No Response" class="text-secondary">&#11044; No Response</option>
+                                                <option value="Not interested" class="text-danger"> &#11044; Not interested</option>
+                                                <option value="Prospect" class="text-warning"> &#11044; Prospect</option>
+                                                <option value="lead" class="text-info"> &#11044; Lead</option>
+                                                <option value="hot lead" class="text-primary"> &#11044; Hot Lead</option>
+                                                <option value="client" class="text-success"> &#11044; Client</option>
+                                            </select>   
+                                        </div>
+                                    </div>
+                                    <button type="submit" class="btn btn-primary">Save changes</button>
+                                </form>
                         </div>
                     </div>
                 </div>
@@ -248,7 +240,7 @@
                                     @endif
                                     <p style="margin-bottom: 2rem !important">
                                         {{ $data->message }}
-                                        <a href="{{ route('admin/delete-followup', $data->id) }}" class="btn btn-danger btn-sm float-end">
+                                        <a href="{{ route('emp/delete-followup', $data->id) }}" class="btn btn-danger btn-sm float-end">
                                             <i class="fas fa-trash-alt fa-xs"></i> <!-- Font Awesome trash icon -->
                                         </a>
                                     </p>

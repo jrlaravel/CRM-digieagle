@@ -72,7 +72,7 @@
                             @foreach ($meetings as $item)
                             <tr>
                                 <td>{{ $loop->index + 1 }}</td>
-                                <td>{{ $item->first_name . ' ' . $item->last_name }}</td>
+                                <td>{{ $item->first_name }}</td>
                                 <td>{{ \Carbon\Carbon::parse($item->meeting_date)->format('d-m-Y') }}</td>
                                 <td>{{ $item->start_time }}</td>
                             </tr>

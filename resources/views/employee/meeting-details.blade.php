@@ -43,7 +43,7 @@
                                     @foreach($meetings as $key => $data)
                                     <tr>
                                         <td>{{$key+1}}</td>
-                                        <td>{{$data->first_name.' '.$data->last_name}}</td>
+                                        <td>{{$data->first_name}}</td>
                                         <td>{{$data->description}}</td>
                                         <td>{{ $data->meeting_date }}</td>
                                         <td>{{ $data->start_time }}</td>

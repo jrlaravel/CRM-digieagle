@@ -12,7 +12,6 @@ class Lead extends Model
 
     protected $fillable = [
         'first_name',
-        'last_name',
         'company_name',
         'lead_source',
         'description',

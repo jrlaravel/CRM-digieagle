@@ -28,7 +28,6 @@ class EmpLeadController extends Controller
         // Validation rules
         $validator = Validator::make($request->all(), [
             'fname' => 'required|string|max:255',
-            'lname' => 'required|string|max:255',
             'phone' => 'required|numeric',
             'status' => 'required',
         ]);
@@ -37,7 +36,6 @@ class EmpLeadController extends Controller
             // dd($request->all());
             Lead::create([
                 'first_name' => $request->input('fname'),
-                'last_name' => $request->input('lname'),
                 'company_name' => $request->input('company_name'),
                 'description' => $request->input('description'),
                 'lead_source' => $request->input('lead_source'), //
@@ -137,21 +135,18 @@ class EmpLeadController extends Controller
 
     public function createOrUpdateFollowup(Request $request)
     {
-        // Validation rules
         $validator = Validator::make($request->all(), [
             'title'   => 'required',
             'message' => 'required',
-            'date'    => 'required',
+            'date'    => 'required|date', 
             'status'  => 'required',
             'call_date' => 'nullable|date', 
         ]);
-    
-        // If validation fails
+        
         if ($validator->fails()) {
             return redirect()->back()->withErrors($validator)->withInput();
         }
         
-        // Fetch the lead and previous status
         $lead = Lead::find($request->lead_id);
         if (!$lead) {
             return redirect()->back()->with('error', 'Lead not found.');
@@ -161,9 +156,8 @@ class EmpLeadController extends Controller
         $companyName = $lead->company_name; 
         $callDate = $request->call_date; 
         
-        // Update or create the followup record
         $followup = Followup::updateOrCreate(
-            ['id' => $request->id], // Match by 'id' to update, or create a new one
+            ['id' => $request->id], 
             [
                 'title'           => $request->input('title'),
                 'lead_id'         => $request->input('lead_id'),
@@ -174,14 +168,14 @@ class EmpLeadController extends Controller
             ]
         );
     
-        // Update the lead's status if follow-up is successfully created or updated
-       
         if ($followup) {
             $newStatus = $request->status;
             $lead->status = $newStatus;
             $lead->save();
     
-            $adminEmails = ['ceo.digieagleinc@gmail.com','manager.digieagleinc@gmail.com'];
+            $adminEmails = [
+                'manager.digieagleinc@gmail.com',
+                'ceo.digieagleinc@gmail.com',   ];
             
             if ($previousStatus != $newStatus) {
                 Mail::to($adminEmails)->send(new LeadStatusChangedMail(
@@ -198,7 +192,7 @@ class EmpLeadController extends Controller
         // Return success response
         return redirect()->back()->with('success', 'Follow-up has been successfully ' . ($request->has('id') ? 'updated' : 'added') . '.');
     }
-    
+     
 
 public function delete_followup($id)
 {
@@ -235,10 +229,10 @@ public function uploadExcel(Request $request)
 
     public function meetingDetails()
     {
-        $lead = Lead::select('id','first_name','last_name')->get();
+        $lead = Lead::select('id','first_name')->get();
         $meetings = DB::table('client_meeting_details')
             ->join('lead_detail', 'client_meeting_details.lead_id', '=', 'lead_detail.id')
-            ->select('client_meeting_details.*', 'lead_detail.first_name', 'lead_detail.last_name')
+            ->select('client_meeting_details.*', 'lead_detail.first_name')
             ->get();
         return view('employee/meeting-details',compact('lead','meetings'));
     }

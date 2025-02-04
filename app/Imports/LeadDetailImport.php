@@ -18,13 +18,12 @@ class LeadDetailImport implements ToModel, WithHeadingRow
     public function model(array $row)
     {
         // Check if a lead with this email already exists
-        $lead = Lead::where('company_name', $row['company_name'])->first();
+        $lead = Lead::where('phone', $row['phone'])->first();
 
         if ($lead) {
             // If lead exists, update the record
             $lead->update([
                 'first_name'   => $row['first_name'],
-                'last_name'    => $row['last_name'],
                 'company_name' => $row['company_name'],
                 'lead_source' => $row['lead_source'],
                 'description'  => $row['description'],
@@ -41,7 +40,6 @@ class LeadDetailImport implements ToModel, WithHeadingRow
             // Insert new record if not found
             return new Lead([
                 'first_name'   => $row['first_name'],
-                'last_name'    => $row['last_name'],
                 'company_name' => $row['company_name'],
                 'lead_source' => $row['lead_source'],
                 'description'  => $row['description'],

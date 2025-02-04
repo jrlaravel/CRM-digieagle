@@ -63,7 +63,7 @@
                                 @foreach ($data as $key => $lead)
                                 <tr data-status="{{ $lead->status }}">
                                     <td>{{ ++$key }}</td>
-                                    <td><a href="{{route('emp/lead-datail',$lead->id)}}">{{ $lead->first_name }} {{ $lead->last_name }}</a></td>
+                                    <td><a href="{{route('emp/lead-datail',$lead->id)}}">{{ $lead->first_name }}</a></td>
                                     <td>{{ $lead->company_name }}</td>
                                     <td>{{ $lead->description }}</td>
                                     <td>{{ $lead->lead_source}}</td>
@@ -94,7 +94,6 @@
                                         <button class="btn btn-primary edit-lead" 
                                                 data-id="{{ $lead->id }}"
                                                 data-first_name="{{ $lead->first_name }}"
-                                                data-last_name="{{ $lead->last_name }}"
                                                 data-company_name="{{ $lead->company_name }}"
                                                 data-lead_source = "{{ $lead->lead_source }}"
                                                 data-description="{{ $lead->description }}"
@@ -166,13 +165,8 @@
 
                     <div class="row">
                         <div class="mb-3 col-md-6">
-                            <label for="first_name" class="form-label">First Name</label>
+                            <label for="first_name" class="form-label">Full Name</label>
                             <input type="text" class="form-control" id="first_name" name="first_name">
-                        </div>
-        
-                        <div class="mb-3 col-md-6">
-                            <label for="last_name" class="form-label">Last Name</label>
-                            <input type="text" class="form-control" id="last_name" name="last_name">
                         </div>
                     </div>
 
@@ -305,7 +299,6 @@
     $(document).on('click', '.edit-lead', function() {
         let leadId = $(this).data('id');
         let firstName = $(this).data('first_name');
-        let lastName = $(this).data('last_name');
         let companyName = $(this).data('company_name');
         let lead_source = $(this).data('lead_source');
         let description = $(this).data('description');
@@ -325,7 +318,6 @@
         // Set modal input values
         $('#lead-id').val(leadId);
         $('#first_name').val(firstName);
-        $('#last_name').val(lastName);
         $('#company_name').val(companyName);
         $('#lead_source').val(lead_source); 
         $('#description').val(description);

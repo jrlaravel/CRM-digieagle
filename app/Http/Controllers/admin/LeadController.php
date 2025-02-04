@@ -19,7 +19,7 @@ use Illuminate\Support\Facades\Mail;
 class LeadController extends Controller
 {
     public function index(){
-        $user = DB::select("SELECT first_name,last_name,users.id FROM `users` join designation as des on users.designation = des.id where des.name =  'BDE'");
+        $user = DB::select("SELECT first_name,users.id FROM `users` join designation as des on users.designation = des.id where des.name =  'BDE'");
         return view('admin/add_lead_detail',compact('user'));
     }
 
@@ -28,24 +28,14 @@ class LeadController extends Controller
         // Validation rules
         $validator = Validator::make($request->all(), [
             'fname' => 'required|string|max:255',
-            'lname' => 'required|string|max:255',
-            'company_name' => 'required|string|max:255',
-            'description' => 'required|string|max:255',
-            'lead_source' => 'required|string|max:255',
             'user_id' => 'required',
-            'email' => 'required|email|max:255',
             'phone' => 'required|numeric',
-            'whatsappno' => 'nullable|numeric',
-            'city' => 'required|string|max:255',
-            'state' => 'required|string|max:255',
             'status' => 'required',
-            'address' => 'required|string|max:500',
         ]);
         
         if ($validator->passes()) {
             Lead::create([
                 'first_name' => $request->input('fname'),
-                'last_name' => $request->input('lname'),
                 'company_name' => $request->input('company_name'),
                 'description' => $request->input('description'),
                 'lead_source' => $request->input('lead_source'), 
@@ -83,7 +73,6 @@ class LeadController extends Controller
         $validator = Validator::make($request->all(), [
             'id' => 'required',
             'first_name' => 'required|string|max:255',
-            'last_name' => 'required|string|max:255',
             'company_name' => 'required|string|max:255',
             'description' => 'nullable|string',
             'email' => 'required|email',
@@ -108,7 +97,6 @@ class LeadController extends Controller
         // Update the lead data
         $lead->update([
             'first_name' => $request->input('first_name'),
-            'last_name' => $request->input('last_name'),
             'company_name' => $request->input('company_name'),
             'description' => $request->input('description'),
             'lead_source' => $request->input('lead_source'),
@@ -187,7 +175,7 @@ class LeadController extends Controller
     
             $adminEmails = [
                 'manager.digieagleinc@gmail.com',
-                'ceo.digieagleinc@gmail.com',   ];
+                'ceo.digieagleinc@gmail.com',];
             
             if ($previousStatus != $newStatus) {
                 Mail::to($adminEmails)->send(new LeadStatusChangedMail(

@@ -37,15 +37,20 @@ class EmployeeDashboardController extends Controller
         if(session('has_bde_features')){
             $follow_ups = DB::table('follow_up')
             ->join('lead_detail', 'lead_detail.id', '=', 'follow_up.lead_id')
-            ->select('lead_detail.first_name', 'lead_detail.id as lead_id', 'lead_detail.status','follow_up.id as follow_id', 'lead_detail.company_name', 'lead_detail.phone', 'lead_detail.last_name', 'follow_up.call_date')
+            ->select('lead_detail.first_name', 'lead_detail.id as lead_id', 'lead_detail.status','follow_up.id as follow_id', 'lead_detail.company_name', 'lead_detail.phone', 'follow_up.call_date')
             ->where(DB::raw('DATE(follow_up.call_date)'), '=', DB::raw('CURDATE()')) // Use CURDATE() for today's date
             ->get();
+            $meetings = DB::table('client_meeting_details')
+            ->join('lead_detail', 'client_meeting_details.lead_id', '=', 'lead_detail.id')
+            ->select('client_meeting_details.*', 'lead_detail.first_name')
+            ->get();
             $cards = DB::select('SELECT card.name,card.image,ac.message,ac.date FROM `assign_card` as ac join card on ac.card_id = card.id WHERE ac.user_id = '.session('employee')->id);
-            return view('employee.employeedashboard',compact('presentDaysCount', 'absentDaysCount','cards','follow_ups'));
+            return view('employee.employeedashboard',compact('presentDaysCount', 'absentDaysCount','cards','follow_ups','meetings'));
         }
 
         if(session('has_hr_features'))
         {
+
             $interviewdata = DB::select("SELECT interview_details.id, candidate_id, name, interview_type, interview_date, interview_time FROM interview_details JOIN cv_details ON interview_details.candidate_id = cv_details.id WHERE interview_date BETWEEN CURDATE() AND CURDATE() + INTERVAL 3 DAY AND interview_details.status = '0';");
             $cards = DB::select('SELECT card.name,card.image,ac.message,ac.date FROM `assign_card` as ac join card on ac.card_id = card.id WHERE ac.user_id = '.session('employee')->id);
             return view('employee.employeedashboard',compact('presentDaysCount', 'absentDaysCount','cards','interviewdata'));

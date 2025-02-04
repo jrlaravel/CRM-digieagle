@@ -17,7 +17,7 @@ class AdminDashboardController extends Controller
     {   
         $meetings = DB::table('client_meeting_details')
         ->join('lead_detail', 'client_meeting_details.lead_id', '=', 'lead_detail.id')
-        ->select('client_meeting_details.*', 'lead_detail.first_name', 'lead_detail.last_name')
+        ->select('client_meeting_details.*', 'lead_detail.first_name')
         ->get();
 
         $interviewdata = DB::select("SELECT interview_details.id, candidate_id, name, interview_type, interview_date, interview_time FROM interview_details JOIN cv_details ON interview_details.candidate_id = cv_details.id WHERE interview_date BETWEEN CURDATE() AND CURDATE() + INTERVAL 3 DAY AND interview_details.status = '0';");
