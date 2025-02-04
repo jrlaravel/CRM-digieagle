@@ -255,7 +255,7 @@
             <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
             <div class="modal-body">
-                <form action="{{ route('admin/add-followup') }}" method="post">
+                <form action="{{ route('emp/add-followup') }}" method="post">
                     @csrf
 
                     <input type="hidden" id="lead_Id" name="lead_id">
