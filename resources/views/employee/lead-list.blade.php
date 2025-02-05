@@ -327,7 +327,7 @@
         $('#city').val(city);
         $('#state').val(state);
         $('#address').val(address);
-        $('#status-filter').val(status);
+        $('#status').val(status);
         $('#instagram').val(insLink); // Set Instagram link
         $('#facebook').val(facebookLink); // Set Facebook link
         $('#website').val(webLink); // Set Website link
