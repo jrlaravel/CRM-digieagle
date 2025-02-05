@@ -72,24 +72,15 @@ class EmpLeadController extends Controller
         $validator = Validator::make($request->all(), [
             'id' => 'required',
             'first_name' => 'required|string|max:255',
-            'last_name' => 'required|string|max:255',
-            'company_name' => 'required|string|max:255',
-            'description' => 'nullable|string',
-            'email' => 'required|email',
-            'lead_source' => 'required|string',
             'phone' => 'required|numeric|digits:10',
-            'whatsappno' => 'nullable|numeric|digits:10',
-            'city' => 'required|string|max:255',
-            'state' => 'required|string|max:255',
-            'address' => 'required|string|max:500',
             'status' => 'required',
         ]);
-
+        
         // If validation fa ils
         if ($validator->fails()) {
             return redirect()->back()->withErrors($validator)->withInput();
         }
-
+        
         // Find the lead by ID
         $lead = Lead::findOrFail($request->id);
 
