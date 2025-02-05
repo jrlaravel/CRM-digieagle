@@ -93,7 +93,7 @@ class EmployeeLeaveController extends Controller
             $user = User::find($request->id);
 
             Notification::create([
-                'user_id' => session('user')->id,
+                'user_id' => 1,
                 'title' => 'Leave Request',
                 'url' => 'leave',
                 'message' => $user->first_name . ' has been requested for leave, Reason: ' . $request->reason,
