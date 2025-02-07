@@ -164,20 +164,20 @@ class EmpLeadController extends Controller
             $lead->status = $newStatus;
             $lead->save();
     
-            // $adminEmails = [
-            //     'manager.digieagleinc@gmail.com',
-            //     'ceo.digieagleinc@gmail.com',   ];
+            $adminEmails = [
+                'manager.digieagleinc@gmail.com',
+                'ceo.digieagleinc@gmail.com'];
             
-            // if ($previousStatus != $newStatus) {
-            //     Mail::to($adminEmails)->send(new LeadStatusChangedMail(
-            //         $lead, 
-            //         $previousStatus, 
-            //         $newStatus, 
-            //         $followup->message, 
-            //         $companyName,
-            //         $callDate
-            //     ));
-            // }
+            if ($previousStatus != $newStatus) {
+                Mail::to($adminEmails)->send(new LeadStatusChangedMail(
+                    $lead, 
+                    $previousStatus, 
+                    $newStatus, 
+                    $followup->message, 
+                    $companyName,
+                    $callDate
+                ));
+            }
         }
     
         // Return success response
