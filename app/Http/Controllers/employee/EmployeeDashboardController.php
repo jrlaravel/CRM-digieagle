@@ -53,7 +53,9 @@ class EmployeeDashboardController extends Controller
 
             $interviewdata = DB::select("SELECT interview_details.id, candidate_id, name, interview_type, interview_date, interview_time FROM interview_details JOIN cv_details ON interview_details.candidate_id = cv_details.id WHERE interview_date BETWEEN CURDATE() AND CURDATE() + INTERVAL 3 DAY AND interview_details.status = '0';");
             $cards = DB::select('SELECT card.name,card.image,ac.message,ac.date FROM `assign_card` as ac join card on ac.card_id = card.id WHERE ac.user_id = '.session('employee')->id);
-            return view('employee.employeedashboard',compact('presentDaysCount', 'absentDaysCount','cards','interviewdata'));
+            $leavedata = DB::select('SELECT first_name,last_name,total_days,start_date FROM `leave` as la join leavetype on leavetype.id = la.leave_type_id join users on la.user_id = users.id where status = 0');
+
+            return view('employee.employeedashboard',compact('presentDaysCount', 'absentDaysCount','cards','interviewdata','leavedata'));
         }
 
         $cards = DB::select('SELECT card.name,card.image,ac.message,ac.date FROM `assign_card` as ac join card on ac.card_id = card.id WHERE ac.user_id = '.session('employee')->id);

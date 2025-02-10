@@ -307,50 +307,90 @@
 
 {{-- HR feature --}}
 @if(session('has_hr_features'))
-    <div class="card mt-4">
-        <div class="card-body">
-            <div class="d-flex align-items-center justify-content-between">
-                <h5 class="card-title mb-0">Interview Reminder List</h5>
-                <a  href="{{route('emp/candidate-cv-list')}}" class="btn btn-primary ms-auto">Schedule Interview</a>
-            </div>        
-            <table id="employee-table" class="table table-striped" style="width:100%">
-                <thead>
-                    <tr>
-                        <th>No.</th>
-                        <th>Name</th>
-                        <th>Interview type</th>
-                        <th>Date and time</th>
-                        <th>Action</th>
-                    </tr>
-                </thead>
-                <tbody>
-                @foreach ($interviewdata as $item)
-                    <tr>
-                        <td>{{ $loop->index + 1 }}</td>
-                        <td>{{ $item->name }}</td>
-                        <td>{{ $item->interview_type }}</td>
-                        <td>{{ $item->interview_date }} {{ $item->interview_time }}</td>
-                        <td>             
-                            <a href="javascript:void(0)" class="btn btn-primary edit-interview-btn"
-                                data-id="{{ $item->id }}"
-                                data-type="{{ $item->interview_type }}"
-                                data-date="{{ $item->interview_date }}"
-                                data-time="{{ $item->interview_time }}"
-                                data-bs-toggle="modal"
-                                data-bs-target="#editInterviewModal">
-                                Edit
-                            </a>
-                        
-                            <a href="#" class="addfollow btn btn-info" data-id="{{$item->candidate_id}}" data-interview_id="{{$item->id}}" data-bs-toggle="modal" data-bs-target="#addFollowUpModal">
-                                Add Follow Up
-                            </a>
-                        </td>
-                    </tr>
-                @endforeach
-                </tbody>
-            </table>
+<div class="row">
+    <!-- Interview Reminder List Section -->
+    <div class="col-lg-6">
+        <div class="card mt-4">
+            <div class="card-body">
+                <div class="d-flex align-items-center justify-content-between">
+                    <h5 class="card-title mb-0">Interview Reminder List</h5>
+                    <a href="{{route('emp/candidate-cv-list')}}" class="btn btn-primary ms-auto">Schedule Interview</a>
+                </div>        
+                <table id="employee-table" class="table table-striped" style="width:100%">
+                    <thead>
+                        <tr>
+                            <th>No.</th>
+                            <th>Name</th>
+                            <th>Interview type</th>
+                            <th>Date and time</th>
+                            <th>Action</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                    @foreach ($interviewdata as $item)
+                        <tr>
+                            <td>{{ $loop->index + 1 }}</td>
+                            <td>{{ $item->name }}</td>
+                            <td>{{ $item->interview_type }}</td>
+                            <td>{{ $item->interview_date }} {{ $item->interview_time }}</td>
+                            <td>
+                                <a href="javascript:void(0)" class="btn btn-primary edit-interview-btn"
+                                   data-id="{{ $item->id }}"
+                                   data-type="{{ $item->interview_type }}"
+                                   data-date="{{ $item->interview_date }}"
+                                   data-time="{{ $item->interview_time }}"
+                                   data-bs-toggle="modal"
+                                   data-bs-target="#editInterviewModal">
+                                   Edit
+                                </a>
+                                <a href="#" class="addfollow btn btn-info" data-id="{{$item->candidate_id}}" data-interview_id="{{$item->id}}" data-bs-toggle="modal" data-bs-target="#addFollowUpModal">
+                                    Add Follow Up
+                                </a>
+                            </td>
+                        </tr>
+                    @endforeach
+                    </tbody>
+                </table>
+            </div>
         </div>
     </div>
+
+    <!-- New Leave List Section -->
+    <div class="col-lg-6">
+        <div class="card mt-4">
+            <div class="card-body">
+                <h5 class="card-title mb-0">New Leave List</h5>
+                <div class="table-responsive">
+                    <table id="datatables-reponsive" class="table table-striped" style="width:100%">
+                        <thead>
+                            <tr>
+                                <th>No.</th>
+                                <th>Employee Name</th>
+                                <th>Start date</th>
+                                <th>Total Days</th>
+                                <th>Action</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @foreach($leavedata as $key => $value)
+                            <tr>
+                                <td>{{ $key + 1 }}</td>
+                                <td>{{ $value->first_name }} {{ $value->last_name }}</td>
+                                <td>{{$value->start_date ? \Carbon\Carbon::parse($value->start_date)->format('d-m-Y') : 'N/A' }}</td>
+                                <td>{{ $value->total_days }}</td>
+                                <td>
+                                    <a href="{{route('emp/leave-list')}}" class="btn btn-primary">View</a>
+                                </td>
+                            </tr>
+                            @endforeach
+                        </tbody>    
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
 
     <!-- Add Follow Up Modal -->
     <div class="modal fade" id="addFollowUpModal" tabindex="-1" aria-labelledby="addFollowUpModalLabel" aria-hidden="true">
