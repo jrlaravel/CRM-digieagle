@@ -45,7 +45,7 @@
                                     <td>{{$value['phone']}}</td>
                                     <td>{{$value['designation']}}</td>
                                     <td>
-                                        @if($value['assign_to'] == '0')
+                                        @if($value['assign_to'] == null)
                                         <a href="#" class="btn btn-primary assign-btn" data-bs-toggle="modal" data-id="{{ $value['id'] }}" data-bs-target="#assignCandidateModal">
                                             Assign Candidate
                                         </a>                           

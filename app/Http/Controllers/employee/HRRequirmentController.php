@@ -69,11 +69,19 @@ class HRRequirmentController extends Controller
 
     public function store_candidate(Request $request)
     {
+        // dd($request->all());
+        $candidate = Candidate_details::where('email', '=', $request->email)->first();
+        // dd($candidate);
+        if($candidate != null)
+        {
+            return view('layout/success');
+
+        }
         // return $request->all();
         // Validate all fields including profile photo
         $validator = Validator::make($request->all(), [
             'name' => 'required|string|max:255',
-            'email' => 'required|email|max:255',
+            'email' => 'required|email|max:255|unique:candidate_details',
             'phone' => 'required|regex:/^[0-9]{10,15}$/', // Allows 10 to 15 digits
             'designation' => 'required|string|max:255',
             'experience' => 'required|integer',
@@ -105,8 +113,7 @@ class HRRequirmentController extends Controller
         }
 
         // Retrieve the token
-        $token = $request->get('_token');
-        
+        $token = $request->input('token');
         if (!$token) {
             return response()->json([
                 'success' => false,
