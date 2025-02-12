@@ -259,7 +259,6 @@ class ClientController extends Controller
             '*.required' => 'This field is required.',
         ]);
         
-        
         try {
             // Handle file upload for the client logo
             $clientLogoPath = null;
@@ -282,27 +281,28 @@ class ClientController extends Controller
                     throw new \Exception('Failed to store client logo.');
                 }
             }
-        
+            
+            // dd($clientLogoPath);
             try {
                 HostingAndDomain::create([
-                    'client_name' => $validated['client_name'],
-                    'logo' => $clientLogoPath,
-                    'domain_name' => $validated['domain_name'],
-                    'domain_purchase_from' => $validated['domain_purchase_from'] ?? null,
-                    'domain_purchase_date' => $validated['domain_purchase_date'] ?? null,
-                    'domain_expire_date' => $validated['domain_expire_date'] ?? null,
-                    'domain_amount' => $validated['domain_amount'] ?? null,
-                    'domain_email' => $validated['domain_email'] ?? null,
-                    'domain_id' => $validated['domain_id'] ?? null,
-                    'domain_password' => $validated['domain_password'] ?? null,
-                    'hosting_purchase_from' => $validated['hosting_purchase_from'] ?? null,
-                    'hosting_link' => $validated['hosting_link'] ?? null,
-                    'hosting_purchase_date' => $validated['hosting_purchase_date'] ?? null,
-                    'hosting_expire_date' => $validated['hosting_expire_date'] ?? null,
-                    'hosting_amount' => $validated['hosting_amount'] ?? null,
-                    'hosting_email' => $validated['hosting_email'] ?? null,
-                    'hosting_id' => $validated['hosting_id'] ?? null,
-                    'hosting_password' => $validated['hosting_password'] ?? null,
+                    'client_name' => $request->input('client_name'),
+                    'logo' => $clientLogoPath ?? null,
+                    'domain_name' => $request->input('domain_name') ?? null,
+                    'domain_purchase_from' => $request->input('domain_purchase_from') ?? null,
+                    'domain_purchase_date' => $request->input('domain_purchase_date') ?? null,
+                    'domain_expire_date' => $request->input('domain_expire_date') ?? null,
+                    'domain_amount' => $request->input('domain_amount') ?? null,
+                    'domain_email' => $request->input('domain_email') ?? null,
+                    'domain_id' => $request->input('domain_id') ?? null,
+                    'domain_password' => $request->input('domain_password') ?? null,
+                    'hosting_purchase_from' => $request->input('hosting_purchase_from') ?? null,
+                    'hosting_link' => $request->input('hosting_link') ?? null,
+                    'hosting_purchase_date' => $request->input('hosting_purchase_date') ?? null,
+                    'hosting_expire_date' => $request->input('hosting_expire_date') ?? null,
+                    'hosting_amount' => $request->input('hosting_amount') ?? null,
+                    'hosting_email' => $request->input('hosting_email') ?? null,
+                    'hosting_id' => $request->input('hosting_id') ?? null,
+                    'hosting_password' => $request->input('hosting_password') ?? null,
                 ]);
         
                 return redirect()->back()->with('success', 'Hosting data added successfully!');
