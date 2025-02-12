@@ -254,33 +254,9 @@ class ClientController extends Controller
         // Validate the incoming data with custom messages
         $validated = $request->validate([
             'client_name' => 'required|string|max:255',
-            'logo' => 'nullable|image|max:255',
-            'domain_name' => 'required|url|max:255|unique:hosting_and_domain,domain_name',
-            'domain_purchase_from' => 'nullable|string|max:255',
-            'domain_purchase_date' => 'nullable|date|before_or_equal:today',
-            'domain_expire_date' => 'nullable|date|after:domain_purchase_date',
-            'domain_amount' => 'nullable|numeric|min:0',
-            'domain_email' => 'nullable|email|max:255',
-            'domain_id' => 'nullable|string|max:255',
-            'domain_password' => 'nullable|string|max:255',
-            'hosting_purchase_from' => 'nullable|string|max:255',
-            'hosting_link' => 'nullable|url|max:255|unique:hosting_and_domain,hosting_link',
-            'hosting_purchase_date' => 'nullable|date|before_or_equal:today',
-            'hosting_expire_date' => 'nullable|date|after:hosting_purchase_date',
-            'hosting_amount' => 'nullable|numeric|min:0',
-            'hosting_email' => 'nullable|email|max:255',
-            'hosting_id' => 'nullable|string|max:255',
-            'hosting_password' => 'nullable|string|max:255',
         ], [
             // Grouped custom error messages
             '*.required' => 'This field is required.',
-            '*.unique' => 'This value must be unique.',
-            '*.before_or_equal' => 'This date cannot be a future date.',
-            '*.after' => 'This date must be after the related field.',
-            '*.min' => 'The value must be at least 0.',
-            '*.email' => 'Please enter a valid email address.',
-            '*.url' => 'Please enter a valid URL.',
-            'logo.mimes' => 'The logo must be a valid image file (jpeg, png, jpg, gif).',
         ]);
         
         
