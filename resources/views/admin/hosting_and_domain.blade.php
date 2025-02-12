@@ -184,14 +184,14 @@
                         <!-- Client Information -->
                         <div class="col-md-6">
                             <label for="clientName" class="form-label">Client Name</label>
-                            <input type="text" class="form-control" id="clientName" name="client_name" placeholder="Enter client name" value="{{ old('client_name') }}" required>
+                            <input type="text" class="form-control" id="clientName" name="client_name" placeholder="Enter client name" value="{{ old('client_name') }}">
                             @error('client_name')
                                 <small class="text-danger">{{ $message }}</small>
                             @enderror
                         </div>
                         <div class="col-md-6">
                             <label for="clientLogo" class="form-label">Client Logo</label>
-                            <input type="file" class="form-control" id="clientLogo" name="client_logo" accept="image/*" required>
+                            <input type="file" class="form-control" id="clientLogo" name="client_logo" accept="image/*">
                             @error('client_logo')
                                 <small class="text-danger">{{ $message }}</small>
                             @enderror
@@ -202,35 +202,35 @@
                         <h5 class="mt-3">Domain Information</h5>
                         <div class="col-md-6">
                             <label for="domainName" class="form-label">Domain Link</label>
-                            <input type="text" class="form-control" id="domainName" name="domain_name" placeholder="Enter domain link" value="{{ old('domain_name') }}" required>
+                            <input type="text" class="form-control" id="domainName" name="domain_name" placeholder="Enter domain link" value="{{ old('domain_name') }}">
                             @error('domain_name')
                                 <small class="text-danger">{{ $message }}</small>
                             @enderror
                         </div>
                         <div class="col-md-6">
                             <label for="domainPurchaseFrom" class="form-label">Domain Purchase From</label>
-                            <input type="text" class="form-control" id="domainPurchaseFrom" name="domain_purchase_from" placeholder="Enter purchase source" value="{{ old('domain_purchase_from') }}" required>
+                            <input type="text" class="form-control" id="domainPurchaseFrom" name="domain_purchase_from" placeholder="Enter purchase source" value="{{ old('domain_purchase_from') }}">
                             @error('domain_purchase_from')
                                 <small class="text-danger">{{ $message }}</small>
                             @enderror
                         </div>
                         <div class="col-md-4">
                             <label for="domainPurchaseDate" class="form-label">Domain Purchase Date</label>
-                            <input type="date" class="form-control" id="domainPurchaseDate" name="domain_purchase_date" value="{{ old('domain_purchase_date') }}" required>
+                            <input type="date" class="form-control" id="domainPurchaseDate" name="domain_purchase_date" value="{{ old('domain_purchase_date') }}">
                             @error('domain_purchase_date')
                                 <small class="text-danger">{{ $message }}</small>
                             @enderror
                         </div>
                         <div class="col-md-4">
                             <label for="domainExpireDate" class="form-label">Domain Expire Date</label>
-                            <input type="date" class="form-control" id="domainExpireDate" name="domain_expire_date" value="{{ old('domain_expire_date') }}" required>
+                            <input type="date" class="form-control" id="domainExpireDate" name="domain_expire_date" value="{{ old('domain_expire_date') }}">
                             @error('domain_expire_date')
                                 <small class="text-danger">{{ $message }}</small>
                             @enderror
                         </div>
                         <div class="col-md-4">
                             <label for="domainAmount" class="form-label">Domain Amount</label>
-                            <input type="number" class="form-control" id="domainAmount" name="domain_amount" placeholder="Enter domain amount" value="{{ old('domain_amount') }}" required>
+                            <input type="number" class="form-control" id="domainAmount" name="domain_amount" placeholder="Enter domain amount" value="{{ old('domain_amount') }}">
                             @error('domain_amount')
                                 <small class="text-danger">{{ $message }}</small>
                             @enderror
@@ -251,7 +251,7 @@
                         </div>
                         <div class="col-md-4">
                             <label for="domainPassword" class="form-label">Domain Password</label>
-                            <input type="password" class="form-control" id="domainPassword" name="domain_password" placeholder="Enter domain password" value="{{ old('domain_password') }}" required>
+                            <input type="password" class="form-control" id="domainPassword" name="domain_password" placeholder="Enter domain password" value="{{ old('domain_password') }}">
                             @error('domain_password')
                                 <small class="text-danger">{{ $message }}</small>
                             @enderror
@@ -262,35 +262,35 @@
                         <h5 class="mt-3">Hosting Information</h5>
                         <div class="col-md-6">
                             <label for="hostingPurchaseFrom" class="form-label">Hosting Purchase From</label>
-                            <input type="text" class="form-control" id="hostingPurchaseFrom" name="hosting_purchase_from" placeholder="Enter hosting source" value="{{ old('hosting_purchase_from') }}" required>
+                            <input type="text" class="form-control" id="hostingPurchaseFrom" name="hosting_purchase_from" placeholder="Enter hosting source" value="{{ old('hosting_purchase_from') }}">
                             @error('hosting_purchase_from')
                                 <small class="text-danger">{{ $message }}</small>
                             @enderror
                         </div>
                         <div class="col-md-6">
                             <label for="hostingLink" class="form-label">Hosting Link</label>
-                            <input type="text" class="form-control" id="hostingLink" name="hosting_link" placeholder="Enter hosting link" value="{{ old('hosting_link') }}" required>
+                            <input type="text" class="form-control" id="hostingLink" name="hosting_link" placeholder="Enter hosting link" value="{{ old('hosting_link') }}">
                             @error('hosting_link')
                                 <small class="text-danger">{{ $message }}</small>
                             @enderror
                         </div>
                         <div class="col-md-4">
                             <label for="hostingPurchaseDate" class="form-label">Hosting Purchase Date</label>
-                            <input type="date" class="form-control" id="hostingPurchaseDate" name="hosting_purchase_date" value="{{ old('hosting_purchase_date') }}" required>
+                            <input type="date" class="form-control" id="hostingPurchaseDate" name="hosting_purchase_date" value="{{ old('hosting_purchase_date') }}">
                             @error('hosting_purchase_date')
                                 <small class="text-danger">{{ $message }}</small>
                             @enderror
                         </div>
                         <div class="col-md-4">
                             <label for="hostingExpireDate" class="form-label">Hosting Expire Date</label>
-                            <input type="date" class="form-control" id="hostingExpireDate" name="hosting_expire_date" value="{{ old('hosting_expire_date') }}" required>
+                            <input type="date" class="form-control" id="hostingExpireDate" name="hosting_expire_date" value="{{ old('hosting_expire_date') }}">
                             @error('hosting_expire_date')
                                 <small class="text-danger">{{ $message }}</small>
                             @enderror
                         </div>
                         <div class="col-md-4">
                             <label for="hostingAmount" class="form-label">Hosting Amount</label>
-                            <input type="number" class="form-control" id="hostingAmount" name="hosting_amount" placeholder="Enter hosting amount" value="{{ old('hosting_amount') }}" required>
+                            <input type="number" class="form-control" id="hostingAmount" name="hosting_amount" placeholder="Enter hosting amount" value="{{ old('hosting_amount') }}">
                             @error('hosting_amount')
                                 <small class="text-danger">{{ $message }}</small>
                             @enderror
@@ -311,7 +311,7 @@
                         </div>
                         <div class="col-md-4">
                             <label for="hostingPassword" class="form-label">Hosting Password</label>
-                            <input type="password" class="form-control" id="hostingPassword" name="hosting_password" placeholder="Enter hosting password" value="{{ old('hosting_password') }}" required>
+                            <input type="password" class="form-control" id="hostingPassword" name="hosting_password" placeholder="Enter hosting password" value="{{ old('hosting_password') }}">
                             @error('hosting_password')
                                 <small class="text-danger">{{ $message }}</small>
                             @enderror
@@ -369,7 +369,7 @@
                     <!-- Client Information -->
                     <div class="mb-3">
                         <label for="edit-client-name" class="form-label">Client Name</label>
-                        <input type="text" class="form-control" id="edit-client-name" name="client_name" required>
+                        <input type="text" class="form-control" id="edit-client-name" name="client_name">
                     </div>
 
                     <!-- Domain Information -->
