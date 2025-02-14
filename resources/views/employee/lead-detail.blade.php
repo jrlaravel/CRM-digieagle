@@ -99,37 +99,37 @@
                             <form>
                               
                                 <div class="row">
-                                    <div class="mb-3 col-md-4">
-                                        <label class="form-label" for="inputFirstName">First name</label>
-                                        <input type="text" class="form-control" id="inputFirstName" value="{{$lead->first_name}}" disabled placeholder="First name">
+                                    <div class="mb-3 col-md-6">
+                                        <label class="form-label" for="inputFirstName">Full name</label>
+                                        <input type="text" class="form-control" id="inputFirstName" value="{{$lead->first_name}}" disabled >
                                     </div>
-                                    <div class="mb-3 col-md-4">
+                                    <div class="mb-3 col-md-6">
                                         <label class="form-label" for="inputLastName">Status</label>
-                                        <input type="text" class="form-control" id="inputLastName" value="{{$lead->status}}" disabled placeholder="Last name">
+                                        <input type="text" class="form-control" id="inputLastName" value="{{$lead->status}}" disabled>
                                     </div>
                                 </div>
                                 <div class="row">
                                     <div class="mb-3 col-md-6">
                                         <label class="form-label" for="inputFirstName">Company name</label>
-                                        <input type="text" class="form-control" id="inputcomName" value="{{$lead->company_name}}" disabled placeholder="First name">
+                                        <input type="text" class="form-control" id="inputcomName" value="{{$lead->company_name}}" disabled >
                                     </div>
                                     <div class="mb-3 col-md-6">
                                         <label class="form-label" for="inputLastName">Description</label>
-                                        <input type="text" class="form-control" id="inputdescription" value="{{$lead->description}}" disabled placeholder="Last name">
+                                        <input type="text" class="form-control" id="inputdescription" value="{{$lead->description}}" disabled>
                                     </div>
                                 </div>
                                 <div class="row">
                                     <div class="mb-3 col-md-4">
                                         <label class="form-label" for="inputEmail4">Email</label>
-                                        <input type="email" class="form-control" id="inputEmail4" value="{{$lead->email}}" disabled placeholder="Email">
+                                        <input type="email" class="form-control" id="inputEmail4" value="{{$lead->email}}" disabled>
                                     </div>
                                     <div class="mb-3 col-md-4">
                                         <label class="form-label" for="inputEmail4">Phone</label>
-                                        <input type="number" class="form-control" id="inputphone" value="{{$lead->phone}}" disabled placeholder="Email">
+                                        <input type="number" class="form-control" id="inputphone" value="{{$lead->phone}}" disabled>
                                     </div>
                                     <div class="mb-3 col-md-4">
                                         <label class="form-label" for="phone">Whatsapp No:</label>
-                                        <input type="number" class="form-control" id="whatsappphone" min="10" name="whatsappphone" placeholder="Whatsapp Phone" value="{{$lead->whatsappno}}" required>
+                                        <input type="number" class="form-control" id="whatsappphone" min="10" name="whatsappphone" value="{{$lead->whatsappno}}" required>
                                     </div>
                                 </div>
                                 <div class="row">
@@ -149,7 +149,7 @@
                                 <div class="row">
                                     <div class="mb-3 col-md-4">
                                         <label class="form-label" for="inputAddress">Address</label>
-                                        <input type="text" class="form-control" id="inputAddress" value="{{$lead->address}}" disabled placeholder="1234 Main St">
+                                        <input type="text" class="form-control" id="inputAddress" value="{{$lead->address}}" disabled>
                                     </div>
                                     <div class="mb-3 col-md-4">
                                         <label class="form-label" for="inputCity">City</label>
