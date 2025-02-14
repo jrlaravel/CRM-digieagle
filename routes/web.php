@@ -56,7 +56,10 @@ Route::prefix('emp')->group(function () {
         Route::get('meeting_details', [EmpLeadController::class, 'meetingDetails'])->name('emp/meeting_details');
         Route::post('/client-meeting-store', [EmpLeadController::class, 'meetingStore'])->name('emp/client-meeting-store');
         Route::get('/client-meeting-delete/{id}', [EmpLeadController::class, 'meetingDelete'])->name('emp/client-meeting-delete');
-        Route::post('emp/client-meeting-update', [EmpLeadController::class, 'meetingUpdate'])->name('emp/client-meeting-update');
+        Route::post('client-meeting-update', [EmpLeadController::class, 'meetingUpdate'])->name('emp/client-meeting-update');
+        Route::get('add-client-details', [EmpLeadController::class, 'AddClientDetails'])->name('emp/add-client-details');
+        Route::post('get-question', [EmpLeadController::class, 'GetQuestion'])->name('emp/get-question');
+        Route::post('store-answer', [EmpLeadController::class, 'StoreAnswer'])->name('emp/store-answer');
     });
 
     Route::group(['middleware' => ['emp.auth', 'check.hr']], function () {
@@ -224,6 +227,11 @@ Route::prefix('admin')->group(function () {
         Route::post('update-hosting-data', [ClientController::class, 'update_hosting_data'])->name('admin/update-hosting-data');
         Route::post('assign-candidate-details', [RequirmentController::class, 'assign_candidate_details'])->name('admin.assign-candidate-details');
         Route::post('add-candidate-followup', [RequirmentController::class, 'add_followup'])->name('admin/add-candidate-followup');
+        Route::get('lead_questions',[LeadController::class, 'lead_question'])->name('admin/lead_questions');
+        Route::post('add_lead_question',[LeadController::class, 'add_lead_question'])->name('admin/add_lead_question');
+        Route::delete('/delete-lead-question/{id}', [LeadController::class, 'delete_lead_question'])->name('admin/delete-lead-question');
+        Route::put('/update-lead-question/{id}', [LeadController::class, 'update_lead_question'])->name('admin/update-lead-question');
+
     });
 });
 

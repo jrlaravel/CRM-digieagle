@@ -40,8 +40,7 @@
 </div>
 
 <div class="col-md-12">
-    <div class="card">
-       
+    <div class="card">  
         <div class="card-body">
             <form action="
             @if(session('user'))
@@ -100,7 +99,7 @@
                         <select id="user_id" name="user_id" class="form-control @error('user_id') is-invalid @enderror" required>
                             <option value="">Select User</option>
                             @foreach($user as $data)
-                            <option value="{{ $data->id }}">{{ $data->first_name }} {{$data->last_name}}</option>
+                            <option value="{{ $data->id }}">{{ $data->first_name }}</option>
                             @endforeach
                         </select>
                         @error('user_id')

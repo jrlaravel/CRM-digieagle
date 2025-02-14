@@ -68,8 +68,8 @@
 		
 					@if(session('has_bde_features'))
 					<li class="sidebar-item">
-						<a data-bs-target="#lead" data-bs-toggle="collapse" class="sidebar-link {{ request()->routeIs('emp/lead') || request()->routeIs('emp/lead-list') || request()->routeIs('emp/meeting_details') ? 'active' : 'collapsed' }}">
-							<i class="fas fa-poll {{ request()->routeIs('emp/lead') || request()->routeIs('emp/lead-list') || request()->routeIs('emp/meeting_details') ? 'text-white' : '' }}"></i> 
+						<a data-bs-target="#lead" data-bs-toggle="collapse" class="sidebar-link {{ request()->routeIs('emp/lead') || request()->routeIs('emp/lead-list') || request()->routeIs('emp/add-client-details') || request()->routeIs('emp/meeting_details') ? 'active' : 'collapsed' }}">
+							<i class="fas fa-poll {{ request()->routeIs('emp/lead') || request()->routeIs('emp/lead-list') || request()->routeIs('emp/add-client-details') || request()->routeIs('emp/meeting_details') ? 'text-white' : '' }}"></i> 
 							<span class="align-middle">Lead Management</span>
 						</a>
 						<ul id="lead" class="sidebar-dropdown list-unstyled collapse {{ request()->routeIs('emp/lead') || request()->routeIs('emp/lead-list') ? 'show' : '' }}" data-bs-parent="#sidebar">
@@ -80,7 +80,11 @@
 								<a class="sidebar-link {{ request()->routeIs('emp/lead') ? 'active' : '' }}" href="{{ route('emp/lead') }}">Add Lead</a>
 							</li>
 							<li class="sidebar-item">
+								<a class="sidebar-link {{ request()->routeIs('emp/add-client-details') ? 'active' : '' }}" href="{{ route('emp/add-client-details') }}">Add Client Details</a>
+							</li>
+							<li class="sidebar-item">
 								<a href="{{ route('emp/meeting_details') }}" class="sidebar-link {{ request()->routeIs('emp/meeting_details') ? 'active' : '' }}">Schedule Meeting</a>
+							</li>
 						</ul>
 					</li>
 					@endif

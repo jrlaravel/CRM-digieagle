@@ -9,6 +9,7 @@ use App\Imports\LeadDetailImport;
 use App\Exports\LeadsExport;
 use Maatwebsite\Excel\Facades\Excel;
 use App\Models\Followup;
+use App\Models\LeadQuestion;
 use Illuminate\Support\Facades\DB;
 use App\Models\Notification;
 use PhpOffice\PhpSpreadsheet\IOFactory;
@@ -129,7 +130,8 @@ class LeadController extends Controller
     {
         $lead = Lead::find($id);
         $followups = Followup::where('lead_id', $id)->orderBy('date','desc')->get();
-        return view('admin/lead-detail', compact('lead', 'followups'));  
+        $leadDetails = DB::select('SELECT question,answer,la.id from lead_answer_detail as la join lead_question as lq on la.lead_question_id = lq.id WHERE la.lead_id = '.$id);
+        return view('admin/lead-detail', compact('lead', 'followups','leadDetails'));  
     }
 
     public function createOrUpdateFollowup(Request $request)
@@ -225,4 +227,54 @@ public function uploadExcel(Request $request)
     {
         return Excel::download(new LeadsExport, 'leads.xlsx');
     }
+
+    public function lead_question()
+    {
+        $questions = LeadQuestion::all();   
+        return view('admin/lead_question_list', compact('questions'));
+    }
+
+    public function add_lead_question(Request $request)
+    {
+        // Validate the request data
+        $request->validate([
+            'service_name' => 'required|string|max:255',
+            'question' => 'required|string',
+        ]);
+
+        // Store data in the database
+        $leadQuestion = LeadQuestion::create([
+            'service_name' => $request->service_name,
+            'question' => $request->question,
+        ]);
+
+        return redirect()->route('admin/lead_questions')->with('success', 'Lead Question added successfully');
+    }
+
+    public function delete_lead_question($id)
+    {
+        $leadQuestion = LeadQuestion::findOrFail($id);
+        $leadQuestion->delete();
+    
+        return redirect()->back()->with('success', 'Lead question deleted successfully!');
+    }
+
+    public function update_lead_question(Request $request, $id)
+{
+    // Validate input
+    $request->validate([
+        'service_name' => 'required|string|max:255',
+        'question' => 'required|string',
+    ]);
+
+    // Find and update the record
+    $leadQuestion = LeadQuestion::findOrFail($id);
+    $leadQuestion->update([
+        'service_name' => $request->service_name,
+        'question' => $request->question,
+    ]);
+
+    return redirect()->back()->with('success', 'Lead question updated successfully!');
+}
+
 }

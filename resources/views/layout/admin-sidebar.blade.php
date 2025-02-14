@@ -116,12 +116,13 @@
 					</li>
 
 					<li class="sidebar-item">
-						<a data-bs-target="#lead" data-bs-toggle="collapse" class="sidebar-link {{ request()->routeIs('admin/lead') || request()->routeIs('admin/ead-list') ? 'active' : 'collapsed' }}">
-							<i class="fa fa-bullhorn {{ request()->routeIs('admin/lead') || request()->routeIs('admin/ead-list') ? 'text-white' : '' }}"></i> <span class="align-middle">Leads Management</span>
+						<a data-bs-target="#lead" data-bs-toggle="collapse" class="sidebar-link {{ request()->routeIs('admin/lead') || request()->routeIs('admin/ead-list') || request()->routeIs('admin/lead_questions') ? 'active' : 'collapsed' }}">
+							<i class="fa fa-bullhorn {{ request()->routeIs('admin/lead') || request()->routeIs('admin/ead-list') || request()->routeIs('admin/lead_questions') ? 'text-white' : '' }}"></i> <span class="align-middle">Leads Management</span>
 						</a>
 						<ul id="lead" class="sidebar-dropdown list-unstyled collapse" data-bs-parent="#sidebar">
 							<li class="sidebar-item"><a class='sidebar-link {{ request()->routeIs('admin/lead-list') ? 'active' : '' }}' href='{{ route('admin/lead-list') }}'>Lead List</a></li>
 							<li class="sidebar-item"><a class='sidebar-link {{ request()->routeIs('admin/lead') ? 'active' : '' }}' href='{{ route('admin/lead') }}'>Add Lead</a></li>
+							<li class="sidebar-item"><a class='sidebar-link {{ request()->routeIs('admin/lead_questions') ? 'active' : '' }}' href='{{ route('admin/lead_questions') }}'>Lead Question List</a></li>
 						</ul>
 					</li>
 

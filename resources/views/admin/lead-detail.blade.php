@@ -75,6 +75,9 @@
                     <a class="list-group-item list-group-item-action" data-bs-toggle="list" href="#activity" role="tab">
                         Follow-up Details
                      </a>
+                     <a class="list-group-item list-group-item-action" data-bs-toggle="list" href="#details" role="tab">
+                        Lead Bussiness Details
+                     </a>
                 </div>
             </div>
         </div>
@@ -253,7 +256,27 @@
                             </ul>
                         </div>
                     </div>
-                </div>                
+                </div>     
+                <div class="tab-pane fade" id="details" role="tabpanel">
+                    <div class="card">
+                        <div class="card-body">
+                            <h5 class="card-title">Lead Business Details</h5>
+                
+                            @if(!empty($leadDetails) && count($leadDetails) > 0)
+                                <ul class="list-group">
+                                    @foreach($leadDetails as $key => $q)
+                                        <li class="list-group-item">
+                                            <strong>{{$key+1}}.  {{ $q->question }}</strong> <br> Answer : {{ $q->answer }}
+                                        </li>
+                                    @endforeach
+                                </ul>
+                            @else
+                                <p>No questions available.</p>
+                            @endif
+                
+                        </div>
+                    </div>
+                </div>           
             </div>
         </div>
     </div>

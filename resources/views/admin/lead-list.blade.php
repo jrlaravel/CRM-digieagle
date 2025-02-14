@@ -17,7 +17,6 @@
 @endsection
 @section('content')
     <meta name="csrf-token" content="{{ csrf_token() }}">
-
     <div class="container-fluid p-0">
         <div class="mb-3 d-flex flex-column flex-md-row justify-content-between align-items-md-center">
             <h1 class="h3 d-inline align-middle mb-2 mb-md-0">Lead List</h1>

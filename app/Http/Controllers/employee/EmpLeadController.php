@@ -6,6 +6,8 @@ use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use App\Models\Lead;
 use App\Models\Followup;
+use App\Models\LeadQuestion;
+use App\Models\LeadAnswer;
 use App\Models\ClientMeetingDetail;
 use Illuminate\Support\Facades\DB;
 use App\Models\Notification;
@@ -120,7 +122,8 @@ class EmpLeadController extends Controller
     {
         $lead = Lead::find($id);
         $followups = Followup::where('lead_id', $id)->orderBy('date','desc')->get();
-        return view('employee/lead-detail', compact('lead', 'followups'));  
+        $leadDetails = DB::select('SELECT question,answer,la.id from lead_answer_detail as la join lead_question as lq on la.lead_question_id = lq.id WHERE la.lead_id = '.$id);
+        return view('employee/lead-detail', compact('lead', 'followups','leadDetails'));  
     }
 
 
@@ -287,4 +290,64 @@ public function uploadExcel(Request $request)
             'message' => 'Meeting details updated successfully.',
         ]);
     }    
+
+    public function AddClientDetails()
+    {
+        return view('employee/add_client_detail');
+    }
+
+    public function GetQuestion(Request $request)
+    {
+        $selectedServices = $request->services;
+
+        $questions = LeadQuestion::whereIn('service_name', $selectedServices)->get(['id','question']);
+
+        return response()->json([
+            'status' => 'success',
+            'questions' => $questions
+        ]);
+    }
+
+
+    public function StoreAnswer(Request $request)
+    {
+        // Validate Request
+        $validator = Validator::make($request->all(), [
+            'fname' => 'required|string|max:255',
+            'phone' => 'required|numeric',
+            'whatsappphone' => 'nullable|numeric',
+            'company_name' => 'nullable|string|max:255',
+            'address' => 'nullable|string',
+            'services' => 'nullable|array',
+            'questions' => 'nullable|array',
+        ]);
+
+        if ($validator->fails()) {
+            return response()->json(['errors' => $validator->errors()], 422);
+        }
+
+        // Store Lead
+        $lead = Lead::create([
+            'first_name' => $request->input('fname'),
+            'company_name' => $request->input('company_name'),
+            'phone' => $request->input('phone'),
+            'whatsappno' => $request->input('whatsappphone'),
+            'city' => $request->input('city'),
+            'status' => 'Lead',
+        ]);
+
+        // Store Answers
+        if ($request->has('questions')) {
+            foreach ($request->input('questions') as $question_id => $answer) {
+                LeadAnswer::create([
+                    'lead_id' => $lead->id, // Associate the answer with the lead
+                    'lead_question_id' => $question_id,
+                    'answer' => $answer,
+                ]);
+            }
+        }
+
+        return response()->json(['message' => 'Lead and answers stored successfully', 'lead_id' => $lead->id], 201);
+    }
+
 }
