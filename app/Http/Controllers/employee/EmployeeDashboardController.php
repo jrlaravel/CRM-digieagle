@@ -129,7 +129,6 @@ class EmployeeDashboardController extends Controller
 
     public function notification()
     {
-        // Fetch unread notifications for the authenticated user
         $notifications = Notification::where('user_id', session('employee')->id)
             ->orderBy('created_at', 'desc')
             ->get();

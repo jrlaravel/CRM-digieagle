@@ -122,8 +122,19 @@ class EmpLeadController extends Controller
     {
         $lead = Lead::find($id);
         $followups = Followup::where('lead_id', $id)->orderBy('date','desc')->get();
-        $leadDetails = DB::select('SELECT question,answer,la.id from lead_answer_detail as la join lead_question as lq on la.lead_question_id = lq.id WHERE la.lead_id = '.$id);
-        return view('employee/lead-detail', compact('lead', 'followups','leadDetails'));  
+        $leadDetailsRaw = DB::select("
+        SELECT lq.service_name, la.id, lq.question, la.answer 
+        FROM lead_answer_detail AS la 
+        JOIN lead_question AS lq ON la.lead_question_id = lq.id 
+        WHERE la.lead_id = ?", [$id]
+        );
+        
+        // Convert result into grouped array format
+        $leadDetails = [];
+        foreach ($leadDetailsRaw as $item) {
+            $leadDetails[$item->service_name][] = $item;
+        }
+            return view('employee/lead-detail', compact('lead', 'followups','leadDetails'));  
     }
 
 
@@ -210,7 +221,6 @@ public function uploadExcel(Request $request)
             $userId = session('employee')->id; // Or pass any custom user_id
         }
 
-        // Pass the custom user_id to the import class
         Excel::import(new LeadDetailImport($userId), $request->file('excel_file'));
 
         return response()->json(['message' => 'Leads imported successfully.']);
@@ -264,10 +274,8 @@ public function uploadExcel(Request $request)
 
     public function meetingUpdate(Request $request)
     {
-        // Find the meeting using the meeting_id from the request
         $meeting = ClientMeetingDetail::where('id', '=', $request->input('meeting_id'))->first();
     
-        // If the meeting is not found, return an error
         if (!$meeting) {
             return response()->json([
                 'status' => 'error',
@@ -347,7 +355,7 @@ public function uploadExcel(Request $request)
             }
         }
 
-        return response()->json(['message' => 'Lead and answers stored successfully', 'lead_id' => $lead->id], 201);
+        return redirect()->route('emp/lead-list');
     }
 
 }

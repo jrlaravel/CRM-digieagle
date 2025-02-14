@@ -130,7 +130,18 @@ class LeadController extends Controller
     {
         $lead = Lead::find($id);
         $followups = Followup::where('lead_id', $id)->orderBy('date','desc')->get();
-        $leadDetails = DB::select('SELECT question,answer,la.id from lead_answer_detail as la join lead_question as lq on la.lead_question_id = lq.id WHERE la.lead_id = '.$id);
+        $leadDetailsRaw = DB::select("
+        SELECT lq.service_name, la.id, lq.question, la.answer 
+        FROM lead_answer_detail AS la 
+        JOIN lead_question AS lq ON la.lead_question_id = lq.id 
+        WHERE la.lead_id = ?", [$id]
+        );
+        
+        // Convert result into grouped array format
+        $leadDetails = [];
+        foreach ($leadDetailsRaw as $item) {
+            $leadDetails[$item->service_name][] = $item;
+        }
         return view('admin/lead-detail', compact('lead', 'followups','leadDetails'));  
     }
 

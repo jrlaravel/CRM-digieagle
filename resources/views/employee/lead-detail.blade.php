@@ -260,18 +260,27 @@
                         <div class="card-body">
                             <h5 class="card-title">Lead Business Details</h5>
                 
-                            @if(!empty($leadDetails) && count($leadDetails) > 0)
-                                <ul class="list-group">
-                                    @foreach($leadDetails as $key => $q)
-                                        <li class="list-group-item">
-                                            <strong>{{$key+1}}.  {{ $q->question }}</strong> <br> Answer : {{ $q->answer }}
-                                        </li>
+                                @if(!empty($leadDetails) && count($leadDetails) > 0)
+                                    @foreach($leadDetails as $serviceName => $questions)
+                                        <div class="card mb-3">
+                                            <div class="card-header bg-primary">
+                                                <h5 class="mb-0" style="color: #ffffff">{{ $serviceName }}</h5>
+                                            </div>
+                                            <div class="card-body">
+                                                <ul class="list-group">
+                                                    @foreach($questions as $key => $q)
+                                                        <li class="list-group-item">
+                                                            <strong>{{ $key+1 }}. {{ $q->question }}</strong> <br>
+                                                            Answer: {{ $q->answer }}
+                                                        </li>
+                                                    @endforeach
+                                                </ul>
+                                            </div>
+                                        </div>
                                     @endforeach
-                                </ul>
-                            @else
-                                <p>No questions available.</p>
-                            @endif
-                
+                                @else
+                                    <p>No questions available.</p>
+                                @endif
                         </div>
                     </div>
                 </div>                
