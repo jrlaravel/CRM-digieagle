@@ -289,13 +289,6 @@
         });
     });
 
-    document.addEventListener("DOMContentLoaded", function() {
-        // Datatables Responsive
-        $("#datatables-reponsive").DataTable({
-            responsive: true
-        });
-    });
-
     $(document).on('click', '.edit-lead', function() {
         let leadId = $(this).data('id');
         let firstName = $(this).data('first_name');
