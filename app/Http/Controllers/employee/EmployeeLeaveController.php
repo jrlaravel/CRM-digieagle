@@ -123,13 +123,13 @@ class EmployeeLeaveController extends Controller
                 'designation' => $designation->name
             ];
 
-            // $mailRecipients = [
-            //     'hr.digieagleinc@gmail.com',
-            //     'ceo.digieagleinc@gmail.com',
-            //     'manager.digieagleinc@gmail.com',
-            // ];
+            $mailRecipients = [
+                'hr.digieagleinc@gmail.com',
+                'ceo.digieagleinc@gmail.com',
+                'manager.digieagleinc@gmail.com',
+            ];
             
-            // Mail::to($mailRecipients)->send(new LeaveRequestMail($leaveDetails));
+            Mail::to($mailRecipients)->send(new LeaveRequestMail($leaveDetails));
             
             
             // Redirect back with success message
