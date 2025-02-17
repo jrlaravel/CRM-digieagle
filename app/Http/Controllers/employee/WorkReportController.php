@@ -198,6 +198,7 @@ class WorkReportController extends Controller
         
         // Fetch company data
         $companydata = DB::select('SELECT * FROM `company_detail` join company_services on company_detail.id = company_services.company_id WHERE company_services.department_id = ' .session('employee')->department);
+        $status = DB::select('SELECT * FROM `status` where department_id = ' . session('employee')->department);
         
         // Fetch report data only if the report's date matches today's date
         $data = DB::select("
@@ -232,7 +233,7 @@ class WorkReportController extends Controller
         }
     
         // Return view with data
-        return view('employee/edit-work-report', compact('data', 'companydata'));
+        return view('employee/edit-work-report', compact('data', 'companydata','status'));
     }
     
 

@@ -287,81 +287,128 @@ echo Session::get('leave_date')
         });
     });
 
-    $(document).ready(function () {
-        function setMonthRestrictions() {
-            var today = new Date();
-            var firstDay = new Date(today.getFullYear(), today.getMonth(), 1).toISOString().split('T')[0]; // First day of the month
-            var lastDay = new Date(today.getFullYear(), today.getMonth() + 1, 0).toISOString().split('T')[0]; // Last day of the month
 
-            // Set min and max attributes for the date inputs
-            $('#from').attr('min', firstDay);
-            $('#from').attr('max', lastDay);
-            $('#to').attr('min', firstDay);
-            $('#to').attr('max', lastDay);
+$(document).ready(function () {
+    function setMonthRestrictions() {
+        let today = new Date();
+        let firstDay = new Date(today.getFullYear(), today.getMonth(), 1).toISOString().split('T')[0];
+        let lastDay = new Date(today.getFullYear(), today.getMonth() + 1, 0).toISOString().split('T')[0];
+
+        $('#from').attr('min', firstDay);
+        $('#from').attr('max', lastDay);
+        $('#to').attr('min', firstDay);
+        $('#to').attr('max', lastDay);
+    }
+
+    function getWeekendDates() {
+        let today = new Date();
+        let year = today.getFullYear();
+        let month = today.getMonth();
+        let weekends = [];
+
+        let daysInMonth = new Date(year, month + 1, 0).getDate();
+
+        for (let day = 1; day <= daysInMonth; day++) {
+            let date = new Date(year, month, day);
+            let dayOfWeek = date.getDay();
+
+            if (dayOfWeek === 0 || dayOfWeek === 6) {
+                weekends.push(date.toISOString().split('T')[0]);
+            }
+        }
+        return weekends;
+    }
+
+    function hasWeekendInRange(startDate, endDate) {
+        let weekends = getWeekendDates();
+        let currentDate = new Date(startDate);
+
+        while (currentDate <= new Date(endDate)) {
+            let formattedDate = currentDate.toISOString().split('T')[0];
+            if (weekends.includes(formattedDate)) {
+                return true; // Weekend found in range
+            }
+            currentDate.setDate(currentDate.getDate() + 1);
+        }
+        return false;
+    }
+
+    setMonthRestrictions();
+
+    $('#leaveType').change(function () {
+        var selectedLeave = $('#leaveType option:selected').data('name');
+
+        $('#from').removeAttr('min').removeAttr('max');
+        $('#to').removeAttr('min').removeAttr('max').removeAttr('disabled');
+
+        if (selectedLeave === 'Casual Leave') {
+            $('#reportInput').hide();
+            var today = new Date();
+            today.setHours(0, 0, 0, 0);
+
+            var minDate = new Date(today);
+            minDate.setDate(minDate.getDate() + 4);
+
+            $('#from').attr('min', minDate.toISOString().split('T')[0]);
+            $('#to').attr('min', minDate.toISOString().split('T')[0]);
+
+            return;
         }
 
-        // Apply month restrictions on page load
+        if (selectedLeave === 'Sick Leave') {
+            $('#reportInput').show();
+            var today = new Date().toISOString().split('T')[0];
+
+            $('#from').attr('min', today);
+            $('#to').attr('min', today);
+
+            return;
+        }
+
+        if (selectedLeave === 'Half Day') {
+            var today = new Date().toISOString().split('T')[0];
+            $('#reportInput').hide();
+
+            $('#from').attr('min', today);
+            $('#to').attr('disabled', true);
+
+            $('#from').change(function () {
+                var selectedDate = $(this).val();
+                $('#to').val(selectedDate).attr('min', selectedDate).attr('max', selectedDate).removeAttr('disabled');
+            });
+
+            return;
+        }
+
+        if (selectedLeave === 'Weekend Leave') {
+            $('#reportInput').hide();
+
+            let today = new Date();
+            let minDate = new Date(today);
+            minDate.setDate(minDate.getDate() + 7); // 1 week notice
+
+            $('#from').attr('min', minDate.toISOString().split('T')[0]);
+
+            $('#from, #to').change(function () {
+                let selectedFrom = $('#from').val();
+                let selectedTo = $('#to').val();
+
+                if (selectedFrom && selectedTo) {
+                    if (hasWeekendInRange(selectedFrom, selectedTo)) {
+                        alert('Your selected range includes a weekend. This will be counted as a Weekend Leave, and you must apply at least 7 days in advance.');
+                        $('#from').attr('min', minDate.toISOString().split('T')[0]);
+                        $('#to').attr('min', minDate.toISOString().split('T')[0]);
+                    }
+                }
+            });
+
+            return;
+        }
+
         setMonthRestrictions();
-
-        // Handle leave type change
-        $('#leaveType').change(function () {
-            var selectedLeave = $('#leaveType option:selected').data('name');
-
-            // Clear any previous restrictions when changing leave type
-            $('#from').removeAttr('min').removeAttr('max');
-            $('#to').removeAttr('min').removeAttr('max').removeAttr('disabled');
-
-            if (selectedLeave === 'Casual Leave') {
-                $('#reportInput').hide(); // Show the report input field
-                var today = new Date();
-                today.setHours(0, 0, 0, 0);
-
-                var minDate = new Date(today);
-                minDate.setDate(minDate.getDate() + 4); // 4 days from today
-
-                $('#from').attr('min', minDate.toISOString().split('T')[0]);
-                $('#to').attr('min', minDate.toISOString().split('T')[0]);
-
-                // Exit early to avoid overriding by month restrictions
-                return;
-            }
-
-            if (selectedLeave === 'Sick Leave') {
-                $('#reportInput').show(); // Show the report input field
-                var today = new Date().toISOString().split('T')[0];
-
-                $('#from').attr('min', today);
-                $('#to').attr('min', today);
-
-                // Exit early to avoid overriding by month restrictions
-                return;
-            }
-
-            if (selectedLeave === 'Half Day') {
-                var today = new Date().toISOString().split('T')[0]; // Get today's date in ISO format
-                $('#reportInput').hide(); // Hide the report input field
-
-                // Set the 'from' field to disable past dates
-                $('#from').attr('min', today);
-
-                // Restrict 'to' to the same date as 'from'
-                $('#to').attr('disabled', true); // Disable 'to' field initially
-                $('#from').change(function () {
-                    var selectedDate = $(this).val();
-                    $('#to').val(selectedDate).attr('min', selectedDate).attr('max', selectedDate).removeAttr('disabled');
-                });
-
-                // Exit early to avoid overriding by month restrictions
-                return;
-            } else {
-                // Enable 'to' field for other leave types
-                $('#to').removeAttr('disabled');
-            }
-
-
-            // Reapply the current month restrictions if the leave type is not Casual, Sick, or Half Day
-            setMonthRestrictions();
-        });
     });
+});
+
+
 </script>
 @endsection

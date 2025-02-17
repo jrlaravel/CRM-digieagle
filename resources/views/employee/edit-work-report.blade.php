@@ -127,10 +127,9 @@
                                         <label for="form-label">Status</label>
                                         <select name="status[]" class="form-control" required id="status">
                                             <option value="">Select Status</option>
-                                            <option value="Completed">Completed</option>
-                                            <option value="Ongoing">Ongoing</option>
-                                            <option value="Pending">Pending</option>
-                                            <option value="Onhold">On-hold</option>
+                                            @foreach($status as $value)
+                                             <option value="{{$value->name}}">{{$value->name}}</option>
+                                             @endforeach
                                         </select>
                             
                                         <label class="form-label">Note</label>
