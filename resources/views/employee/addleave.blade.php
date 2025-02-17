@@ -425,7 +425,7 @@ $(document).ready(function () {
 
                 if (selectedFrom && selectedTo) {
                     if (hasWeekendInRange(selectedFrom, selectedTo)) {
-                        alert('Your selected range includes a weekend. This will be counted as a Weekend Leave, and you must apply at least 7 days in advance.');
+                        $('#alert').text('Your selected range includes a weekend. This will be counted as a Weekend Leave, and you must apply at least 7 days in advance.');
                         $('#from').attr('min', minDate.toISOString().split('T')[0]);
                         $('#to').attr('min', minDate.toISOString().split('T')[0]);
                     }
