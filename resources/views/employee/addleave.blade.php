@@ -130,52 +130,54 @@ echo Session::get('leave_date')
     </div>
     <div class="mb-3">
         <h1 class="h3 d-inline align-middle">Leave List</h1> 
-        <button type="button" class="btn btn-primary float-end" data-bs-toggle="modal" data-bs-target="#defaultModalSuccess">Add</button>    
+        <button type="button" class="btn btn-primary float-end" data-bs-toggle="modal" data-bs-target="#defaultModalSuccess">+ Add</button>    
     </div>
     <div class="row">
         <div class="col-12">
             <div class="card">
                 <div class="card-body">
-                    <table id="datatables-reponsive" class="table table-striped" style="width:100%">
-                        <thead>
-                            <tr>
-                                <th>No.</th>
-                                <th>Leave type</th>
-                                <th>From</th>
-                                <th>To</th>
-                                <th>Total Days</th>
-                                <th>Reason</th>
-                                <th>Action</th>
-                                <th>Status</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            @foreach ($leaves as $key => $data)
-                            <tr>
-                                <td>{{$key+1}}</td>
-                                <td>{{$data->name}}</td>
-                                <td>{{ $data->start_date ? \Carbon\Carbon::parse($data->start_date)->format('d-m-Y') : 'N/A' }}</td>
-                                <td>{{ $data->end_date ? \Carbon\Carbon::parse($data->end_date)->format('d-m-Y') : 'N/A' }}</td>
-                                <td>{{$data->total_days}}</td>
-                                <td class="reason-cell" data-reason="{{ $data->reason }}">{{$data->reason}}</td>
-                                <td>
-                                    @if($data->status == 0)
-                                    <button type="button" class="btn btn-danger" data-bs-toggle="modal" data-bs-target="#cancelConfirmationModal" data-href="{{ route('emp/leave-delete', $data->id) }}">Cancel</button>
+                    <div class="table-responsive">
+                        <table id="datatables-reponsive" class="table table-striped" style="width:100%">
+                            <thead>
+                                <tr>
+                                    <th>No.</th>
+                                    <th>Leave type</th>
+                                    <th>From</th>
+                                    <th>To</th>
+                                    <th>Total Days</th>
+                                    <th>Reason</th>
+                                    <th>Action</th>
+                                    <th>Status</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                @foreach ($leaves as $key => $data)
+                                <tr>
+                                    <td>{{$key+1}}</td>
+                                    <td>{{$data->name}}</td>
+                                    <td>{{ $data->start_date ? \Carbon\Carbon::parse($data->start_date)->format('d-m-Y') : 'N/A' }}</td>
+                                    <td>{{ $data->end_date ? \Carbon\Carbon::parse($data->end_date)->format('d-m-Y') : 'N/A' }}</td>
+                                    <td>{{$data->total_days}}</td>
+                                    <td class="reason-cell" data-reason="{{ $data->reason }}">{{$data->reason}}</td>
+                                    <td>
+                                        @if($data->status == 0)
+                                        <button type="button" class="btn btn-danger" data-bs-toggle="modal" data-bs-target="#cancelConfirmationModal" data-href="{{ route('emp/leave-delete', $data->id) }}">Cancel</button>
+                                            @endif
+                                    </td>
+                                    <td>
+                                        @if($data->status == 0)
+                                        <span class="badge bg-warning">Pending</span>
+                                        @elseif($data->status == 1)
+                                        <span class="badge bg-success">Approved</span>
+                                        @else
+                                        <span class="badge bg-danger">Rejected</span>
                                         @endif
-                                </td>
-                                <td>
-                                    @if($data->status == 0)
-                                    <span class="badge bg-warning">Pending</span>
-                                    @elseif($data->status == 1)
-                                    <span class="badge bg-success">Approved</span>
-                                    @else
-                                    <span class="badge bg-danger">Rejected</span>
-                                    @endif
-                                </td>
-                            </tr>
-                            @endforeach
-                        </tbody>
-                    </table>
+                                    </td>
+                                </tr>
+                                @endforeach
+                            </tbody>
+                        </table>
+                    </div>
                 </div>
             </div>
         </div>
@@ -238,6 +240,7 @@ echo Session::get('leave_date')
                                 </option>
                             @endforeach
                         </select>
+                        <span id="alert" class="text-danger"></span>
                     </div>                    
 
                     <div class="mb-3">
@@ -276,6 +279,13 @@ echo Session::get('leave_date')
 </div>
 
 <script>
+
+    $(document).ready(function () {
+        $('#datatables-reponsive').DataTable({
+            responsive: true,
+            pageLength: 5, // Number of rows per page
+        });
+    });
     document.addEventListener('DOMContentLoaded', function () {
         $('#cancelConfirmationModal').on('show.bs.modal', function (event) {
             var button = $(event.relatedTarget); // Button that triggered the modal
@@ -336,6 +346,7 @@ $(document).ready(function () {
     setMonthRestrictions();
 
     $('#leaveType').change(function () {
+
         var selectedLeave = $('#leaveType option:selected').data('name');
 
         $('#from').removeAttr('min').removeAttr('max');
@@ -347,10 +358,28 @@ $(document).ready(function () {
             today.setHours(0, 0, 0, 0);
 
             var minDate = new Date(today);
-            minDate.setDate(minDate.getDate() + 4);
+            minDate.setDate(minDate.getDate() + 4); // Casual Leave must be applied 4 days in advance
 
             $('#from').attr('min', minDate.toISOString().split('T')[0]);
             $('#to').attr('min', minDate.toISOString().split('T')[0]);
+
+            function disableWeekendLeaveDates(input) {
+                $(input).on("input", function () {
+                    let selectedDate = new Date($(this).val());
+                    let dayOfWeek = selectedDate.getDay(); // 0 = Sunday, 1 = Monday, ..., 5 = Friday, 6 = Saturday
+
+                    if (dayOfWeek === 1 || dayOfWeek === 5) { // Monday or Friday
+                        $('#leavetype').val("");
+                        $('#alert').text("You cannot apply leave on this date. It will be consider as weekend leave.");                          
+                        $(this).val(""); // Clear the selected date
+                    }
+                });
+            }
+            
+
+            // Apply restriction on both date pickers
+            disableWeekendLeaveDates('#from');
+            disableWeekendLeaveDates('#to');
 
             return;
         }
@@ -388,6 +417,7 @@ $(document).ready(function () {
             minDate.setDate(minDate.getDate() + 7); // 1 week notice
 
             $('#from').attr('min', minDate.toISOString().split('T')[0]);
+            $('#to').attr('min', minDate.toISOString().split('T')[0]);
 
             $('#from, #to').change(function () {
                 let selectedFrom = $('#from').val();

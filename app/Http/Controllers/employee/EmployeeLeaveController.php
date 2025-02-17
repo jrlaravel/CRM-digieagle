@@ -23,8 +23,10 @@ class EmployeeLeaveController extends Controller
     {
         $leaves = DB::select('SELECT name,la.id,start_date,end_date,reason,la.status,total_days FROM `leave` as la join leavetype on la.leave_type_id = leavetype.id WHERE la.user_id = '.session('employee')->id);
         $leavetype = LeaveType::all();
-        $appleave = Leave::where('status', 1)->where('user_id', session('employee')->id)->count();
-        $rejleave = Leave::where('status', 2)->where('user_id', session('employee')->id)->count();   
+        $appleave = DB::Select("SELECT COUNT(*) as appleave FROM `leave` as data join leavetype on data.leave_type_id = leavetype.id WHERE leavetype.name != 'Half day' and data.status = 1 and data.user_id = " .session('employee')->id);
+        $appleave = $appleave[0]->appleave;
+        $rejleave = DB::Select("SELECT COUNT(*) as rejleave FROM `leave` as data join leavetype on data.leave_type_id = leavetype.id WHERE leavetype.name != 'Half day' and data.status = 2 and data.user_id = " .session('employee')->id);
+        $rejleave = $rejleave[0]->rejleave;
         $totalleave = 12;
         $pendingleave = $totalleave - $appleave;
 
@@ -37,6 +39,10 @@ class EmployeeLeaveController extends Controller
         $startDate = Carbon::parse($request->from);
         $endDate = Carbon::parse($request->to);
         
+        if($startDate > $endDate)
+        {
+            return redirect()->back()->withErrors(['leave_date' => 'Start date cannot be after end date.']);
+        }
         // Calculate the total days for the leave
         $totalDays = $startDate->diffInDays($endDate) + 1; 
         
@@ -117,13 +123,13 @@ class EmployeeLeaveController extends Controller
                 'designation' => $designation->name
             ];
 
-            $mailRecipients = [
-                'hr.digieagleinc@gmail.com',
-                'ceo.digieagleinc@gmail.com',
-                'manager.digieagleinc@gmail.com',
-            ];
+            // $mailRecipients = [
+            //     'hr.digieagleinc@gmail.com',
+            //     'ceo.digieagleinc@gmail.com',
+            //     'manager.digieagleinc@gmail.com',
+            // ];
             
-            Mail::to($mailRecipients)->send(new LeaveRequestMail($leaveDetails));
+            // Mail::to($mailRecipients)->send(new LeaveRequestMail($leaveDetails));
             
             
             // Redirect back with success message
@@ -131,7 +137,7 @@ class EmployeeLeaveController extends Controller
         
         } else {
             // If validation fails, redirect back with errors
-            return redirect()->back()->withErrors($validator);
+            return redirect()->back()->withErrors(['leave_date' => 'leave Application failed']);
         }
     }
 

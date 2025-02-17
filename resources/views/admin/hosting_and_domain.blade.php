@@ -57,8 +57,8 @@
                                         @endif
                                     </td>
                                     <td>{{ $value->client_name }}</td>
-                                    <td class="text-danger">{{ $value->domain_expire_date }}</td>
-                                    <td class="text-danger">{{ $value->hosting_expire_date }}</td>
+                                    <td class="text-danger">{{ \Carbon\Carbon::parse($value->domain_expire_date)->format('d-m-Y') }}</td>
+                                    <td class="text-danger">{{ \Carbon\Carbon::parse($value->hosting_expire_date)->format('d-m-Y') }}</td>
                                     <td>
                                         <button type="button" class="btn btn-info view-btn" data-id="{{ $value->id }}"
                                             data-client_name="{{ $value->client_name }}"

@@ -35,7 +35,7 @@
 
     <div class="mb-3">
         <h1 class="h3 d-inline align-middle">Client List</h1>   
-        <button type="button" class="btn btn-primary float-end" data-bs-toggle="modal" data-bs-target="#defaultModalSuccess">Add</button> 
+        <button type="button" class="btn btn-primary float-end" data-bs-toggle="modal" data-bs-target="#defaultModalSuccess">+ Add</button> 
     </div>
 
     <div class="row">
@@ -246,18 +246,7 @@
 @endsection
 @section('scripts')
 
-<script>
-
-    $(document).ready(function () {
-        $('#datatables-reponsive').DataTable({
-            responsive: true,
-            pageLength: 5, // Number of rows per page
-            paging: false,
-            searching: false
-        });
-    });
-
-    
+<script>   
     // Function to populate the modal with data
     $(document).on('click', '.edit-lead', function() {
     let Id = $(this).data('id');

@@ -335,7 +335,7 @@
 
 $(document).ready(function() {
 
-function fetchNotifications() {
+	function fetchNotifications() {
 	$.ajax({
 		url: "{{ url('admin/getnotification') }}",
 		method: 'GET',
@@ -351,8 +351,10 @@ function fetchNotifications() {
 				// No notifications available
 				$('#notification-list').append('<div class="text-muted">No notifications available.</div>');
 			} else {
-				response.forEach(function(notification) {
+				// Get the 5 most recent notifications
+				let recentNotifications = response.slice(0, 5);
 
+				recentNotifications.forEach(function(notification) {
 					var url = notification.url;
 					var id = notification.id;
 
