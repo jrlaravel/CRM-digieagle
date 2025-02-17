@@ -16,6 +16,7 @@ use Illuminate\Support\Facades\Mail;
 use Carbon\Carbon;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Storage;
+use App\Jobs\SendLeaveRequestEmail;
 
 class EmployeeLeaveController extends Controller
 {
@@ -38,108 +39,92 @@ class EmployeeLeaveController extends Controller
         $today = Carbon::now()->format('Y-m-d');
         $startDate = Carbon::parse($request->from);
         $endDate = Carbon::parse($request->to);
-        
-        if($startDate > $endDate)
-        {
+
+        if ($startDate > $endDate) {
             return redirect()->back()->withErrors(['leave_date' => 'Start date cannot be after end date.']);
         }
+
         // Calculate the total days for the leave
-        $totalDays = $startDate->diffInDays($endDate) + 1; 
-        
-        // Apply the 2x rule to calculate the minimum date from startDate
-        $minDateFromStart = $startDate->subDays(($totalDays * 2) + 1)->format('Y-m-d');
-        
+        $totalDays = $startDate->diffInDays($endDate) + 1;
+
+        // Apply the 2x rule
+        $minDateFromStart = $startDate->copy()->subDays(($totalDays * 2) + 1)->format('Y-m-d');
+
         // Validate the request
         $validator = Validator::make($request->all(), [
             'leave' => 'required',
             'to' => 'required',
             'from' => 'required',
             'reason' => 'required',
-            // 'report' => 'nullable|file|mimes:pdf|max:10240', // Validate PDF file and limit size to 10MB
         ]);
-        
-        // Check if validation passes
-        if ($validator->passes()) { 
-            
-            // If the leave type is Casual Leave, perform the check
-            $data = LeaveType::find($request->leave);
-            // dd($data);
-            if ($data->name == 'Casual Leave') {
-                // Check if today's date is either on or after the calculated min date
-                if ($today > $minDateFromStart) {
-                    Log::info("Leave request is rejected: Apply at least " . ($totalDays * 2) . " days in advance.");
-                    return redirect()->back()->withErrors(['leave_date' => 'You must apply for leave at least ' . ($totalDays * 2) . ' days in advance.']);
-                } else {
-                    Log::info("Leave request is accepted.");
-                }                
-                
-            }
-            // Prepare leave data
-            $leaveData = [
-                'leave_type_id' => $request->leave,
-                'user_id' => $request->id,
-                'apply_date' => $today,
-                'start_date' => $request->from,
-                'end_date' => $request->to,
-                'total_days' => $totalDays,
-                'reason' => $request->reason,
-                'other' => $request->other,
-                'status' => '0', // Pending status
-            ];
 
-            // Handle PDF file upload for Sick Leave
-            if ($request->hasFile('report')) {
-                $pdf = $request->file('report');
-                $pdfPath = $pdf->store('sick_leave_reports', 'public');
-                $leaveData['report'] = $pdfPath;
-            }
-            
-            // Create the leave record
-            Leave::create($leaveData);
-            $user = User::find($request->id);
-
-            Notification::create([
-                'user_id' => 1,
-                'title' => 'Leave Request',
-                'url' => 'leave',
-                'message' => $user->first_name . ' has been requested for leave, Reason: ' . $request->reason,
-            ]);
-            
-
-            // Send notification or email to HR (optional)
-            $designation = Designation::find($user->designation);
-            $email = $user->email;
-
-            // Send mail to HR (optional)
-            $leaveDetails = [
-                'name' => $request->input('name'),
-                'email' => $email,
-                'start_date' => $request->from,
-                'end_date' => $request->to,
-                'reason' => $request->reason,
-                'other' => $request->other,
-                'first_name' => $user->first_name,
-                'last_name' => $user->last_name,
-                'designation' => $designation->name
-            ];
-
-            $mailRecipients = [
-                'hr.digieagleinc@gmail.com',
-                'ceo.digieagleinc@gmail.com',
-                'manager.digieagleinc@gmail.com',
-            ];
-            
-            Mail::to($mailRecipients)->send(new LeaveRequestMail($leaveDetails));
-            
-            
-            // Redirect back with success message
-            return redirect()->back()->with('success', 'Leave request submitted successfully and HR has been notified.');
-        
-        } else {
-            // If validation fails, redirect back with errors
-            return redirect()->back()->withErrors(['leave_date' => 'leave Application failed']);
+        if ($validator->fails()) {
+            return redirect()->back()->withErrors(['leave_date' => 'Leave Application failed']);
         }
-    }
+
+        // Check for Casual Leave condition
+        $leaveType = LeaveType::find($request->leave);
+        if ($leaveType->name == 'Casual Leave' && $today > $minDateFromStart) {
+            return redirect()->back()->withErrors(['leave_date' => 'You must apply for leave at least ' . ($totalDays * 2) . ' days in advance.']);
+        }
+
+        // Prepare leave data
+        $leaveData = [
+            'leave_type_id' => $request->leave,
+            'user_id' => $request->id,
+            'apply_date' => $today,
+            'start_date' => $request->from,
+            'end_date' => $request->to,
+            'total_days' => $totalDays,
+            'reason' => $request->reason,
+            'other' => $request->other,
+            'status' => '0', // Pending status
+        ];
+
+        // Handle file upload for Sick Leave
+        if ($request->hasFile('report')) {
+            $pdf = $request->file('report');
+            $pdfPath = $pdf->store('sick_leave_reports', 'public');
+            $leaveData['report'] = $pdfPath;
+        }
+
+        // Create leave record
+        Leave::create($leaveData);
+        $user = User::find($request->id);
+
+        Notification::create([
+            'user_id' => 1,
+            'title' => 'Leave Request',
+            'url' => 'leave',
+            'message' => $user->first_name . ' has requested leave. Reason: ' . $request->reason,
+        ]);
+
+        // Email Details
+        $designation = Designation::find($user->designation);
+        $leaveDetails = [
+            'name' => $request->input('name'),
+            'email' => $user->email,
+            'start_date' => $request->from,
+            'end_date' => $request->to,
+            'reason' => $request->reason,
+            'other' => $request->other,
+            'first_name' => $user->first_name,
+            'last_name' => $user->last_name,
+            'designation' => $designation->name
+        ];
+
+        $mailRecipients = [
+            'hr.digieagleinc@gmail.com',
+            'ceo.digieagleinc@gmail.com',
+            'manager.digieagleinc@gmail.com',
+        ];
+
+        // Dispatch the email job to be processed in the background
+        dispatch(new SendLeaveRequestEmail($leaveDetails, $mailRecipients));
+
+        return redirect()->back()->with('success', 'Leave request submitted successfully. HR will be notified shortly.');
+}
+
 
     
     
