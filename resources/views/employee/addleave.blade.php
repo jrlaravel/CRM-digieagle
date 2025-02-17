@@ -372,6 +372,10 @@ $(document).ready(function () {
                         $('#leavetype').val("");
                         $('#alert').text("You cannot apply leave on this date. It will be consider as weekend leave.");                          
                         $(this).val(""); // Clear the selected date
+                        // Show alert for 3 seconds, then reload the page
+                        setTimeout(function () {
+                            location.reload();
+                        }, 1000);
                     }
                 });
             }
