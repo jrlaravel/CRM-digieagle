@@ -19,6 +19,7 @@
     <div class="card">
         <div class="card-body">
             <!-- Filter Checkboxes -->
+            @if(session('has_hr_features'))
             <div class="mb-3 d-flex flex-wrap justify-content-start align-items-center">
                 <label class="me-4 mb-2" style="font-size: 16px;">
                     <input type="checkbox" id="birthdayFilter" checked> Show Birthdays
@@ -26,12 +27,11 @@
                 <label class="me-4 mb-2" style="font-size: 16px;">
                     <input type="checkbox" id="festivalLeaveFilter" checked> Show Festival Leaves
                 </label>
-                @if(session('has_hr_features'))
                 <label class="me-4 mb-2" style="font-size: 16px">
                     <input type="checkbox" id="leaveFilter" checked> Show Leaves
                 </label>
-                @endif
             </div>
+            @endif
 
             <!-- Calendar Section -->
             <div id="fullcalendar" class="mt-3"></div>
@@ -44,12 +44,18 @@
 <script src="{{asset('js/fullcalendar.js')}}"></script>
 
 <script>
-      document.addEventListener("DOMContentLoaded", function() {
+    document.addEventListener("DOMContentLoaded", function() {
         var calendarEl = document.getElementById("fullcalendar");
 
         var birthdays = @json($data);
-        var leaves = @json($leave);
         var festivalLeaves = @json($festivalleave);
+        
+        // Only pass leave data if the user has HR features
+        @if(session()->has('has_hr_feature'))
+            var leaves = @json($leave);
+        @else
+            var leaves = [];
+        @endif
 
         function transformBirthdayData(birthdays) {
             const year = new Date().getFullYear();
@@ -57,12 +63,12 @@
                 const [day, month] = item.start.split('-');
                 const formattedDate = `${year}-${month}-${day}`;
                 return {
-                    id: 'birthday-' + item.id, // Unique ID for filtering
+                    id: 'birthday-' + item.id, 
                     title: item.name + "'s birthday",
                     start: formattedDate,
                     backgroundColor: '#ff9f89',
                     borderColor: '#ff9f89',
-                    type: 'birthday' // Custom property for filtering
+                    type: 'birthday'
                 };
             });
         }
@@ -70,14 +76,14 @@
         function transformLeaveData(leaves) {
             return leaves.map(item => {
                 return {
-                    id: 'leave-' + item.id, // Unique ID for filtering
+                    id: 'leave-' + item.id, 
                     title: item.first_name + ' on leave',
                     start: item.start_date,
                     end: item.end_date,
                     description: item.reason,
                     backgroundColor: '#1e90ff',
                     borderColor: '#1e90ff',
-                    type: 'leave' // Custom property for filtering
+                    type: 'leave'
                 };
             });
         }
@@ -85,21 +91,21 @@
         function transformFestivalLeaveData(festivalLeaves) {
             return festivalLeaves.map(item => {
                 return {
-                    id: 'festivalLeave-' + item.id, // Unique ID for filtering
+                    id: 'festivalLeave-' + item.id,
                     title: item.name,
                     start: item.start_date,
                     end: item.end_date,
-                    backgroundColor: '#ffd700', // Gold color for festival leaves
+                    backgroundColor: '#ffd700', 
                     borderColor: '#ffd700',
-                    type: 'festivalLeave' // Custom property for filtering
+                    type: 'festivalLeave'
                 };
             });
         }
 
         var transformedBirthdays = transformBirthdayData(birthdays);
-        var transformedLeaves = transformLeaveData(leaves);
         var transformedFestivalLeaves = transformFestivalLeaveData(festivalLeaves);
-        var allEvents = transformedBirthdays.concat(transformedLeaves, transformedFestivalLeaves);
+        var transformedLeaves = transformLeaveData(leaves);
+        var allEvents = transformedBirthdays.concat(transformedFestivalLeaves, transformedLeaves);
 
         var calendar = new FullCalendar.Calendar(calendarEl, {
             themeSystem: "bootstrap",
