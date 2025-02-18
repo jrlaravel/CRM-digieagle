@@ -309,7 +309,7 @@
 @if(session('has_hr_features'))
 <div class="row">
     <!-- Interview Reminder List Section -->
-    <div class="col-lg-6">
+    <div class="col-lg-5">
         <div class="card mt-4">
             <div class="card-body">
                 <div class="d-flex align-items-center justify-content-between">
@@ -356,7 +356,7 @@
     </div>
 
     <!-- New Leave List Section -->
-    <div class="col-lg-6">
+    <div class="col-lg-5">
         <div class="card mt-4">
             <div class="card-body">
                 <h5 class="card-title mb-0">New Leave List</h5>
@@ -384,6 +384,32 @@
                             </tr>
                             @endforeach
                         </tbody>    
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="col-lg-2">  
+        <div class="card mt-4">
+            <div class="card-body">
+                <h5 class="card-title mb-0">Employee's On Leave</h5>
+                <div class="table-responsive">
+                    <table id="datatables-reponsive" class="table table-striped" style="width:100%">
+                        <thead>
+                            <tr>
+                                <th>No.</th>
+                                <th>Employee Name</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @foreach($empOnLeave as $key => $value)
+                            <tr>
+                                <td>{{$key+1}}</td>
+                                <td>{{ $value->first_name }} {{ $value->last_name }}</td>
+                            </tr>
+                            @endforeach
+                        </tbody>
                     </table>
                 </div>
             </div>

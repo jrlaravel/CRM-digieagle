@@ -127,6 +127,20 @@
 							<li class="sidebar-item"><a class='sidebar-link {{ request()->routeIs('emp/website-cv-list') ? 'active' : '' }}' href='{{route('emp/website-cv-list')}}'>Website CVs</a></li>
 						</ul>
 					</li>
+
+					<li class="sidebar-item">
+						<a data-bs-target="#card" data-bs-toggle="collapse" class="sidebar-link {{ request()->routeIs('emp/cards') || request()->routeIs('emp/assign-card') ? 'active' : 'collapsed' }}">
+							<i class="fas fa-id-badge {{ request()->routeIs('emp/cards') || request()->routeIs('emp/assign-card') ? 'text-white' : '' }}"></i> <span class="align-middle">Cards Management</span>
+						</a>
+						<ul id="card" class="sidebar-dropdown list-unstyled collapse" data-bs-parent="#sidebar">
+							<li class="sidebar-item">
+								<a class='sidebar-link {{ request()->routeIs('emp/assign-card') ? 'active' : '' }}' href='{{ route('emp/assign-card') }}'>Assign Card</a>
+							</li>
+							<li class="sidebar-item">
+								<a class='sidebar-link {{ request()->routeIs('emp/cards') ? 'active' : '' }}' href='{{ route('emp/cards') }}'>Add Cards</a>
+							</li>
+						</ul>
+					</li>
 					@endif	
 		
 					<a href="{{ route('emp/attendance') }}" class="sidebar-link {{ request()->routeIs('emp/attendance') ? 'active' : '' }}">

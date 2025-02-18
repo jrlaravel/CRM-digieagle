@@ -10,6 +10,7 @@ use App\Http\Controllers\admin\DepartmentController;
 use App\Http\Controllers\employee\AttendanceController;
 use App\Http\Controllers\admin\AttendanceController as AdminAttendanceController;
 use App\Http\Controllers\admin\CardsController;
+use App\Http\Controllers\employee\HrCardsController;
 use App\Http\Controllers\admin\LeaveController;
 use App\Http\Controllers\admin\ProjectController;
 use App\Http\Controllers\admin\TaskController;
@@ -90,6 +91,13 @@ Route::prefix('emp')->group(function () {
         Route::post('interview-schedule',[HRRequirmentController::class, 'interview_schedule'])->name('emp/interview-schedule');
         Route::post('edit-interview-schedule',[HRRequirmentController::class ,'edit_interview_schedule'])->name('emp/edit-interview-schedule');
         Route::post('add-candidate-followup', [HRRequirmentController::class, 'add_followup'])->name('emp/add-candidate-followup');
+        Route::get('cards', [HrCardsController::class, 'index'])->name('emp/cards');
+        Route::post('add-card', [HrCardsController::class, 'store'])->name('emp/add-card');
+        Route::get('delete-card/{id}', [HrCardsController::class, 'delete'])->name('emp/delete-card');
+        Route::post('update-card', [HrCardsController::class, 'store'])->name('emp/update-card');
+        Route::get('assign-card', [HrCardsController::class, 'assign_card'])->name('emp/assign-card');
+        Route::post('add-assign-card', [HrCardsController::class, 'assign_card_store'])->name('emp/add-assign-card');
+        Route::get('delete-assign-card/{id}', [HrCardsController::class, 'assign_card_delete'])->name('emp/delete-assign-card');
 
     });
 
