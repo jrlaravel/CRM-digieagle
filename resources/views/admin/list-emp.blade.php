@@ -215,12 +215,7 @@
 
     $(document).ready(function () {
         $('#datatables-reponsive').DataTable({
-            paging: false,
-            searching: true,
-            ordering: true,
-            info: true,
-            pageLength: 10,
-            responsive: true
+        z
         });
     });
 

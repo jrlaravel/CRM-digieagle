@@ -92,7 +92,26 @@ class HREmployeeController extends Controller
 
     public function show(){
         
-        $employees = DB::select('SELECT users.id as uid,users.first_name,users.last_name,users.username,users.birth_date,users.email,users.phone,users.address,dep.name as depname,dep.id as depid,des.id as desid,des.name as desname FROM `users` join department as dep on users.department = dep.id join designation as des on users.designation = des.id;');
+        $employees = DB::table('users')
+        ->join('department as dep', 'users.department', '=', 'dep.id')
+        ->join('designation as des', 'users.designation', '=', 'des.id')
+        ->select(
+            'users.id as uid',
+            'users.first_name',
+            'users.last_name',
+            'users.username',
+            'users.birth_date',
+            'users.email',
+            'users.phone',
+            'users.address',
+            'dep.name as depname',
+            'users.empcode as code',
+            'dep.id as depid',
+            'des.id as desid',
+            'des.name as desname'
+        )
+        ->orderBy('users.id', 'desc')
+        ->paginate(100);
         $department = Department::all();
         $designation = Designation::all();
         return view('employee.list-emp', compact('employees','department','designation'));

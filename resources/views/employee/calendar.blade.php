@@ -51,8 +51,9 @@
         var festivalLeaves = @json($festivalleave);
         
         // Only pass leave data if the user has HR features
-        @if(session()->has('has_hr_feature'))
+        @if(session('has_hr_features'))
             var leaves = @json($leave);
+            console.log("Raw leave data:", leaves);
         @else
             var leaves = [];
         @endif
@@ -87,6 +88,7 @@
                 };
             });
         }
+
 
         function transformFestivalLeaveData(festivalLeaves) {
             return festivalLeaves.map(item => {

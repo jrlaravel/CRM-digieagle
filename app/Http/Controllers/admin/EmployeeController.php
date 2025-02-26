@@ -116,7 +116,7 @@ public function show() {
         'des.name as desname'
     )
     ->orderBy('users.id', 'desc')
-    ->paginate(10);
+    ->paginate(100);
 
     $department = Department::all();
     $designation = Designation::all();
