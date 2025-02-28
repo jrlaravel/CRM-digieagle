@@ -376,7 +376,7 @@ $(document).ready(function () {
                     $('#from').attr('min', startDateStr).val(""); // Set 'From' min date
                     
                     let endDate = new Date(startDate);
-                    endDate.setDate(endDate.getDate() + totalDays - 1); // Set 'To' date
+                    // endDate.setDate(endDate.getDate() + totalDays - 1); // Set 'To' date
 
                     let endDateStr = endDate.toISOString().split('T')[0];
                     $('#to').attr('min', endDateStr).val(""); // Set 'To' min date
