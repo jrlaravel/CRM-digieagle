@@ -39,17 +39,23 @@ class EmployeeLeaveController extends Controller
         $today = Carbon::now()->format('Y-m-d');
         $startDate = Carbon::parse($request->from);
         $endDate = Carbon::parse($request->to);
-
+        
         if ($startDate > $endDate) {
             return redirect()->back()->withErrors(['leave_date' => 'Start date cannot be after end date.']);
         }
-
+        
         // Calculate the total days for the leave
         $totalDays = $startDate->diffInDays($endDate) + 1;
+        // return $request->total_days;
 
-        // Apply the 2x rule
-        $minDateFromStart = $startDate->copy()->subDays(($totalDays * 2) + 1)->format('Y-m-d');
+        // Check for Casual Leave condition
 
+        if($request->total_days != null)
+        {
+            if ($totalDays != $request->total_days) {
+                return redirect()->back()->withErrors(['leave_date' => 'Invalid dates']);
+            }
+        }
         // Validate the request
         $validator = Validator::make($request->all(), [
             'leave' => 'required',
@@ -62,11 +68,6 @@ class EmployeeLeaveController extends Controller
             return redirect()->back()->withErrors(['leave_date' => 'Leave Application failed']);
         }
 
-        // Check for Casual Leave condition
-        $leaveType = LeaveType::find($request->leave);
-        if ($leaveType->name == 'Casual Leave' && $today > $minDateFromStart) {
-            return redirect()->back()->withErrors(['leave_date' => 'You must apply for leave at least ' . ($totalDays * 2) . ' days in advance.']);
-        }
 
         // Prepare leave data
         $leaveData = [
@@ -113,14 +114,14 @@ class EmployeeLeaveController extends Controller
             'designation' => $designation->name
         ];
 
-        $mailRecipients = [
-            'hr.digieagleinc@gmail.com',
-            'ceo.digieagleinc@gmail.com',
-            'manager.digieagleinc@gmail.com',
-        ];
+        // $mailRecipients = [
+        //     'hr.digieagleinc@gmail.com',
+        //     'ceo.digieagleinc@gmail.com',
+        //     'manager.digieagleinc@gmail.com',
+        // ];
 
-        // Dispatch the email job to be processed in the background
-        dispatch(new SendLeaveRequestEmail($leaveDetails, $mailRecipients));
+        // // Dispatch the email job to be processed in the background
+        // dispatch(new SendLeaveRequestEmail($leaveDetails, $mailRecipients));
 
         return redirect()->back()->with('success', 'Leave request submitted successfully. HR will be notified shortly.');
 }

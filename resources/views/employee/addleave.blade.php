@@ -241,7 +241,12 @@ echo Session::get('leave_date')
                             @endforeach
                         </select>
                         <span id="alert" class="text-danger"></span>
-                    </div>                    
+                    </div>     
+                    
+                    <div class="mb-3" id="total_days" style="display: none">
+                        <label for="totalDays" class="form-label">Total Days</label>
+                        <input type="number" class="form-control" id="totalDays" name="total_days" required>
+                    </div>
 
                     <div class="mb-3">
                         <label for="from" class="form-label">From</label>
@@ -347,6 +352,7 @@ $(document).ready(function () {
 
     $('#leaveType').change(function () {
 
+
         var selectedLeave = $('#leaveType option:selected').data('name');
 
         $('#from').removeAttr('min').removeAttr('max');
@@ -354,42 +360,58 @@ $(document).ready(function () {
 
         if (selectedLeave === 'Casual Leave') {
             $('#reportInput').hide();
+            $('#total_days').show();
             var today = new Date();
             today.setHours(0, 0, 0, 0);
 
-            var minDate = new Date(today);
-            minDate.setDate(minDate.getDate() + 4); // Casual Leave must be applied 4 days in advance
+            $('#totalDays').on("input", function () {
+                let totalDays = parseInt($(this).val(), 10) || 0;
+                if (totalDays > 0) {
+                    let startAfterDays = totalDays * 2; // Start leave after (totalDays * 2)
+                    $('#alert').text("You can choose date after " + startAfterDays  + " days");
+                    let startDate = new Date(today);
+                    startDate.setDate(startDate.getDate() + startAfterDays + 1);
 
-            $('#from').attr('min', minDate.toISOString().split('T')[0]);
-            $('#to').attr('min', minDate.toISOString().split('T')[0]);
+                    let startDateStr = startDate.toISOString().split('T')[0];
+                    $('#from').attr('min', startDateStr).val(""); // Set 'From' min date
+                    
+                    let endDate = new Date(startDate);
+                    endDate.setDate(endDate.getDate() + totalDays - 1); // Set 'To' date
+
+                    let endDateStr = endDate.toISOString().split('T')[0];
+                    $('#to').attr('min', endDateStr).val(""); // Set 'To' min date
+                }
+            });
 
             function disableWeekendLeaveDates(input) {
                 $(input).on("input", function () {
                     let selectedDate = new Date($(this).val());
-                    let dayOfWeek = selectedDate.getDay(); // 0 = Sunday, 1 = Monday, ..., 5 = Friday, 6 = Saturday
+                    let dayOfWeek = selectedDate.getDay(); // 0 = Sunday, 1 = Monday, ..., 6 = Saturday
 
                     if (dayOfWeek === 1 || dayOfWeek === 5) { // Monday or Friday
                         $('#leavetype').val("");
-                        $('#alert').text("You cannot apply leave on this date. It will be consider as weekend leave.");                          
+                        $('#alert').text("You cannot apply leave on this date. It will be considered as weekend leave.");                          
                         $(this).val(""); // Clear the selected date
-                        // Show alert for 3 seconds, then reload the page
+                        
                         setTimeout(function () {
                             location.reload();
-                        }, 1000);
+                        }, 2000);
                     }
                 });
             }
-            
 
-            // Apply restriction on both date pickers
-            disableWeekendLeaveDates('#from');
-            disableWeekendLeaveDates('#to');
+    // Apply restriction on both date pickers
+    disableWeekendLeaveDates('#from');
+    disableWeekendLeaveDates('#to');
 
-            return;
-        }
+    return;
+}
 
         if (selectedLeave === 'Sick Leave') {
             $('#reportInput').show();
+            $('#total_days').hide();
+            $('#alert').text('');
+
             var today = new Date().toISOString().split('T')[0];
 
             $('#from').attr('min', today);
@@ -401,6 +423,8 @@ $(document).ready(function () {
         if (selectedLeave === 'Half Day') {
             var today = new Date().toISOString().split('T')[0];
             $('#reportInput').hide();
+            $('#total_days').hide();
+            $('#alert').text('');
 
             $('#from').attr('min', today);
             $('#to').attr('disabled', true);
@@ -415,7 +439,9 @@ $(document).ready(function () {
 
         if (selectedLeave === 'Weekend Leave') {
             $('#reportInput').hide();
-
+            $('#total_days').hide();
+            $('#alert').text('');
+            $('#to').attr('disabled', false);
             let today = new Date();
             let minDate = new Date(today);
             minDate.setDate(minDate.getDate() + 7); // 1 week notice
@@ -442,7 +468,5 @@ $(document).ready(function () {
         setMonthRestrictions();
     });
 });
-
-
 </script>
 @endsection
