@@ -114,14 +114,14 @@ class EmployeeLeaveController extends Controller
             'designation' => $designation->name
         ];
 
-        // $mailRecipients = [
-        //     'hr.digieagleinc@gmail.com',
-        //     'ceo.digieagleinc@gmail.com',
-        //     'manager.digieagleinc@gmail.com',
-        // ];
+        $mailRecipients = [
+            'hr.digieagleinc@gmail.com',
+            'ceo.digieagleinc@gmail.com',
+            'manager.digieagleinc@gmail.com',
+        ];
 
-        // // Dispatch the email job to be processed in the background
-        // dispatch(new SendLeaveRequestEmail($leaveDetails, $mailRecipients));
+        // Dispatch the email job to be processed in the background
+        dispatch(new SendLeaveRequestEmail($leaveDetails, $mailRecipients));
 
         return redirect()->back()->with('success', 'Leave request submitted successfully. HR will be notified shortly.');
 }
