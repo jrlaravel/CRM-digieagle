@@ -147,4 +147,5 @@ class EmployeeDashboardController extends Controller
         }
         return view('employee/calendar',compact('data','festivalleave'));
     }
+
 }

@@ -98,6 +98,9 @@ Route::prefix('emp')->group(function () {
         Route::get('assign-card', [HrCardsController::class, 'assign_card'])->name('emp/assign-card');
         Route::post('add-assign-card', [HrCardsController::class, 'assign_card_store'])->name('emp/add-assign-card');
         Route::get('delete-assign-card/{id}', [HrCardsController::class, 'assign_card_delete'])->name('emp/delete-assign-card');
+        Route::get('media-manager',[HREmployeeController::class, 'MediaManager'])->name('emp/media-manager');
+        Route::post('upload-media', [HREmployeeController::class, 'uploadMedia'])->name('emp/upload-media');
+        Route::DELETE('delete-media/{id}', [HREmployeeController::class, 'deleteMedia'])->name('emp/delete-media');
 
     });
 
@@ -239,7 +242,9 @@ Route::prefix('admin')->group(function () {
         Route::post('add_lead_question',[LeadController::class, 'add_lead_question'])->name('admin/add_lead_question');
         Route::delete('/delete-lead-question/{id}', [LeadController::class, 'delete_lead_question'])->name('admin/delete-lead-question');
         Route::put('/update-lead-question/{id}', [LeadController::class, 'update_lead_question'])->name('admin/update-lead-question');
-
+        Route::get('media-manager',[EmployeeController::class, 'MediaManager'])->name('admin/media-manager');
+        Route::post('upload-media', [EmployeeController::class, 'uploadMedia'])->name('admin/upload-media');
+        Route::DELETE('delete-media/{id}', [EmployeeController::class, 'deleteMedia'])->name('admin/delete-media');
     });
 });
 

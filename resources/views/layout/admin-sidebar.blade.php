@@ -174,7 +174,10 @@
 						<i class="fa fa-history {{ request()->routeIs('admin/activity_log') ? 'text-white' : '' }}" aria-hidden="true"></i><span class="align-middle">Activity Log</span>
 					</a>
 		
-		
+					<a href="{{ route('admin/media-manager') }}" class="sidebar-link {{ request()->routeIs('admin/media-manager') ? 'active' : '' }}">
+						<i class='fa fa-image {{ request()->routeIs('admin/media-manager') ? 'text-white' : '' }}'></i> <span class="align-middle">Media Manager</span>
+					</a>
+
 				</ul>
 			</div>
 		</nav>

@@ -13,6 +13,7 @@ use App\Models\Department;
 use App\Models\Designation;
 use App\Models\Notification;
 use App\Models\Festival_leave;
+use App\Models\MediaManager;
 use Illuminate\Database\QueryException;
 use Illuminate\Support\Carbon;
 use PDF;
@@ -358,6 +359,41 @@ public function show() {
     
         // Return the file as a download response
         return response()->download($filePath)->deleteFileAfterSend(true);
+    }
+
+    public function MediaManager()
+    {
+        $media = MediaManager::all();
+        return view('admin/media-manager',compact('media'));
+    }
+ 
+    public function uploadMedia(Request $request)
+    {
+        // return $request->hasFile('document');
+        // Check if multiple files are uploaded
+        if ($request->hasFile('document')) {
+            foreach ($request->file('document') as $file) {
+                // Store file in the storage folder
+                $filePath = $file->store('media', 'public');
+                // Save file path in the database
+                MediaManager::create([
+                    'path' => $filePath,
+                ]);
+            }
+    
+            return back()->with('success', 'Files uploaded successfully!');
+        }
+    
+    }
+
+    public function deleteMedia($id)
+    {
+        $media = MediaManager::find($id);
+        // Delete file from the storage folder
+        Storage::delete('public/media'. $media->path);
+        // Delete record from the database
+        $media->delete();
+        return redirect()->route('admin/media-manager');
     }
     
 }
