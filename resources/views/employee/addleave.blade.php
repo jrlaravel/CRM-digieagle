@@ -245,7 +245,7 @@ echo Session::get('leave_date')
                     
                     <div class="mb-3" id="total_days" style="display: none">
                         <label for="totalDays" class="form-label">Total Days</label>
-                        <input type="number" class="form-control" id="totalDays" name="total_days" required>
+                        <input type="number" class="form-control" id="totalDays" name="total_days">
                     </div>
 
                     <div class="mb-3">
