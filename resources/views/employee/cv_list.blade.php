@@ -21,22 +21,25 @@
         box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); 
     }
 
+    .remove-card {
+    background-color: rgb(255, 255, 255) !important;
+    padding: 5px;
+    border-radius: 20%;
+    opacity: 1;
+    filter: invert(1); /* Makes the close icon visible */
+}
+
+
     </style>
     <meta name="csrf-token" content="{{ csrf_token() }}">
 
     <div class="row">
         @foreach($count as $statusData)
-            <div class="col-sm-3 col-xl-2" style="cursor: pointer">
+            <div class="col-lg-2 col-md-2 col-sm-4 col-6 mb-3" style="cursor: pointer;">
                 <!-- Make the entire card clickable -->
-                <div class="card status-filter" data-status="{{ $statusData->status }}">
+                <div class="card status-filter text-center" data-status="{{ $statusData->status }}">
                     <div class="card-body">
-                        <div class="row">
-                            <div class="col mt-0">
-                            <h5 class="card-title">
-                                {{ $statusData->status }}
-                            </h5>
-                            </div>
-                        </div>
+                        <h5 class="card-title">{{ $statusData->status }}</h5>
                         <h1 class="mt-1 mb-3">{{ $statusData->total }}</h1>
                     </div>
                 </div>
@@ -51,7 +54,7 @@
             <div class="d-flex justify-content-between float-end" >
                 <select class="form-control w-auto" style="margin-right: 1cm" id="designation" name="designation">
                     <option value="" selected> Select Designation <i class="fa fa-arrow-down" aria-hidden="true"></i> </option>
-                    <option value="Front Developer">Front Developer</option>
+                    <option value="Front End Developer">Front Developer</option>
                     <option value="UI/UX Designer">UI/UX Designer</option>
                     <option value="Laravel Developer">Laravel Developer</option>
                     <option value="Graphic Designer">Graphic Designer</option>
@@ -67,71 +70,77 @@
         
         <div class="row d-flex justify-content-start align-items-center mb-3">
             @foreach($cvs as $data)
+            @if($data->status != "Rejected")
             <div class="col-lg-3 col-md-4 col-sm-6 col-12 mb-4 cv-card" data-status="{{ $data->status }}">
-                <div class="card cv-details h-100">
-                    <div class="card-inner" >
-                            <!-- Front Side -->
-                            <div class="card-front">
-                                @if($data->cv_path)
-                                    @php
-                                        $cvPath = filter_var($data->cv_path, FILTER_VALIDATE_URL) ? $data->cv_path : asset('storage/' . $data->cv_path);
-                                        $isPdf = Str::endsWith($cvPath, ['.pdf']);
-                                    @endphp
-                                    
-                                    @if($isPdf)
-                                        <iframe class="card-img-top" src="{{ $cvPath }}" style="height: 200px; width: 100%;" frameborder="0"></iframe>
-                                    @else
-                                        <img class="card-img-top" src="{{ $cvPath }}" alt="CV Image" style="height: 200px; width: 100%;">
-                                    @endif
-                                    @else
-                                        <img class="card-img-top" src="path/to/default-image.jpg" alt="No CV available">
-                                    @endif
+                <div class="card cv-details h-100 position-relative">
+                    <!-- Close Icon -->
+                    <button class="btn-close remove-card position-absolute top-0 end-0" aria-label="Close"
+                    data-bs-toggle="modal" data-bs-target="#confirmRejectModal"
+                    data-id="{{ $data->id }}" data-name="{{ $data->name }}"></button>
+                    <div class="card-inner">
+                        <!-- Front Side -->
+                        <div class="card-front">
+                            @if($data->cv_path)
+                                @php
+                                    $cvPath = filter_var($data->cv_path, FILTER_VALIDATE_URL) ? $data->cv_path : asset('storage/' . $data->cv_path);
+                                    $isPdf = Str::endsWith($cvPath, ['.pdf']);
+                                @endphp
+                                
+                                @if($isPdf)
+                                    <iframe class="card-img-top" src="{{ $cvPath }}" style="height: 200px; width: 100%;" frameborder="0"></iframe>
+                                @else
+                                    <img class="card-img-top" src="{{ $cvPath }}" alt="CV Image" style="height: 200px; width: 100%;">
+                                @endif
+                            @else
+                                <img class="card-img-top" src="path/to/default-image.jpg" alt="No CV available">
+                            @endif
             
-                                    <div class="card-body" style="background-color: #fff">
-                                        <div class="d-flex justify-content-between align-items-center">
-                                            <div>
-                                                <h5 class="card-title mb-1">{{ $data->name }}</h5>
-                                                <p class="card-text mb-1">Applied for: {{ $data->designation }}</p>
-                                                <span class="designation" style="display: none;">{{ $data->designation }}</span> <!-- Hidden designation for filtering -->
-                                                <p class="card-text mb-0">
-                                                    <strong>Status:</strong>
-                                                    <span class="badge 
-                                                        @if($data->status == 'Selection') bg-primary
-                                                        @elseif($data->status == 'Phone Interview') bg-secondary
-                                                        @elseif($data->status == 'Technical Interview') bg-info
-                                                        @elseif($data->status == 'Practical Interview') bg-warning
-                                                        @elseif($data->status == 'Background Verification') bg-dark
-                                                        @elseif($data->status == 'Finalisation') bg-success
-                                                        @endif">
-                                                        {{ $data->status }}
-                                                    </span>
-                                                </p>
-                                            </div>
-                                    
-                                            <!-- Action Icons -->
-                                            <div class="d-flex justify-content-between align-items-center">
-                                                <a href="{{ $cvPath }}" target="_blank" class="btn btn-sm btn-outline-primary me-2" data-bs-toggle="tooltip" data-bs-placement="top" title="View CV">
-                                                    <i class="fa fa-eye"></i>
-                                                </a>
-                                                <a href="{{ $cvPath }}" download target="_blank" class="btn btn-sm btn-outline-success me-2" data-bs-toggle="tooltip" data-bs-placement="top" title="Download CV">
-                                                    <i class="fa fa-download"></i>
-                                                </a>
-                                                <a href="#" class="btn btn-sm btn-outline-info" data-bs-toggle="modal" data-id="{{$data->id}}" data-bs-target="#addFollowUpModal"  title="Add Followup">
-                                                    <i class="fa fa-plus"></i>
-                                                </a>
-                                            </div>
-                                        </div>
-                                    </div>                                
-                                    <div class="card-body" style="background-color: #fff; padding-bottom: 35px">
-                                        <a href="javascript:void(0);" class="card-link float-start view-followup-btn" data-id="{{ $data->id }}" data-name="{{ $data->name }}" style="color: black">
-                                            View Follow Up <i class="fa fa-arrow-right"></i>
-                                        </a>                                    
-                                        <a href="javascript:void(0);" class="card-link float-end" data-id="{{ $data->id }}" id="interviewScheduleBtn{{ $data->id }}">+ Interview Schedule</a>
+                            <div class="card-body" style="background-color: #fff">
+                                <div class="d-flex justify-content-between align-items-center">
+                                    <div>
+                                        <h5 class="card-title mb-1">{{ $data->name }}</h5>
+                                        <p class="card-text mb-1">Applied for: {{ $data->designation }}</p>
+                                        <span class="designation" style="display: none;">{{ $data->designation }}</span> <!-- Hidden designation for filtering -->
+                                        <p class="card-text mb-0">
+                                            <strong>Status:</strong>
+                                            <span class="badge 
+                                                @if($data->status == 'Selection') bg-primary
+                                                @elseif($data->status == 'Phone Interview') bg-secondary
+                                                @elseif($data->status == 'Technical Interview') bg-info
+                                                @elseif($data->status == 'Practical Interview') bg-warning
+                                                @elseif($data->status == 'Background Verification') bg-dark
+                                                @elseif($data->status == 'Finalisation') bg-success
+                                                @endif">
+                                                {{ $data->status }}
+                                            </span>
+                                        </p>
+                                    </div>
+            
+                                    <!-- Action Icons -->
+                                    <div class="d-flex justify-content-between align-items-center">
+                                        <a href="{{ $cvPath }}" target="_blank" class="btn btn-sm btn-outline-primary me-2" data-bs-toggle="tooltip" data-bs-placement="top" title="View CV">
+                                            <i class="fa fa-eye"></i>
+                                        </a>
+                                        <a href="{{ $cvPath }}" download target="_blank" class="btn btn-sm btn-outline-success me-2" data-bs-toggle="tooltip" data-bs-placement="top" title="Download CV">
+                                            <i class="fa fa-download"></i>
+                                        </a>
+                                        <a href="#" class="btn btn-sm btn-outline-info" data-bs-toggle="modal" data-id="{{$data->id}}" data-bs-target="#addFollowUpModal"  title="Add Followup">
+                                            <i class="fa fa-plus"></i>
+                                        </a>
                                     </div>
                                 </div>
+                            </div>                                
+                            <div class="card-body" style="background-color: #fff; padding-bottom: 35px">
+                                <a href="javascript:void(0);" class="card-link float-start view-followup-btn" data-id="{{ $data->id }}" data-name="{{ $data->name }}" style="color: black">
+                                    View Follow Up <i class="fa fa-arrow-right"></i>
+                                </a>                                    
+                                <a href="javascript:void(0);" class="card-link float-end" data-id="{{ $data->id }}" id="interviewScheduleBtn{{ $data->id }}">+ Interview Schedule</a>
+                            </div>
                         </div>
                     </div>
                 </div>        
+            </div>
+            @endif
             @endforeach
         </div>    
     </div>
@@ -317,12 +326,31 @@
         </div>
     </div>
 
-
+    {{-- reject CV confirm --}}
+    <div class="modal fade" id="confirmRejectModal" tabindex="-1" aria-labelledby="confirmRejectModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="confirmRejectModalLabel">Confirm Rejection</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    Are you sure you want to reject <strong id="cvName"></strong>'s CV?
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+                    <button type="button" class="btn btn-danger" id="confirmRejectBtn">Reject CV</button>
+                </div>
+            </div>
+        </div>
+    </div>
+    
 @endsection
 
 @section('scripts')
 <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 <script>
+    
     $(document).ready(function() {
         $("#cvForm").submit(function(event) {
             event.preventDefault(); // Prevent default form submission
@@ -355,194 +383,225 @@
     });
 
     // Open the modal when the Interview Schedule button is clicked
-$(document).ready(function() {
-    // Open the modal when Interview Schedule button is clicked
-    $('a[id^="interviewScheduleBtn"]').on('click', function() {
-        // Get the candidate ID from the data-id attribute
-        var candidateId = $(this).data('id');
-        
-        // Set the candidateId input value in the modal
-        $('#candidateId').val(candidateId);
-
-        // Show the modal
-        $('#interviewScheduleModal').modal('show');
-    });
-
-    // Handle form submission (for scheduling the interview)
-    $('#interviewScheduleForm').on('submit', function(e) {
-            event.preventDefault(); // Prevent the default form submission
-
-            // Get the form data
-            var candidateId = $('#candidateId').val();
-            var interviewType = $('#interviewType').val();
-            var interviewDate = $('#interviewDate').val();
-            var interviewTime = $('#interviewTime').val();
-
-            // Send the data via AJAX
-            $.ajax({
-                url: "{{ route('emp/interview-schedule') }}", // Adjust the route if necessary
-                type: "POST",
-                data: {
-                    candidate_id: candidateId, 
-                    interview_type: interviewType,
-                    interview_date: interviewDate,
-                    interview_time: interviewTime,
-                    _token: $('meta[name="csrf-token"]').attr('content')  // CSRF token for security
-                },
-            success: function(response) {
-                if (response.status === 'success') {
-                    alert(response.message);  // You can replace this with a modal message
-                    $('#interviewScheduleModal').modal('hide');
-                } else {
-                    alert(response.message);  // You can replace this with a modal error message
-                }
-            },
-            error: function(xhr) {
-                alert('Something went wrong. Please try again.');
-            }
-        });
-    });
-});
-
-$(document).ready(function () {
-    // Click event for status card (filter)
-    $(".status-filter").click(function () {
-        var status = $(this).data('status');  // Get the status from the clicked card
-
-        // Remove the active class from all cards and then add it to the clicked one
-        $(".status-filter").removeClass("active-card");
-        $(this).addClass("active-card");
-
-        // Filter the CV cards based on the clicked status
-        $(".cv-card").each(function () {
-            var cvStatus = $(this).data('status');  // Get the status of each CV card
-
-            if (cvStatus === status) {
-                $(this).show();  // Show matching status cards
-            } else {
-                $(this).hide();  // Hide others
-            }
-        });
-    });
-});
-
-// JavaScript to handle the designation filter
-document.getElementById('designation').addEventListener('change', function() {
-    const selectedDesignation = this.value;
-    
-    console.log(selectedDesignation);
-    // Filter the CVs based on the selected designation
-    const allCards = document.querySelectorAll('.cv-details'); // Assuming each CV is inside a .card element
-    console.log(allCards);
-    allCards.forEach(card => {
-        const cardDesignation = card.querySelector('.designation'); // Assuming each CV card has the .designation class
-        console.log(cardDesignation);
-        if (selectedDesignation === "" || cardDesignation.textContent === selectedDesignation) {
-            card.style.display = 'block'; // Show the card
-        } else {
-            card.style.display = 'none'; // Hide the card
-        }
-    });
-});
-
- // add follow up
- document.addEventListener("DOMContentLoaded", function () {
-        // Get all "Add Follow Up" buttons
-            document.querySelectorAll('.btn-outline-info').forEach(button => {
-                button.addEventListener("click", function () {
-                let candidateId = this.getAttribute("data-id"); // Get candidate_id from button
-                document.getElementById("candidate_id").value = candidateId; // Set in hidden input
-            });
-        });
-
-        // Handle form submission
-        document.getElementById("followUpForm").addEventListener("submit", function (event) {
-            event.preventDefault(); // Prevent page reload
+    $(document).ready(function() {
+        // Open the modal when Interview Schedule button is clicked
+        $('a[id^="interviewScheduleBtn"]').on('click', function() {
+            // Get the candidate ID from the data-id attribute
+            var candidateId = $(this).data('id');
             
-            // Get form data
-            let candidateId = document.getElementById("candidate_id").value;
-            let notes = document.getElementById("followUpNotes").value;
-
-            // Send data via AJAX to Laravel backend
-            fetch("{{route('emp/add-candidate-followup')}}", {
-                method: "POST",
-                headers: {
-                    "Content-Type": "application/json",
-                    "X-CSRF-TOKEN": "{{ csrf_token() }}"
-                },
-                body: JSON.stringify({ candidate_id: candidateId, notes: notes})
-            })
-            .then(response => response.json())
-            .then(data => {
-                // Close add follow-up modal
-                let addFollowUpModal = bootstrap.Modal.getInstance(document.getElementById('addFollowUpModal'));
-                addFollowUpModal.hide();
-
-                // Reset form
-                document.getElementById("followUpForm").reset();
-
-                // Open success modal
-                let successModal = new bootstrap.Modal(document.getElementById('successModal'));
-                successModal.show();
-
-                // Wait for the success modal to be fully shown before reloading
-                successModal._element.addEventListener('hidden.bs.modal', function () {
-                    location.reload(); // Refresh the page after success modal is closed
-                });
-            })
-
-            .catch(error => console.error("Error:", error));
-        });
-});
-
-document.addEventListener("DOMContentLoaded", function () {
-    document.querySelectorAll('.view-followup-btn').forEach(button => {
-        button.addEventListener("click", function () {
-            let candidateId = this.getAttribute("data-id");
-            let name = this.getAttribute("data-name");
-
-            document.getElementById("header").textContent = `Follow-ups for ${name}`;
-            // Get all follow-ups from Laravel
-            let followups = @json($followup); // Convert Laravel data to JavaScript
-
-            // Filter follow-ups for the clicked candidate
-            let filteredFollowups = followups
-                .filter(f => f.candidate_id == candidateId)
-                .sort((a, b) => new Date(b.created_at) - new Date(a.created_at)); // Sort in DESC order
-
-            let followUpList = document.getElementById("followUpList");
-
-            followUpList.innerHTML = ""; // Clear previous entries
-
-            if (filteredFollowups.length === 0) {
-                followUpList.innerHTML = "<li class='text-muted'>No follow-ups available.</li>";
-            } else {
-
-                filteredFollowups.forEach(followup => {
-                    let formattedDate = new Date(followup.created_at).toLocaleString('en-US', {
-                        year: 'numeric', month: 'short', day: 'numeric',
-                        hour: '2-digit', minute: '2-digit', hour12: true
-                    });
-
-                    let followUpItem = `
-                        <li class="timeline-item">
-                            <strong>Follow_up</strong>
-                            <span class="float-end text-muted text-sm">${formattedDate}</span>
-                            <p>${followup.follow_up}</p>
-                        </li>`;
-                    followUpList.innerHTML += followUpItem;
-                });
-            }
+            // Set the candidateId input value in the modal
+            $('#candidateId').val(candidateId);
 
             // Show the modal
-            let viewFollowUpModal = new bootstrap.Modal(document.getElementById('viewFollowUpModal'));
-            viewFollowUpModal.show();
+            $('#interviewScheduleModal').modal('show');
+        });
+
+        // Handle form submission (for scheduling the interview)
+        $('#interviewScheduleForm').on('submit', function(e) {
+                event.preventDefault(); // Prevent the default form submission
+
+                // Get the form data
+                var candidateId = $('#candidateId').val();
+                var interviewType = $('#interviewType').val();
+                var interviewDate = $('#interviewDate').val();
+                var interviewTime = $('#interviewTime').val();
+
+                // Send the data via AJAX
+                $.ajax({
+                    url: "{{ route('emp/interview-schedule') }}", // Adjust the route if necessary
+                    type: "POST",
+                    data: {
+                        candidate_id: candidateId, 
+                        interview_type: interviewType,
+                        interview_date: interviewDate,
+                        interview_time: interviewTime,
+                        _token: $('meta[name="csrf-token"]').attr('content')  // CSRF token for security
+                    },
+                success: function(response) {
+                    if (response.status === 'success') {
+                        alert(response.message);  // You can replace this with a modal message
+                        $('#interviewScheduleModal').modal('hide');
+                    } else {
+                        alert(response.message);  // You can replace this with a modal error message
+                    }
+                },
+                error: function(xhr) {
+                    alert('Something went wrong. Please try again.');
+                }
+            });
+        });
+    });
+
+    $(document).ready(function () {
+        // Click event for status card (filter)
+        $(".status-filter").click(function () {
+            var status = $(this).data('status');  // Get the status from the clicked card
+
+            // Remove the active class from all cards and then add it to the clicked one
+            $(".status-filter").removeClass("active-card");
+            $(this).addClass("active-card");
+
+            // Filter the CV cards based on the clicked status
+            $(".cv-card").each(function () {
+                var cvStatus = $(this).data('status');  // Get the status of each CV card
+
+                if (cvStatus === status) {
+                    $(this).show();  // Show matching status cards
+                } else {
+                    $(this).hide();  // Hide others
+                }
+            });
+        });
+    });
+
+    // JavaScript to handle the designation filter
+    document.getElementById('designation').addEventListener('change', function() {
+        const selectedDesignation = this.value;
+        
+        console.log(selectedDesignation);
+        // Filter the CVs based on the selected designation
+        const allCards = document.querySelectorAll('.cv-details'); // Assuming each CV is inside a .card element
+        console.log(allCards);
+        allCards.forEach(card => {
+            const cardDesignation = card.querySelector('.designation'); // Assuming each CV card has the .designation class
+            console.log(cardDesignation);
+            if (selectedDesignation === "" || cardDesignation.textContent === selectedDesignation) {
+                card.style.display = 'block'; // Show the card
+            } else {
+                card.style.display = 'none'; // Hide the card
+            }
+        });
+    });
+
+    // add follow up
+    document.addEventListener("DOMContentLoaded", function () {
+            // Get all "Add Follow Up" buttons
+                document.querySelectorAll('.btn-outline-info').forEach(button => {
+                    button.addEventListener("click", function () {
+                    let candidateId = this.getAttribute("data-id"); // Get candidate_id from button
+                    document.getElementById("candidate_id").value = candidateId; // Set in hidden input
+                });
+            });
+
+            // Handle form submission
+            document.getElementById("followUpForm").addEventListener("submit", function (event) {
+                event.preventDefault(); // Prevent page reload
+                
+                // Get form data
+                let candidateId = document.getElementById("candidate_id").value;
+                let notes = document.getElementById("followUpNotes").value;
+
+                // Send data via AJAX to Laravel backend
+                fetch("{{route('emp/add-candidate-followup')}}", {
+                    method: "POST",
+                    headers: {
+                        "Content-Type": "application/json",
+                        "X-CSRF-TOKEN": "{{ csrf_token() }}"
+                    },
+                    body: JSON.stringify({ candidate_id: candidateId, notes: notes})
+                })
+                .then(response => response.json())
+                .then(data => {
+                    // Close add follow-up modal
+                    let addFollowUpModal = bootstrap.Modal.getInstance(document.getElementById('addFollowUpModal'));
+                    addFollowUpModal.hide();
+
+                    // Reset form
+                    document.getElementById("followUpForm").reset();
+
+                    // Open success modal
+                    let successModal = new bootstrap.Modal(document.getElementById('successModal'));
+                    successModal.show();
+
+                    // Wait for the success modal to be fully shown before reloading
+                    successModal._element.addEventListener('hidden.bs.modal', function () {
+                        location.reload(); // Refresh the page after success modal is closed
+                    });
+                })
+
+                .catch(error => console.error("Error:", error));
+            });
+    });
+
+    document.addEventListener("DOMContentLoaded", function () {
+        document.querySelectorAll('.view-followup-btn').forEach(button => {
+            button.addEventListener("click", function () {
+                let candidateId = this.getAttribute("data-id");
+                let name = this.getAttribute("data-name");
+
+                document.getElementById("header").textContent = `Follow-ups for ${name}`;
+                // Get all follow-ups from Laravel
+                let followups = @json($followup); // Convert Laravel data to JavaScript
+
+                // Filter follow-ups for the clicked candidate
+                let filteredFollowups = followups
+                    .filter(f => f.candidate_id == candidateId)
+                    .sort((a, b) => new Date(b.created_at) - new Date(a.created_at)); // Sort in DESC order
+
+                let followUpList = document.getElementById("followUpList");
+
+                followUpList.innerHTML = ""; // Clear previous entries
+
+                if (filteredFollowups.length === 0) {
+                    followUpList.innerHTML = "<li class='text-muted'>No follow-ups available.</li>";
+                } else {
+
+                    filteredFollowups.forEach(followup => {
+                        let formattedDate = new Date(followup.created_at).toLocaleString('en-US', {
+                            year: 'numeric', month: 'short', day: 'numeric',
+                            hour: '2-digit', minute: '2-digit', hour12: true
+                        });
+
+                        let followUpItem = `
+                            <li class="timeline-item">
+                                <strong>Follow_up</strong>
+                                <span class="float-end text-muted text-sm">${formattedDate}</span>
+                                <p>${followup.follow_up}</p>
+                            </li>`;
+                        followUpList.innerHTML += followUpItem;
+                    });
+                }
+
+                // Show the modal
+                let viewFollowUpModal = new bootstrap.Modal(document.getElementById('viewFollowUpModal'));
+                viewFollowUpModal.show();
+            });
+        });
+    });
+
+    $(document).ready(function() {
+    let cvId;
+
+    // Open modal with data
+    $('.remove-card').click(function() {
+        cvId = $(this).data('id');
+        let cvName = $(this).data('name');
+        $('#cvName').text(cvName);
+    });
+
+    // Handle CV rejection
+    $('#confirmRejectBtn').click(function() {
+        $.ajax({
+            url: "{{ route('emp/reject-cv') }}", // Adjust the endpoint
+            method: 'POST',
+            data: {
+                _token: '{{ csrf_token() }}',
+                id: cvId,
+            },
+            success: function(response) {
+                if (response.success) {
+                    $('#confirmRejectModal').modal('hide');
+                    $('[data-id="' + cvId + '"]').closest('.cv-card').remove(); // Remove from UI
+                } else {
+                    alert('Error rejecting CV.');
+                }
+            },
+            error: function() {
+                alert('Server error.');
+            }
         });
     });
 });
-
-
-
 
 </script>
 @endsection

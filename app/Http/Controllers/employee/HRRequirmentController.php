@@ -193,9 +193,9 @@ class HRRequirmentController extends Controller
             'phone' => 'required|string|max:15',
             'designation' => 'required|string|max:255',
             'notice_period' => 'required|string|max:255',
-            'experience' => 'required|integer',
-            'current_ctc' => 'nullable|integer',
-            'expected_ctc' => 'nullable|integer',
+            'experience' => 'required',
+            'current_ctc' => 'nullable',
+            'expected_ctc' => 'nullable',
             'cv' => 'nullable|mimes:pdf,jpeg,png,jpg|max:2048', // Accept both PDF and images (Max 2MB)
             'cv_url' => 'nullable|url', // Allow a CV URL
         ]);
@@ -249,12 +249,61 @@ class HRRequirmentController extends Controller
             ]);
         }
     }
+
+    public function rejectCv(Request $request)
+    {
+        $cv = CvDetail::find($request->id);
+        if ($cv) {
+            $cv->status = 'Rejected'; // Update status
+            $cv->save();
+
+            return response()->json(['success' => true]);
+        }
+        return response()->json(['success' => false]);
+    }
+
+
     
+    public function rejectCvList()
+    {
+        $data = CvDetail::where('status', 'Rejected')->get();
+        return view('employee/rejected_cv',compact('data'));
+    }
+
+    public function deleteCv(Request $request)
+    {
+        $employee = CvDetail::find($request->id);
     
+        if (!$employee) {
+            return response()->json(['success' => false, 'message' => 'Record not found!']);
+        }
+    
+        // Nullify candidate_id in candidate_follow_up instead of deleting the record
+        $data = CandidateFollowUp::where('candidate_id', $employee->id);
+
+        $data2 = InterviewDetail::where('candidate_id', $employee->id);
+
+        $data->delete();
+
+        $data2->delete();
+    
+        // Delete the CV file if it exists and is not a URL
+        if ($employee->cv_path && !filter_var($employee->cv_path, FILTER_VALIDATE_URL)) {
+            Storage::disk('public')->delete($employee->cv_path);
+        }
+    
+        // Delete the main record from `cv_details`
+        $employee->delete();
+    
+        return response()->json(['success' => true, 'message' => 'Record deleted successfully!']);
+    }
+
+
     public function website_cv_list()
     {
         $data = http::get('https://digieagleinc.com/wp-json/custom-api/v1/form-entries/2');
         $data = $data->json();
+        // dd($data);
         return view('employee/website_cv_list',compact('data'));
     }
 

@@ -18,6 +18,7 @@
     <div class="mb-3">
         <h1 class="h3 d-inline align-middle">Website CV List</h1> 
     </div>
+
     <div class="row">
         <div class="col-12">
             <div class="card">
@@ -70,7 +71,7 @@
                                     </tr>
                                 @endif
                                 @endforeach
-                            </tbody>
+                            </tbody>                        
                         </table>
                     </div>
                 </div>
@@ -101,7 +102,27 @@
 @endsection
 
 @section('scripts')
+
+<link rel="stylesheet" href="https://cdn.datatables.net/1.13.5/css/jquery.dataTables.min.css">
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script src="https://cdn.datatables.net/1.13.5/js/jquery.dataTables.min.js"></script>
+
 <script>
+  document.addEventListener("DOMContentLoaded", function() {
+        // Datatables Responsive
+        $("#datatables-reponsive").DataTable({
+            searching: true,
+            responsive: true
+        });
+    });
+
+    
+    $(document).ready(function() {
+        $(".btn-danger").click(function() {
+            $(this).closest("tr").fadeOut(300); // Hide the row smoothly
+        });
+    });
+
     $(document).on('click', '.approve-btn', function() {
         let button = $(this);
         let candidateData = {
@@ -116,6 +137,8 @@
             source: 'website',
             _token: "{{ csrf_token() }}"  // CSRF Token for security
         };
+
+        console.log(candidateData);
     
         $.ajax({
             url: "{{ route('emp/add-cv') }}",  // Ensure this route exists

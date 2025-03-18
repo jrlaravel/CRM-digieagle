@@ -126,6 +126,9 @@
 						<ul id="requirment" class="sidebar-dropdown list-unstyled collapse" data-bs-parent="#sidebar">
 							<li class="sidebar-item"><a class='sidebar-link {{ request()->routeIs('emp/website-cv-list') ? 'active' : '' }}' href='{{route('emp/website-cv-list')}}'>Website CVs</a></li>
 						</ul>
+						<ul id="requirment" class="sidebar-dropdown list-unstyled collapse" data-bs-parent="#sidebar">
+							<li class="sidebar-item"><a class='sidebar-link {{ request()->routeIs('emp/reject-cv-list') ? 'active' : '' }}' href='{{route('emp/reject-cv-list')}}'>Rejcted CVs</a></li>
+                        </ul>
 					</li>
 
 					<li class="sidebar-item">

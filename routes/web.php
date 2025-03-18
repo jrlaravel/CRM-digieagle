@@ -87,7 +87,10 @@ Route::prefix('emp')->group(function () {
         Route::post('assign-candidate-details', [HRRequirmentController::class, 'assign_candidate_details'])->name('emp.assign-candidate-details');
         Route::get('candidate-cv-list', [HRRequirmentController::class, 'cv_list'])->name('emp/candidate-cv-list');
         Route::post('add-cv',[HRRequirmentController::class, 'store_cv'])->name('emp/add-cv');
-        Route::get('website-cv-list', [HRRequirmentController::class, 'website_cv_list'])->name('emp/website-cv-list');    
+        Route::get('website-cv-list', [HRRequirmentController::class, 'website_cv_list'])->name('emp/website-cv-list'); 
+        Route::post('reject-cv', [HRRequirmentController::class,'rejectCv'])->name('emp/reject-cv');   
+        Route::get('reject-cv-list', [HRRequirmentController::class,'rejectCvList'])->name('emp/reject-cv-list'); 
+        Route::post('delete-cv', [HRRequirmentController::class, 'deleteCv'])->name('emp/delete-cv');
         Route::post('interview-schedule',[HRRequirmentController::class, 'interview_schedule'])->name('emp/interview-schedule');
         Route::post('edit-interview-schedule',[HRRequirmentController::class ,'edit_interview_schedule'])->name('emp/edit-interview-schedule');
         Route::post('add-candidate-followup', [HRRequirmentController::class, 'add_followup'])->name('emp/add-candidate-followup');

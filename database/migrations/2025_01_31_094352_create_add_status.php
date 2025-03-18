@@ -18,7 +18,8 @@ return new class extends Migration
                 'Technical Interview', 
                 'Practical Interview', 
                 'Background Verification', 
-                'Finalisation'
+                'Finalisation',
+                'Rejected'
             ])->default('Selection')->after('cv_path'); // Adjust the position as needed
         });
     }
