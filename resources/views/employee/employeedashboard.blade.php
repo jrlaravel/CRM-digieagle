@@ -162,7 +162,8 @@
                         <h5 class="card-title">Remaining Days (Month)</h5>
                     </div>
                 </div>
-                <h1 class="mt-1 mb-3">{{$absentDaysCount}}</h1>
+                <h1 class="mt-1 mb-3">{{ substr($remainingDaysCount, 1) }}</h1>
+            </h1>
             </div>
         </div>
     </div>

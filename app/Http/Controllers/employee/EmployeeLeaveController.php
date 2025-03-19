@@ -24,8 +24,8 @@ class EmployeeLeaveController extends Controller
     {
         $leaves = DB::select('SELECT name,la.id,start_date,end_date,reason,la.status,total_days FROM `leave` as la join leavetype on la.leave_type_id = leavetype.id WHERE la.user_id = '.session('employee')->id);
         $leavetype = LeaveType::all();
-        $appleave = DB::Select("SELECT COUNT(*) as appleave FROM `leave` as data join leavetype on data.leave_type_id = leavetype.id WHERE leavetype.name != 'Half day' and data.status = 1 and data.user_id = " .session('employee')->id);
-        $appleave = $appleave[0]->appleave;
+        $appleave = DB::Select("SELECT SUM(total_days) as appleave FROM `leave` as data join leavetype on data.leave_type_id = leavetype.id WHERE leavetype.name != 'Half day' and data.status = 1 and data.user_id = ".session('employee')->id);
+        $appleave = $appleave[0]->appleave; 
         $rejleave = DB::Select("SELECT COUNT(*) as rejleave FROM `leave` as data join leavetype on data.leave_type_id = leavetype.id WHERE leavetype.name != 'Half day' and data.status = 2 and data.user_id = " .session('employee')->id);
         $rejleave = $rejleave[0]->rejleave;
         $totalleave = 12;

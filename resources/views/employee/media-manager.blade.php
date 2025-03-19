@@ -28,32 +28,65 @@
                 $fileExtension = pathinfo($value->path, PATHINFO_EXTENSION);
             @endphp
     
-            <div class="col-md-2 col-sm-6 col-12 mb-3">
-                <div class="card">
-                    <div class="card-body text-center">
-                        @if(in_array($fileExtension, ['jpg', 'jpeg', 'png', 'gif', 'webp']))
-                            <!-- Show image preview -->
-                            <img src="{{ $filePath }}" alt="Uploaded Media" class="img-fluid rounded mb-2">
-                        @elseif($fileExtension === 'pdf')
-                            <!-- Show PDF preview -->
-                            <iframe src="{{ $filePath }}" width="100%" height="150px"></iframe>
-                        @else
-                            <!-- Show a generic file icon -->
-                            <i class="fas fa-file fa-3x"></i>
-                        @endif
-                        
-                        <div class="d-flex justify-content-between mt-2">
-                            <a href="{{ $filePath }}" class="btn btn-primary btn-sm" download>Download</a>
-                            
-                            <form action="{{ route('emp/delete-media', $value->id) }}" method="POST">
-                                @csrf
-                                @method('DELETE')
-                                <button type="submit" class="btn btn-danger btn-sm">Delete</button>
-                            </form>
-                        </div>
-                    </div>
+    <div class="col-md-2 col-sm-6 col-12 mb-3">
+        <div class="card">
+            <div class="card-body text-center">
+                @if(in_array($fileExtension, ['jpg', 'jpeg', 'png', 'gif', 'webp']))
+                    <!-- Show image preview -->
+                    <img src="{{ $filePath }}" alt="Uploaded Media" class="img-fluid rounded mb-2">
+                @elseif($fileExtension === 'pdf')
+                    <!-- Show PDF preview -->
+                    <iframe src="{{ $filePath }}" width="100%" height="150px"></iframe>
+                @else
+                    <!-- Show a generic file icon -->
+                    <i class="fas fa-file fa-3x"></i>
+                @endif
+    
+                <div class="d-flex justify-content-between mt-2">
+                    <a href="{{ $filePath }}" class="btn btn-primary btn-sm" download>Download</a>
+    
+                    @if(in_array($fileExtension, ['jpg', 'jpeg', 'png', 'gif', 'webp']))
+                        <!-- View Button to Open Modal -->
+                        <button class="btn btn-info btn-sm view-image" data-image="{{ $filePath }}" data-toggle="modal" data-target="#imageModal">View</button>
+                    @endif
+    
+                    <form action="{{ route('emp/delete-media', $value->id) }}" method="POST">
+                        @csrf
+                        @method('DELETE')
+                        <button type="submit" class="btn btn-danger btn-sm">Delete</button>
+                    </form>
                 </div>
             </div>
+        </div>
+    </div>
+    
+    <!-- Image Modal -->
+    <div class="modal fade" id="imageModal" tabindex="-1" aria-labelledby="imageModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="imageModalLabel">Image Preview</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body text-center">
+                    <img id="modalImage" src="" class="img-fluid" alt="Preview Image">
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <!-- jQuery Script to Update Modal Image -->
+    <script>
+        $(document).ready(function(){
+            $(".view-image").click(function(){
+                var imageUrl = $(this).data("image");
+                $("#modalImage").attr("src", imageUrl);
+            });
+        });
+    </script>
+    
         @endforeach
     </div>    
 </div>

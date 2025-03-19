@@ -19,9 +19,18 @@ use Illuminate\Support\Carbon;
 use PDF;
 use Illuminate\Support\Facades\File;
 use Illuminate\Support\Facades\Storage;
+use App\Services\ETimeOfficeService;
+
 
 class EmployeeController extends Controller
 {
+    private $eTimeOfficeService;
+
+    public function __construct(ETimeOfficeService $eTimeOfficeService)
+    {
+        $this->eTimeOfficeService = $eTimeOfficeService;
+    }
+
     public function index(){
         $department = DB::select('SELECT DISTINCT name,id FROM `department` WHERE status = 1;');
         return view('admin.add-emp',compact('department'));
@@ -396,4 +405,33 @@ public function show() {
         return redirect()->route('admin/media-manager');
     }
     
+    public function empdetails($id)
+    {
+        $data = DB::select('SELECT users.id,users.birth_Date,users.empcode,users.profile_photo_path,users.first_name,users.last_name,dep.name as depname,users.username,users.skills,des.name as desname,users.phone,users.email,users.address,users.document FROM `users` join department as dep on users.department = dep.id join designation as des on des.id = users.designation where users.id = '.$id);
+        $data = $data[0];
+        $code = $data->empcode;
+        $fromDate = Carbon::now()->startOfMonth()->format('d/m/Y');
+        $toDate = Carbon::now()->endOfMonth()->format('d/m/Y');
+        
+        $attendanceData = $this->eTimeOfficeService->getInOutPunchData($code, $fromDate, $toDate);
+
+        $collection = collect($attendanceData['InOutPunchData']);
+        
+        $presentDaysCount = $collection->where('Status', 'P')->count();
+        $absentDaysCount = $collection->where('Status', 'A')->count();
+
+        $appleave = DB::Select("SELECT SUM(total_days) as appleave FROM `leave` as data join leavetype on data.leave_type_id = leavetype.id WHERE leavetype.name != 'Half day' and data.status = 1 and data.user_id = " .$id);
+        $appleave = $appleave[0]->appleave;
+        $totalleave = 12;
+        $remainingleave = $totalleave - $appleave;
+
+        // Decode the document field (if it contains JSON)
+        $documentIds = json_decode($data->document, true) ?? [];
+
+        // Fetch actual file paths along with IDs
+        $documents = MediaManager::whereIn('id', $documentIds)
+            ->get(['id', 'path']) // Fetch ID and Path
+            ->toArray(); // Convert to an array
+        return view('admin/emp-details', compact('appleave', 'remainingleave','presentDaysCount', 'absentDaysCount', 'data','documents'));
+    }
 }

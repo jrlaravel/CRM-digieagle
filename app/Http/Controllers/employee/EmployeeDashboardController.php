@@ -15,6 +15,8 @@ use App\Models\Festival_leave;
 
 class EmployeeDashboardController extends Controller
 {
+    private $eTimeOfficeService;
+    
     public function __construct(ETimeOfficeService $eTimeOfficeService)
     {
         $this->eTimeOfficeService = $eTimeOfficeService;
@@ -34,6 +36,14 @@ class EmployeeDashboardController extends Controller
         $presentDaysCount = $collection->where('Status', 'P')->count();
         $absentDaysCount = $collection->where('Status', 'A')->count();
 
+        // Calculate remaining days in the current month
+        $today = Carbon::today();
+        $lastDayOfMonth = Carbon::now()->endOfMonth();
+        $remainingDaysCount = $lastDayOfMonth->diffInDays($today) + 1;
+        
+        // Ensure it's an integer
+        $remainingDaysCount = (int) round($remainingDaysCount);
+
         if(session('has_bde_features')){
             $follow_ups = DB::table('follow_up')
             ->join('lead_detail', 'lead_detail.id', '=', 'follow_up.lead_id')
@@ -45,7 +55,7 @@ class EmployeeDashboardController extends Controller
             ->select('client_meeting_details.*', 'lead_detail.first_name')
             ->get();
             $cards = DB::select('SELECT card.name,card.image,ac.message,ac.date FROM `assign_card` as ac join card on ac.card_id = card.id WHERE ac.user_id = '.session('employee')->id);
-            return view('employee.employeedashboard',compact('presentDaysCount', 'absentDaysCount','cards','follow_ups','meetings'));
+            return view('employee.employeedashboard',compact('presentDaysCount', 'absentDaysCount','remainingDaysCount','cards','follow_ups','meetings'));
         }
 
         if(session('has_hr_features'))
@@ -55,16 +65,16 @@ class EmployeeDashboardController extends Controller
             $cards = DB::select('SELECT card.name,card.image,ac.message,ac.date FROM `assign_card` as ac join card on ac.card_id = card.id WHERE ac.user_id = '.session('employee')->id);
             $leavedata = DB::select('SELECT first_name,last_name,total_days,start_date FROM `leave` as la join leavetype on leavetype.id = la.leave_type_id join users on la.user_id = users.id where status = 0');
             $empOnLeave = DB::select("SELECT first_name,last_name FROM `leave` as data join users on data.user_id = users.id WHERE CURRENT_DATE() BETWEEN start_date and end_date");
-            return view('employee.employeedashboard',compact('presentDaysCount', 'absentDaysCount','cards','interviewdata','leavedata','empOnLeave'));
+            return view('employee.employeedashboard',compact('presentDaysCount', 'remainingDaysCount','absentDaysCount','cards','interviewdata','leavedata','empOnLeave'));
         }
 
         $cards = DB::select('SELECT card.name,card.image,ac.message,ac.date FROM `assign_card` as ac join card on ac.card_id = card.id WHERE ac.user_id = '.session('employee')->id);
-        return view('employee.employeedashboard',compact('presentDaysCount', 'absentDaysCount','cards'));
+        return view('employee.employeedashboard',compact('presentDaysCount','remainingDaysCount', 'absentDaysCount','cards'));
     }
 
     public function profile()
     {
-        $data = DB::select('SELECT users.id,users.birth_Date,users.profile_photo_path,users.first_name,users.last_name,dep.name as depname,users.username,users.skills,des.name as desname,users.phone,users.email,users.address FROM `users` join department as dep on users.department = dep.id join designation as des on des.id = users.designation where users.id = '.session('employee')->id);
+        $data = DB::select('SELECT users.id,users.  ,users.profile_photo_path,users.first_name,users.last_name,dep.name as depname,users.username,users.skills,des.name as desname,users.phone,users.email,users.address FROM `users` join department as dep on users.department = dep.id join designation as des on des.id = users.designation where users.id = '.session('employee')->id);
         // return $data;
         return view('employee.profile',compact('data'));
     }

@@ -56,6 +56,7 @@
                                     <th>Phone No.</th>
                                     <th>Address</th>
                                     <th>Email</th>
+                                    <th>View</th>
                                     <th>Action</th>
                                 </tr>
                             </thead>
@@ -73,6 +74,7 @@
                                     <td>{{ $data->phone }}</td>
                                     <td>{{ \Illuminate\Support\Str::words($data->address, 50, '...') }}</td>
                                     <td>{{ $data->email }}</td>
+                                    <td> <a href="{{ route('emp/emp-details', $data->uid) }}"> <i class='fas fa-expand-arrows-alt'></i> </a> </td>
                                     <td>
                                         <div class="dropdown">
                                             <button class="btn btn-primary dropdown-toggle" type="button" id="dropdownMenuButton" data-bs-toggle="dropdown" aria-expanded="false">

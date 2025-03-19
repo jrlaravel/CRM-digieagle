@@ -13,10 +13,18 @@ use App\Models\Department;
 use App\Models\Designation;
 use App\Models\Notification;
 use App\Models\MediaManager;
-
+use App\Services\ETimeOfficeService;
+use Carbon\Carbon;
 
 class HREmployeeController extends Controller
 {
+    private $eTimeOfficeService;
+
+    public function __construct(ETimeOfficeService $eTimeOfficeService)
+    {
+        $this->eTimeOfficeService = $eTimeOfficeService;
+    }
+
     public function index()
     {
         $department = DB::select('SELECT DISTINCT name,id FROM `department` WHERE status = 1;');
@@ -185,5 +193,80 @@ class HREmployeeController extends Controller
         // Delete record from the database
         $media->delete();
         return redirect()->route('emp/media-manager');
+    }
+
+    public function empdetails($id)
+    {
+        $data = DB::select('SELECT users.id,users.birth_Date,users.empcode,users.profile_photo_path,users.first_name,users.last_name,dep.name as depname,users.username,users.skills,des.name as desname,users.phone,users.email,users.address,users.document FROM `users` join department as dep on users.department = dep.id join designation as des on des.id = users.designation where users.id = '.$id);
+        $data = $data[0];
+        $code = $data->empcode;
+        $fromDate = Carbon::now()->startOfMonth()->format('d/m/Y');
+        $toDate = Carbon::now()->endOfMonth()->format('d/m/Y');
+        
+        $attendanceData = $this->eTimeOfficeService->getInOutPunchData($code, $fromDate, $toDate);
+
+        $collection = collect($attendanceData['InOutPunchData']);
+        
+        $presentDaysCount = $collection->where('Status', 'P')->count();
+        $absentDaysCount = $collection->where('Status', 'A')->count();
+
+        // Calculate remaining days in the current month
+        $today = Carbon::today();
+        $lastDayOfMonth = Carbon::now()->endOfMonth();
+        $remainingDaysCount = $lastDayOfMonth->diffInDays($today) + 1;
+        
+        // Ensure it's an integer
+        $remainingDaysCount = (int) round($remainingDaysCount);
+         
+        $appleave = DB::Select("SELECT SUM(total_days) as appleave FROM `leave` as data join leavetype on data.leave_type_id = leavetype.id WHERE leavetype.name != 'Half day' and data.status = 1 and data.user_id = " .$id);
+        $appleave = $appleave[0]->appleave;
+        $totalleave = 12;
+        $remainingleave = $totalleave - $appleave;
+
+        // Decode the document field (if it contains JSON)
+        $documentIds = json_decode($data->document, true) ?? [];
+
+        // Fetch actual file paths along with IDs
+        $documents = MediaManager::whereIn('id', $documentIds)
+            ->get(['id', 'path']) // Fetch ID and Path
+            ->toArray(); // Convert to an array
+        return view('employee/emp-details', compact('appleave', 'remainingleave','presentDaysCount', 'remainingDaysCount','absentDaysCount', 'data','documents'));
+    }
+
+    public function employeeDocument(Request $request)
+    {
+        // Validate request
+        $request->validate([
+            'images' => 'required|array', // Accept multiple files
+            'images.*' => 'file|mimes:jpg,jpeg,png,pdf,doc,docx|max:2048', // Validate each file
+            'id' => 'required|exists:users,id',
+        ]);
+        
+        $user = User::find($request->id);
+        
+        // Check if files are present in request
+        if (!$request->hasFile('images')) {
+            return response()->json(['error' => 'No files uploaded'], 400);
+        }
+        
+        $documentIds = []; // To store all uploaded document IDs
+        
+        foreach ($request->file('images') as $file) {
+            // Store File in 'public/media' directory
+            $filePath = $file->store('media', 'public');
+            
+            // Save File Path in Media Manager
+            $media = MediaManager::create(['path' => $filePath]);
+            
+            $documentIds[] = $media->id; // Collect document IDs
+        }
+        // return $documentIds;
+    
+        // Update User's document JSON column
+        $existingDocuments = $user->document ? json_decode($user->document, true) : [];
+        $user->document = json_encode(array_merge($existingDocuments, $documentIds));
+        $user->save();
+    
+        return redirect()->back()->with('success','Document added successfully');
     }
 }

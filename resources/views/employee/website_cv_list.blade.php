@@ -45,7 +45,7 @@
                                         <td>
                                             {{ collect($candidate['fields'])->firstWhere('label', 'Position')['value'] ?? 'N/A' }}
                                         </td>
-                                        <td>{{$candidate['submission_date']}}</td>
+                                        <td>{{ \Carbon\Carbon::parse($candidate['submission_date'])->format('d-m-Y H-m-s') }}</td>
                                         <td>
                                             @php
                                                 $cvUrl = collect($candidate['fields'])->firstWhere('label', 'Upload Your CV (pdf, jpeg, doc upto 2 MB)')['value'] ?? null;

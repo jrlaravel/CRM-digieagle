@@ -104,7 +104,8 @@ Route::prefix('emp')->group(function () {
         Route::get('media-manager',[HREmployeeController::class, 'MediaManager'])->name('emp/media-manager');
         Route::post('upload-media', [HREmployeeController::class, 'uploadMedia'])->name('emp/upload-media');
         Route::DELETE('delete-media/{id}', [HREmployeeController::class, 'deleteMedia'])->name('emp/delete-media');
-
+        Route::get('emp-details/{id}', [HREmployeeController::class, 'empdetails'])->name('emp/emp-details');
+        Route::post('emp-document', [HREmployeeController::class, 'employeeDocument'])->name('emp/emp-document');
     });
 
 
@@ -248,6 +249,8 @@ Route::prefix('admin')->group(function () {
         Route::get('media-manager',[EmployeeController::class, 'MediaManager'])->name('admin/media-manager');
         Route::post('upload-media', [EmployeeController::class, 'uploadMedia'])->name('admin/upload-media');
         Route::DELETE('delete-media/{id}', [EmployeeController::class, 'deleteMedia'])->name('admin/delete-media');
+        Route::get('emp-details/{id}', [EmployeeController::class, 'empdetails'])->name('admin/emp-details');
+
     });
 });
 
