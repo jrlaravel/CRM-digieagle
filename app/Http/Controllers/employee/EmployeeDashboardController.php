@@ -74,7 +74,7 @@ class EmployeeDashboardController extends Controller
 
     public function profile()
     {
-        $data = DB::select('SELECT users.id,users.  ,users.profile_photo_path,users.first_name,users.last_name,dep.name as depname,users.username,users.skills,des.name as desname,users.phone,users.email,users.address FROM `users` join department as dep on users.department = dep.id join designation as des on des.id = users.designation where users.id = '.session('employee')->id);
+        $data = DB::select('SELECT users.id,users.birth_Date,users.profile_photo_path,users.first_name,users.last_name,dep.name as depname,users.username,users.skills,des.name as desname,users.phone,users.email,users.address FROM `users` join department as dep on users.department = dep.id join designation as des on des.id = users.designation where users.id = '.session('employee')->id);
         // return $data;
         return view('employee.profile',compact('data'));
     }
