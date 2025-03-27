@@ -124,7 +124,7 @@
                                         <a href="{{ $cvPath }}" download target="_blank" class="btn btn-sm btn-outline-success me-2" data-bs-toggle="tooltip" data-bs-placement="top" title="Download CV">
                                             <i class="fa fa-download"></i>
                                         </a>
-                                        <a href="#" class="btn btn-sm btn-outline-info" data-bs-toggle="modal" data-id="{{$data->id}}" data-bs-target="#addFollowUpModal"  title="Add Followup">
+                                        <a href="#" class="btn btn-sm btn-outline-info" data-bs-toggle="modal" data-id="{{$data->id}}" data-status="{{ $data->status }}" data-bs-target="#addFollowUpModal"  title="Add Followup">
                                             <i class="fa fa-plus"></i>
                                         </a>
                                     </div>
@@ -283,6 +283,19 @@
                             <label for="followUpNotes" class="form-label">Notes</label>
                             <textarea class="form-control" id="followUpNotes" rows="3" placeholder="Add notes..."></textarea>
                         </div>
+
+                        <div class="mb-3">
+                            <label for="" class="form-label">Status</label>
+                            <select name="status" class="form-control" id="status">
+                                <option value="Selection">Selection</option>
+                                <option value="Phone Interview">Phone Interview</option>
+                                <option value="Technical Interview">Technical Interview</option>
+                                <option value="Practical Interview">Practical Interview</option>
+                                <option value="Background Verification">Background Verification</option>
+                                <option value="Finalisation">Finalisation</option>
+                            </select>
+                        </div>
+
                         <button type="submit" class="btn btn-primary w-100">Save Follow Up</button>
                     </form>
                 </div>
@@ -479,7 +492,9 @@
                 document.querySelectorAll('.btn-outline-info').forEach(button => {
                     button.addEventListener("click", function () {
                     let candidateId = this.getAttribute("data-id"); // Get candidate_id from button
+                    let status = this.getAttribute("data-status");
                     document.getElementById("candidate_id").value = candidateId; // Set in hidden input
+                    document.getElementById("status").value = status; // Set in hidden input
                 });
             });
 
@@ -490,6 +505,7 @@
                 // Get form data
                 let candidateId = document.getElementById("candidate_id").value;
                 let notes = document.getElementById("followUpNotes").value;
+                let status = document.getElementById("status").value;
 
                 // Send data via AJAX to Laravel backend
                 fetch("{{route('emp/add-candidate-followup')}}", {
@@ -498,7 +514,7 @@
                         "Content-Type": "application/json",
                         "X-CSRF-TOKEN": "{{ csrf_token() }}"
                     },
-                    body: JSON.stringify({ candidate_id: candidateId, notes: notes})
+                    body: JSON.stringify({ candidate_id: candidateId, notes: notes ,status: status})
                 })
                 .then(response => response.json())
                 .then(data => {

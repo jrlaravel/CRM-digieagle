@@ -334,13 +334,10 @@ class HRRequirmentController extends Controller
 
          // Attach candidate name separately
         $interviewSchedule->candidate_name = $data->name;
-
-        // dd($data);
         
          // Send email to admin
-        Mail::to('manager.digieagleinc@gmail.com')->send(new InterviewScheduledMail($interviewSchedule));
+        // Mail::to('manager.digieagleinc@gmail.com')->send(new InterviewScheduledMail($interviewSchedule));
 
-    
         // Return success response
         if ($interviewSchedule) {
             return response()->json(['status' => 'success', 'message' => 'Interview scheduled successfully']);
@@ -388,14 +385,20 @@ class HRRequirmentController extends Controller
             $request->validate([
                 'candidate_id' => 'required|exists:cv_details,id',
                 'notes' => 'required|string|max:500',
+                'status' => 'required',
             ]);
-        
+            
             // Create a new follow-up record
             $followup = CandidateFollowup::create([
                 'candidate_id' => $request->candidate_id,
                 'follow_up' => $request->notes,
             ]);
-
+            
+            $data = CvDetail::find($request->candidate_id);
+            $data->status = $request->status;
+            $data->save();
+            // dd($data);
+            
             // Return success response
             return response()->json([
                 'success' => true,

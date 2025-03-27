@@ -436,6 +436,10 @@
                             <label for="followUpNotes" class="form-label">Notes</label>
                             <textarea class="form-control" id="followUpNotes" rows="3" placeholder="Add notes..."></textarea>
                         </div>
+
+                        <div class="mb-3">
+                            
+                        </div>
                         <button type="submit" class="btn btn-primary w-100">Save Follow Up</button>
                     </form>
                 </div>
