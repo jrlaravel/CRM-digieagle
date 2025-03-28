@@ -420,6 +420,14 @@ public function show() {
         $presentDaysCount = $collection->where('Status', 'P')->count();
         $absentDaysCount = $collection->where('Status', 'A')->count();
 
+        // Calculate remaining days in the current month
+        $today = Carbon::today();
+        $lastDayOfMonth = Carbon::now()->endOfMonth();
+        $remainingDaysCount = $lastDayOfMonth->diffInDays($today) + 1;
+        
+        // Ensure it's an integer
+        $remainingDaysCount = (int) round($remainingDaysCount);
+         
         $appleave = DB::Select("SELECT SUM(total_days) as appleave FROM `leave` as data join leavetype on data.leave_type_id = leavetype.id WHERE leavetype.name != 'Half day' and data.status = 1 and data.user_id = " .$id);
         $appleave = $appleave[0]->appleave;
         $totalleave = 12;
@@ -432,6 +440,6 @@ public function show() {
         $documents = MediaManager::whereIn('id', $documentIds)
             ->get(['id', 'path']) // Fetch ID and Path
             ->toArray(); // Convert to an array
-        return view('admin/emp-details', compact('appleave', 'remainingleave','presentDaysCount', 'absentDaysCount', 'data','documents'));
-    }
+            return view('admin/emp-details', compact('appleave', 'remainingleave','presentDaysCount', 'remainingDaysCount','absentDaysCount', 'data','documents'));
+        }
 }
