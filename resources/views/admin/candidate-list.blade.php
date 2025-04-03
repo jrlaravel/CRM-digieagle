@@ -41,8 +41,14 @@
                                         <tr>
                                             <td>{{ $key + 1 }}</td>
                                             <td>{{$candidate->name }}</td>
-                                            <td>{{$candidate->link}}</td>
                                             <td>
+                                                <span id="link-{{ $candidate->id }}">{{ $candidate->link }}</span>
+                                            </td>
+                                            <td>
+                                                <button class="btn btn-success copy-btn"
+                                                        onclick="copyToClipboard('{{ $candidate->id }}', this)">
+                                                        Copy
+                                                    </button>
                                                 <a href="{{route('admin/delete-link',$candidate->id)}}" class="btn btn-danger">Delete</a>
                                             </td>
                                         </tr>
@@ -80,4 +86,27 @@
         </div>
     </div>
 </div>
+
+    
+<script>
+    function copyToClipboard(candidateId, button) {
+        let linkElement = document.getElementById(`link-${candidateId}`);
+        let tempInput = document.createElement("input");
+        tempInput.value = linkElement.innerText;
+        document.body.appendChild(tempInput);
+        tempInput.select();
+        document.execCommand("copy");
+        document.body.removeChild(tempInput);
+
+        // Change button text to "Copied!"
+        button.innerText = "Copied!";
+        button.disabled = true;
+
+        // Revert back to "Copy" after 2 seconds
+        setTimeout(() => {
+            button.innerText = "Copy";
+            button.disabled = false;
+        }, 5000);
+    }
+</script>
 @endsection
