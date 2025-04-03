@@ -252,9 +252,9 @@
                             <label for="interviewType" class="form-label">Interview Type</label>
                             <select id="interviewType" class="form-select" required>
                                 <option value="">Select Interview Type</option>
-                                <option value="HR">HR</option>
-                                <option value="Mock round">Mock round</option>
-                                <option value="Technical">Technical</option>
+                                <option value="First Round">First Round</option>
+                                <option value="Technical Round">Technical Round</option>
+                                <option value="final Call">final Call</option>
                             </select>
                         </div>
                         <div class="mb-3">
