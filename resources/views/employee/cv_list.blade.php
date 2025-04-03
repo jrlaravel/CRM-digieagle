@@ -222,7 +222,7 @@
                         </div>    
                         
                         <!-- Success/Error Messages -->
-                        <div id="responseMessage" class="mt-3"></div>
+                        {{-- <div id="responseMessage" class="mt-3"></div> --}}
                         
                     </div>
                     <div class="modal-footer">
@@ -390,13 +390,13 @@
                     location.reload();   
                 },
                 error: function(xhr) {
-                    let errors = xhr.responseJSON.errors;
-                    let errorMessage = '<div class="alert alert-danger"><ul>';
-                    $.each(errors, function(key, value) {
-                        errorMessage += '<li>' + value + '</li>';
-                    });
-                    errorMessage += '</ul></div>';
-                    $("#responseMessage").html(errorMessage);
+                    // let errors = xhr.responseJSON.errors;
+                    // let errorMessage = '<div class="alert alert-danger"><ul>';
+                    // $.each(errors, function(key, value) {
+                    //     errorMessage += '<li>' + value + '</li>';
+                    // });
+                    // errorMessage += '</ul></div>';
+                    // $("#responseMessage").html(errorMessage);
                 }
             });
         });
