@@ -173,9 +173,16 @@
                                     <option value="">Select Designation</option>
                                     <option value="Front Developer">Front Developer</option>
                                     <option value="UI/UX Designer">UI/UX Designer</option>
-                                    <option value="Laravel Developer">Laravel Developer</option>
+                                    <option value="Backend Developer">Backend Developer</option>
                                     <option value="Graphic Designer">Graphic Designer</option>
                                     <option value="Motion Designer">Motion Designer</option>    
+                                    <option value="Wordpress developer">Wordpress developer</option>
+                                    <option value="SEO Executive">SEO Executive</option>
+                                    <option value="Content Writer">Full Stack Developer</option>
+                                    <option value="Social Media Executive">Social Media Executive</option>
+                                    <option value="HR Executive">HR Executive</option>
+                                    <option value="brand strategist">brand strategist</option>
+                                    <option value="Digital Marketer">Digital Marketer</option>
                                 </select>
                             </div>
                             <div class="mb-3 col-md-6">
@@ -191,7 +198,7 @@
                         <div class="row">
                             <div class="mb-3 col-md-6">
                                 <label class="form-label">Experience</label>
-                                <input type="number" class="form-control" name="experience" placeholder="Enter experience in years" required>
+                                <input type="number" step="0.1" class="form-control" name="experience" placeholder="Enter experience in years" required>
                             </div>
                             <div class="mb-3 col-md-6">
                                 <label for="" class="form-label">Source</label>
@@ -201,11 +208,11 @@
                         <div class="row">    
                             <div class="mb-3 col-md-6">
                                 <label class="form-label">Current CTC</label>
-                                <input type="number" class="form-control" name="current_ctc" placeholder="Enter current CTC">
+                                <input type="number" step="0.1" class="form-control" name="current_ctc" placeholder="Enter current CTC">
                             </div>
                             <div class="mb-3 col-md-6">
                                 <label class="form-label">Expected CTC</label>
-                                <input type="number" class="form-control" name="expected_ctc" placeholder="Enter expected CTC">
+                                <input type="number" step="0.1" class="form-control" name="expected_ctc" placeholder="Enter expected CTC">
                             </div>
                         </div>
                         <div class="mb-3">
@@ -281,7 +288,7 @@
                         <input type="hidden" id="candidate_id" name="candidate_id">
                         <div class="mb-3">
                             <label for="followUpNotes" class="form-label">Notes</label>
-                            <textarea class="form-control" id="followUpNotes" rows="3" placeholder="Add notes..."></textarea>
+                            <textarea class="form-control" id="followUpNotes" rows="3" placeholder="Add notes..." required></textarea>
                         </div>
 
                         <div class="mb-3">

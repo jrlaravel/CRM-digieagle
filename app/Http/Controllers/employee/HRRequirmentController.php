@@ -196,7 +196,7 @@ class HRRequirmentController extends Controller
             'experience' => 'required',
             'current_ctc' => 'nullable',
             'expected_ctc' => 'nullable',
-            'cv' => 'nullable|mimes:pdf,jpeg,png,jpg|max:2048', // Accept both PDF and images (Max 2MB)
+            'cv' => 'nullable|mimes:pdf,jpeg,png,jpg', // Accept both PDF and images (Max 2MB)
             'cv_url' => 'nullable|url', // Allow a CV URL
         ]);
     
