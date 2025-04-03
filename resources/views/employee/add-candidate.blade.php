@@ -82,7 +82,7 @@
                                     <div class="mb-3 col-md-6">
                                         <label for="experience">Total Work Experience:<span class="text-danger">*</span></label>
                                         <input type="number" step="0.1" class="form-control" id="experience" name="experience" placeholder="Enter work experience" required>
-                                        <span class="text-danger">Please enter a valid numerical value</span>
+                                        <span class="text-danger">Please enter a valid numerical value for Example - 1.5</span>
                                         @error('experience')
                                             <span class="text-danger">{{ $message }}</span>
                                         @enderror
@@ -139,7 +139,7 @@
                                 <div class="row">
                                     <div class="mb-3 col-md-6">
                                         <label for="">Current CTC (LPA):<span class="text-danger">*</span></label>
-                                        <input type="number" step="0.1" class="form-control" id="current_ctc" name="current_ctc" placeholder="Enter current ctc" required>
+                                        <input type="number" step="0.01" class="form-control" id="current_ctc" name="current_ctc" placeholder="Enter current ctc" required>
                                         @error('current_ctc')
                                         <span class="text-danger">{{ $message }}</span>
                                         @enderror
@@ -147,7 +147,7 @@
                                     
                                     <div class="mb-3 col-md-6">
                                         <label for="">Expected CTC (LPA):<span class="text-danger">*</span></label>
-                                        <input type="number" step="0.1" class="form-control" id="expected_ctc" name="expected_ctc" placeholder="Enter expected ctc" required>
+                                        <input type="number" step="0.01" class="form-control" id="expected_ctc" name="expected_ctc" placeholder="Enter expected ctc" required>
                                         @error('expected_ctc')  
                                         <span class="text-danger">{{ $message }}</span> 
                                         @enderror   
