@@ -208,11 +208,11 @@
                         <div class="row">    
                             <div class="mb-3 col-md-6">
                                 <label class="form-label">Current CTC</label>
-                                <input type="number" step="0.1" class="form-control" name="current_ctc" placeholder="Enter current CTC">
+                                <input type="number" step="0.01" class="form-control" name="current_ctc" placeholder="Enter current CTC">
                             </div>
                             <div class="mb-3 col-md-6">
                                 <label class="form-label">Expected CTC</label>
-                                <input type="number" step="0.1" class="form-control" name="expected_ctc" placeholder="Enter expected CTC">
+                                <input type="number" step="0.01" class="form-control" name="expected_ctc" placeholder="Enter expected CTC">
                             </div>
                         </div>
                         <div class="mb-3">
