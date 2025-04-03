@@ -54,11 +54,18 @@
             <div class="d-flex justify-content-between float-end" >
                 <select class="form-control w-auto" style="margin-right: 1cm" id="designation" name="designation">
                     <option value="" selected> Select Designation <i class="fa fa-arrow-down" aria-hidden="true"></i> </option>
-                    <option value="Front End Developer">Front Developer</option>
+                    <option value="Front Developer">Front Developer</option>
                     <option value="UI/UX Designer">UI/UX Designer</option>
-                    <option value="Laravel Developer">Laravel Developer</option>
+                    <option value="Backend Developer">Backend Developer</option>
                     <option value="Graphic Designer">Graphic Designer</option>
-                    <option value="Motion Designer">Motion Designer</option>
+                    <option value="Motion Designer">Motion Designer</option>    
+                    <option value="Wordpress developer">Wordpress developer</option>
+                    <option value="SEO Executive">SEO Executive</option>
+                    <option value="Content Writer">Full Stack Developer</option>
+                    <option value="Social Media Executive">Social Media Executive</option>
+                    <option value="HR Executive">HR Executive</option>
+                    <option value="brand strategist">brand strategist</option>
+                    <option value="Digital Marketer">Digital Marketer</option>
                 </select>
         
                 <!-- Add CV Button -->

@@ -32,7 +32,7 @@ class HRRequirmentController extends Controller
         // return $request->all();
         $token = $request->get('_token');
         $name = $request->get('name');
-        $link = route('add-candidate', ['token' => $token]);
+        $link = route('add-candidate', ['token' => $name]);
     
         // Save using the model
         Candidate_link::create([
@@ -55,7 +55,7 @@ class HRRequirmentController extends Controller
     public function add_candidate($token)
     {
         // Verify the token
-        $candidate = Candidate_link::where('token', $token)->first();
+        $candidate = Candidate_link::where('name', $token)->first();
 
         // If candidate is not found, show 404 error
         if (!$candidate) {
@@ -69,15 +69,12 @@ class HRRequirmentController extends Controller
 
     public function store_candidate(Request $request)
     {
-        // dd($request->all());
         $candidate = Candidate_details::where('email', '=', $request->email)->first();
-        // dd($candidate);
         if($candidate != null)
         {
             return view('layout/success');
 
         }
-        // return $request->all();
         // Validate all fields including profile photo
         $validator = Validator::make($request->all(), [
             'name' => 'required|string|max:255',
@@ -113,7 +110,7 @@ class HRRequirmentController extends Controller
         }
 
         // Retrieve the token
-        $token = $request->input('token');
+        $token = $request->input('_token');
         if (!$token) {
             return response()->json([
                 'success' => false,
