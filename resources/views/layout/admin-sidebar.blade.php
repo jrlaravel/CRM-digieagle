@@ -140,7 +140,7 @@
 						</ul>
 					</li>	
 					<li class="sidebar-item">
-						<a data-bs-target="#requirment" data-bs-toggle="collapse" class="sidebar-link {{ request()->routeIs('admin/candidate-list') || request()->routeIs('admin/candidate-details') ? 'active' : 'collapsed' }}">
+						<a data-bs-target="#requirment" data-bs-toggle="collapse" class="sidebar-link {{ request()->routeIs('admin/candidate-list') || request()->routeIs('admin/candidate-details') || request()->routeIs('admin/candidate-review')? 'active' : 'collapsed' }}">
 							<i class="fa fa-user-circle" aria-hidden="true"></i> <span class="align-middle">Requirment And Selection</span>
 						</a>
 						<ul id="requirment" class="sidebar-dropdown list-unstyled collapse" data-bs-parent="#sidebar">
@@ -148,6 +148,9 @@
 						</ul>
 						<ul id="requirment" class="sidebar-dropdown list-unstyled collapse" data-bs-parent="#sidebar">
 							<li class="sidebar-item"><a class='sidebar-link {{ request()->routeIs('admin/candidate-details') ? 'active' : '' }}' href='{{ route('admin/candidate-details') }}'>Candidate Details</a></li>
+						</ul>
+						<ul id="requirment" class="sidebar-dropdown list-unstyled collapse" data-bs-parent="#sidebar">
+							<li class="sidebar-item"><a class='sidebar-link {{ request()->routeIs('admin/candidate-review') ? 'active' : '' }}' href='{{ route('admin/candidate-review') }}'>Candidate Review</a></li>
 						</ul>
 					</li>
 

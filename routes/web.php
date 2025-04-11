@@ -24,6 +24,8 @@ use App\Http\Controllers\employee\HREmployeeController;
 use App\Http\Controllers\employee\WorkReportController;
 use App\Http\Controllers\employee\HRRequirmentController;
 use App\Http\Controllers\admin\RequirmentController;
+use App\Http\Controllers\ReviewController;
+use Illuminate\Http\Request;
 
 
 
@@ -31,6 +33,8 @@ Route::get('/', [LoginController::class, 'index'])->name('emp/login');
 
 Route::get('add-candidate/{token}', [HRRequirmentController::class, 'add_candidate'])->name('add-candidate');
 Route::post('add-candidate-data', [HRRequirmentController::class, 'store_candidate'])->name('add-candidate-data');
+Route::get('review/{candidate}', [ReviewController::class, 'index'])->name('review');
+Route::post('add-review', [ReviewController::class, 'store'])->name('add-review');
 
 Route::prefix('emp')->group(function () {
 
@@ -250,7 +254,8 @@ Route::prefix('admin')->group(function () {
         Route::post('upload-media', [EmployeeController::class, 'uploadMedia'])->name('admin/upload-media');
         Route::DELETE('delete-media/{id}', [EmployeeController::class, 'deleteMedia'])->name('admin/delete-media');
         Route::get('emp-details/{id}', [EmployeeController::class, 'empdetails'])->name('admin/emp-details');
-
+        Route::get('candidate-review', [RequirmentController::class,'candidateReview'])->name('admin/candidate-review');
+        Route::get('delete-review/{id}', [RequirmentController::class,'deleteReview'])->name('delete-review');
     });
 });
 

@@ -84,16 +84,19 @@
   </style>
   <body>
     <div class="card">
-      <div
-        style="border-radius: 200px; height: 200px; width: 200px; background: #F8FAF5; margin: 0 auto;">
+      <div style="border-radius: 200px; height: 200px; width: 200px; background: #F8FAF5; margin: 0 auto;">
         <i class="checkmark">✓</i>
       </div>
       <h1>Thank You!</h1>
       <p>
-        We appreciate your interest in our organization.<br />
-        Your application has been successfully submitted, and our team will review it shortly.<br />
-        You will be contacted if your profile matches our requirements.
+        @if(isset($success))
+        {{ $success }}      
+        @else
+          We appreciate your interest in our organization.<br />
+          Your application has been successfully submitted, and our team will review it shortly.<br />
+          You will be contacted if your profile matches our requirements.
+        @endif
       </p>
     </div>
-  </body>
+  </body>  
 </html>

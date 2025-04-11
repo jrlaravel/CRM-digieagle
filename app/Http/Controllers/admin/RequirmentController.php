@@ -10,6 +10,7 @@ use App\Models\User;
 use App\Models\CandidateFollowup;
 use App\Models\Candidate_details;
 use App\Models\InterviewDetail;
+use App\Models\InterviewReview;
 use Illuminate\Support\Facades\Validator;
 
 class RequirmentController extends Controller
@@ -192,5 +193,17 @@ class RequirmentController extends Controller
             'message' => 'Follow-up added successfully!',
         ]);
     }
-    
+  
+    public function candidateReview()
+    {
+        $data = InterviewReview::all();
+        return view('admin/candidate_review', compact('data'));
+    }
+
+    public function deleteReview($id)
+    {
+        $data = InterviewReview::find($id);
+        $data->delete();
+        return redirect()->back()->with('success', 'Review deleted successfully');
+    }
 }

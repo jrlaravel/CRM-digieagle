@@ -15,6 +15,20 @@
 @endsection
 
 @section('content')
+<style>
+    .copied-toast {
+      position: fixed;
+      top: 20px;
+      right: 20px;
+      background: #1cbb8c;
+      color: #fff;
+      padding: 10px 20px;
+      border-radius: 8px;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.2);
+      z-index: 9999;
+      font-weight: bold;
+  }
+</style>
 <meta name="csrf-token" content="{{ csrf_token() }}">
 <div class="container-fluid p-0">
     <div class="mb-3">
@@ -56,6 +70,11 @@
                                             View
                                         </button>
                                         <a href="#" data-id="{{ $value['id'] }}" class="btn btn-danger delete-btn" data-bs-toggle="modal" data-bs-target="#confirmDeleteModal">Delete</a>
+                                        
+                                        <button class="btn btn-success copy-review-url"
+                                            data-candidate="{{ $value['name'] }}">
+                                            Review Form
+                                        </button>
                                     </td>
                                 </tr>
                             
@@ -320,7 +339,26 @@
     });
 });
 
+document.addEventListener('DOMContentLoaded', function () {
+        document.querySelectorAll('.copy-review-url').forEach(function (button) {
+            button.addEventListener('click', function () {
+                let candidate = this.getAttribute('data-candidate');
+                let url = "{{ url('review') }}/" + encodeURIComponent(candidate);
 
+                navigator.clipboard.writeText(url).then(function () {
+                    // Show copied message
+                    let copiedMsg = document.createElement('div');
+                    copiedMsg.innerText = "URL copied to clipboard!";
+                    copiedMsg.className = "copied-toast";
+                    document.body.appendChild(copiedMsg);
+
+                    setTimeout(() => {
+                        copiedMsg.remove();
+                    }, 2000);
+                });
+            });
+        });
+    });
 </script>
 
 

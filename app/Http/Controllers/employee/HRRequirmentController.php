@@ -2,7 +2,7 @@
 
 namespace App\Http\Controllers\employee;
 
-use Illuminate\Http\Request;
+use Illuminate\Http\request;
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Http;
 use App\Models\Candidate_link;
@@ -22,7 +22,7 @@ class HRRequirmentController extends Controller
 {
 
     public function index()
-    {    
+    {
         $candidates = Candidate_link::all();
         return view('employee/candidate-list', compact('candidates'));
     }
@@ -33,25 +33,25 @@ class HRRequirmentController extends Controller
         $token = $request->get('_token');
         $name = $request->get('name');
         $link = route('add-candidate', ['token' => $name]);
-    
+
         // Save using the model
         Candidate_link::create([
             'name' => $name,
             'token' => $token,
             'link' => $link,
         ]);
-    
-        return redirect()->back()->with('success','Link created Successfully');  
+
+        return redirect()->back()->with('success', 'Link created Successfully');
     }
 
     public function delete($id)
     {
         $candidate = Candidate_link::find($id);
         $candidate->delete();
-        return redirect()->back()->with('success','Link deleted Successfully');   
+        return redirect()->back()->with('success', 'Link deleted Successfully');
     }
 
-    
+
     public function add_candidate($token)
     {
         // Verify the token
@@ -70,10 +70,8 @@ class HRRequirmentController extends Controller
     public function store_candidate(Request $request)
     {
         $candidate = Candidate_details::where('email', '=', $request->email)->first();
-        if($candidate != null)
-        {
+        if ($candidate != null) {
             return view('layout/success');
-
         }
         // Validate all fields including profile photo
         $validator = Validator::make($request->all(), [
@@ -122,13 +120,13 @@ class HRRequirmentController extends Controller
         $data = Candidate_details::create($request->all());
 
         if ($data) {
-            
+
             $link = Candidate_link::where('token', $token)->first();
             if ($link) {
                 $link->delete();
             }
 
-          return view('layout/success');
+            return view('layout/success');
         }
 
         return response()->json([
@@ -142,7 +140,7 @@ class HRRequirmentController extends Controller
     {
         $data = candidate_details::all();
         $users = User::where('role', 'admin')->select('id', 'first_name')->get();
-        return view('employee/candidate-details',compact('data','users'));
+        return view('employee/candidate-details', compact('data', 'users'));
     }
 
     public function candidate_details_delete($id)
@@ -151,7 +149,7 @@ class HRRequirmentController extends Controller
         $data->delete();
         return back()->with('success', 'Candidate details deleted successfully.');
     }
-  
+
 
     public function assign_candidate_details(Request $request)
     {
@@ -159,27 +157,27 @@ class HRRequirmentController extends Controller
             'id' => 'required|exists:candidate_details,id',
             'assign_to' => 'required',
         ]);
-    
+
         $candidate = Candidate_details::find($request->id);
         if (!$candidate) {
             return response()->json(['error' => 'Candidate not found'], 404);
         }
-    
+
         $candidate->assign_to = $request->assign_to;
         $candidate->save();
-    
+
         return response()->json(['success' => 'Candidate assigned successfully!']);
-    }   
-    
+    }
+
     public function cv_list()
     {
         $cvs = CvDetail::all();
         $followup = CandidateFollowup::all();
         $count = DB::select("SELECT s.status, COALESCE(c.count, 0) AS total FROM ( SELECT 'Selection' AS status UNION ALL SELECT 'Phone Interview' UNION ALL SELECT 'Technical Interview' UNION ALL SELECT 'Practical Interview' UNION ALL SELECT 'Background Verification' UNION ALL SELECT 'Finalisation' ) s LEFT JOIN ( SELECT status, COUNT(*) AS count FROM cv_details GROUP BY status ) c ON s.status = c.status;");
-        return view('employee/cv_list',compact('cvs', 'followup', 'count'));
+        return view('employee/cv_list', compact('cvs', 'followup', 'count'));
     }
 
-    
+
     public function store_cv(Request $request)
     {
         $cvPath = null;
@@ -196,27 +194,26 @@ class HRRequirmentController extends Controller
             'cv' => 'nullable|mimes:pdf,jpeg,png,jpg', // Accept both PDF and images (Max 2MB)
             'cv_url' => 'nullable|url', // Allow a CV URL
         ]);
-    
-    
+
+
         // Check if a file is uploaded
-        if ($request->hasFile('cv')) 
-        {
-                $cvFile = $request->file('cv');
-                $cvName = time() . '_' . $cvFile->getClientOriginalName();
-                $cvDirectory = 'cv';
-        
-                // Ensure the directory exists
-                if (!Storage::disk('public')->exists($cvDirectory)) {
-                    Storage::disk('public')->makeDirectory($cvDirectory);
-                }
-        
-                // Store the file
-                $cvPath = $cvFile->storeAs($cvDirectory, $cvName, 'public');
-            } elseif ($request->cv_url) {
-                // If no file is uploaded but a URL is provided, store the URL
-                $cvPath = $request->cv_url;
+        if ($request->hasFile('cv')) {
+            $cvFile = $request->file('cv');
+            $cvName = time() . '_' . $cvFile->getClientOriginalName();
+            $cvDirectory = 'cv';
+
+            // Ensure the directory exists
+            if (!Storage::disk('public')->exists($cvDirectory)) {
+                Storage::disk('public')->makeDirectory($cvDirectory);
+            }
+
+            // Store the file
+            $cvPath = $cvFile->storeAs($cvDirectory, $cvName, 'public');
+        } elseif ($request->cv_url) {
+            // If no file is uploaded but a URL is provided, store the URL
+            $cvPath = $request->cv_url;
         }
-   
+
         // Store Data in Database
         $cvDetail = CvDetail::create([
             'name' => $request->name,
@@ -229,17 +226,14 @@ class HRRequirmentController extends Controller
             'expected_ctc' => $request->expected_ctc,
             'cv_path' => $cvPath, // This now supports both uploaded files and URLs
         ]);
-    
-        if ($cvDetail)
-        {
+
+        if ($cvDetail) {
             return response()->json([
                 'status' => 'success',
                 'message' => 'CV Details Saved Successfully!',
                 'url' => "candidate-cv-list",
             ]);
-        } 
-        else
-        {
+        } else {
             return response()->json([
                 'status' => 'error',
                 'message' => 'Failed to Save CV Details!',
@@ -260,21 +254,21 @@ class HRRequirmentController extends Controller
     }
 
 
-    
+
     public function rejectCvList()
     {
         $data = CvDetail::where('status', 'Rejected')->get();
-        return view('employee/rejected_cv',compact('data'));
+        return view('employee/rejected_cv', compact('data'));
     }
 
     public function deleteCv(Request $request)
     {
         $employee = CvDetail::find($request->id);
-    
+
         if (!$employee) {
             return response()->json(['success' => false, 'message' => 'Record not found!']);
         }
-    
+
         // Nullify candidate_id in candidate_follow_up instead of deleting the record
         $data = CandidateFollowUp::where('candidate_id', $employee->id);
 
@@ -283,15 +277,15 @@ class HRRequirmentController extends Controller
         $data->delete();
 
         $data2->delete();
-    
+
         // Delete the CV file if it exists and is not a URL
         if ($employee->cv_path && !filter_var($employee->cv_path, FILTER_VALIDATE_URL)) {
             Storage::disk('public')->delete($employee->cv_path);
         }
-    
+
         // Delete the main record from `cv_details`
         $employee->delete();
-    
+
         return response()->json(['success' => true, 'message' => 'Record deleted successfully!']);
     }
 
@@ -301,7 +295,7 @@ class HRRequirmentController extends Controller
         $data = http::get('https://digieagleinc.com/wp-json/custom-api/v1/form-entries/2');
         $data = $data->json();
         // dd($data);
-        return view('employee/website_cv_list',compact('data'));
+        return view('employee/website_cv_list', compact('data'));
     }
 
     public function interview_schedule(Request $request)
@@ -313,8 +307,8 @@ class HRRequirmentController extends Controller
             'interview_date' => 'required|date',
             'interview_time' => 'required|date_format:H:i',
         ]);
-    
-         // Retrieve candidate details
+
+        // Retrieve candidate details
         $data = CvDetail::find($request->candidate_id);
 
         if (!$data) {
@@ -329,20 +323,20 @@ class HRRequirmentController extends Controller
             'interview_time' => $request->interview_time,
         ]);
 
-         // Attach candidate name separately
+        // Attach candidate name separately
         $interviewSchedule->candidate_name = $data->name;
-        
-         // Send email to admin
+
+        // Send email to admin
         // Mail::to('manager.digieagleinc@gmail.com')->send(new InterviewScheduledMail($interviewSchedule));
 
         // Return success response
         if ($interviewSchedule) {
             return response()->json(['status' => 'success', 'message' => 'Interview scheduled successfully']);
         }
-    
+
         // Return error response if something goes wrong
         return response()->json(['status' => 'error', 'message' => 'Failed to schedule interview']);
-    } 
+    }
 
     public function edit_interview_schedule(Request $request)
     {
@@ -351,12 +345,12 @@ class HRRequirmentController extends Controller
         $interviewSchedule = InterviewDetail::find($request->id);
 
         if (!$interviewSchedule) {
-            return response()->json(['status' => 'error','message' => 'Interview schedule not found']);
+            return response()->json(['status' => 'error', 'message' => 'Interview schedule not found']);
         }
 
         // Validate the incoming request
         $request->validate([
-            'interview_type' => ['required','string'],
+            'interview_type' => ['required', 'string'],
             'interview_date' => ['required', 'date'],
             'interview_time' => ['required'],
         ]);
@@ -368,57 +362,55 @@ class HRRequirmentController extends Controller
 
         // Save the changes
         if ($interviewSchedule->save()) {
-            return response()->json(['status' => 'success','message' => 'Interview schedule updated successfully']);
+            return response()->json(['status' => 'success', 'message' => 'Interview schedule updated successfully']);
         }
 
         // Return error response if something goes wrong
-        return response()->json(['status' => 'error','message' => 'Failed to update interview schedule']);
+        return response()->json(['status' => 'error', 'message' => 'Failed to update interview schedule']);
     }
-    
+
     public function add_followup(Request $request)
-    {   
-        if($request->interview_id == null)
-        {
+    {
+        if ($request->interview_id == null) {
             $request->validate([
                 'candidate_id' => 'required|exists:cv_details,id',
                 'notes' => 'required|string|max:500',
                 'status' => 'required',
             ]);
-            
+
             // Create a new follow-up record
             $followup = CandidateFollowup::create([
                 'candidate_id' => $request->candidate_id,
                 'follow_up' => $request->notes,
             ]);
-            
+
             $data = CvDetail::find($request->candidate_id);
             $data->status = $request->status;
             $data->save();
             // dd($data);
-            
+
             // Return success response
             return response()->json([
                 'success' => true,
                 'message' => 'Follow-up added successfully!',
             ]);
-        }
-        else{
+        } else {
             // Validate the incoming request
             $request->validate([
                 'candidate_id' => 'required|exists:cv_details,id',
                 'notes' => 'required|string|max:500',
             ]);
-        
+
             // Create a new follow-up record
             $followup = CandidateFollowup::create([
                 'candidate_id' => $request->candidate_id,
                 'follow_up' => $request->notes,
             ]);
-    
+
             $data = InterviewDetail::find($request->interview_id);
             $data->status = "1";
             $data->save();
-        
+
             // Return success response
             return response()->json([
                 'success' => true,
