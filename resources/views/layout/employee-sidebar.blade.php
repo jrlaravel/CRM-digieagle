@@ -144,6 +144,10 @@
 							</li>
 						</ul>
 					</li>
+
+					<a href="{{ route('emp/media-manager') }}" class="sidebar-link {{ request()->routeIs('emp/media-manager') ? 'active' : '' }}">
+						<i class='fa fa-image {{ request()->routeIs('emp/media-manager') ? 'text-white' : '' }}'></i> <span class="align-middle">Media Manager</span>
+					</a>
 					@endif	
 		
 					<a href="{{ route('emp/attendance') }}" class="sidebar-link {{ request()->routeIs('emp/attendance') ? 'active' : '' }}">
@@ -166,11 +170,6 @@
 						<i class='fa fa-birthday-cake {{ request()->routeIs('emp/calendar') ? 'text-white' : '' }}'></i> <span class="align-middle">Birthdays and festival</span>
 					</a>
 
-					<a href="{{ route('emp/media-manager') }}" class="sidebar-link {{ request()->routeIs('emp/media-manager') ? 'active' : '' }}">
-						<i class='fa fa-image {{ request()->routeIs('emp/media-manager') ? 'text-white' : '' }}'></i> <span class="align-middle">Media Manager</span>
-					</a>
-
-		
 					{{-- <a href="{{ route('emp/projects') }}" class="sidebar-link {{ request()->routeIs('emp/projects') ? 'active' : '' }}">
 						<i class='fa fa-project-diagram {{ request()->routeIs('emp/projects') ? 'text-white' : '' }}'></i> <span class="align-middle">Projects</span>
 					</a> --}}
