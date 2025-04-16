@@ -403,7 +403,7 @@
                 }
 
                 $.ajax({
-                    url: "{{ route('admin.assign-candidate-details') }}",
+                    url: "{{ route('assign-candidate-details') }}",
                     type: "POST",
                     data: {
                         _token: token,

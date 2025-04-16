@@ -13,9 +13,7 @@ use App\Models\Candidate_details;
 use App\Models\CandidateFollowup;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Support\Facades\Storage;
-use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Facades\DB;
-use App\Mail\InterviewScheduledMail;
 use Carbon\Carbon;
 
 class HRRequirmentController extends Controller
@@ -27,21 +25,20 @@ class HRRequirmentController extends Controller
         return view('employee/candidate-list', compact('candidates'));
     }
 
-    public function add(Request $request)
+    public function add_candidate_link(Request $request)
     {
-        // return $request->all();
         $token = $request->get('_token');
         $name = $request->get('name');
         $link = route('add-candidate', ['token' => $name]);
-
+    
         // Save using the model
         Candidate_link::create([
             'name' => $name,
             'token' => $token,
             'link' => $link,
         ]);
-
-        return redirect()->back()->with('success', 'Link created Successfully');
+    
+        return redirect()->back()->with('success','Link created Successfully');  
     }
 
     public function delete($id)
@@ -63,12 +60,13 @@ class HRRequirmentController extends Controller
         }
 
         // Pass the token to the view
-        return view('employee.add-candidate', ['token' => $token]);
+        return view('employee/add-candidate', ['token' => $token]);
     }
 
 
     public function store_candidate(Request $request)
     {
+        return $request->all();
         $candidate = Candidate_details::where('email', '=', $request->email)->first();
         if ($candidate != null) {
             return view('layout/success');
@@ -148,25 +146,6 @@ class HRRequirmentController extends Controller
         $data = candidate_details::find($id);
         $data->delete();
         return back()->with('success', 'Candidate details deleted successfully.');
-    }
-
-
-    public function assign_candidate_details(Request $request)
-    {
-        $request->validate([
-            'id' => 'required|exists:candidate_details,id',
-            'assign_to' => 'required',
-        ]);
-
-        $candidate = Candidate_details::find($request->id);
-        if (!$candidate) {
-            return response()->json(['error' => 'Candidate not found'], 404);
-        }
-
-        $candidate->assign_to = $request->assign_to;
-        $candidate->save();
-
-        return response()->json(['success' => 'Candidate assigned successfully!']);
     }
 
     public function cv_list()

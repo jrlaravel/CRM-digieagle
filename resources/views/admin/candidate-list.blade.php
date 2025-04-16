@@ -71,7 +71,7 @@
                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
             <div class="modal-body m-3">
-                <form method="POST" action="{{route('admin/generate-link')}}" id="linkgenerate">
+                <form method="POST" action="{{route('generate-link')}}" id="linkgenerate">
                     @csrf
                     <div class="mb-3">
                         <label class="form-label" for="cardName">Candidate Name</label>

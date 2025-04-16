@@ -31,10 +31,13 @@ use Illuminate\Http\Request;
 
 Route::get('/', [LoginController::class, 'index'])->name('emp/login'); 
 
+Route::post('generate-link', [ReviewController::class, 'add_candidate_link'])->name('generate-link');
 Route::get('add-candidate/{token}', [HRRequirmentController::class, 'add_candidate'])->name('add-candidate');
-Route::post('add-candidate-data', [HRRequirmentController::class, 'store_candidate'])->name('add-candidate-data');
+Route::post('add-candidate-data', [ReviewController::class, 'store_candidate'])->name('add-candidate-data');
 Route::get('review/{candidate}', [ReviewController::class, 'index'])->name('review');
 Route::post('add-review', [ReviewController::class, 'store'])->name('add-review');
+Route::post('assign-candidate-details', [ReviewController::class, 'assign_candidate_details'])->name('assign-candidate-details');
+
 
 Route::prefix('emp')->group(function () {
 
@@ -83,12 +86,11 @@ Route::prefix('emp')->group(function () {
         Route::get('edit-emp-data/{id}', [HREmployeeController::class, 'edit'])->name('emp/edit-emp-data'); 
         Route::post('update-emp-data', [HREmployeeController::class, 'update'])->name('emp/update-emp-data');
         Route::get('candidate-list', [HRRequirmentController::class, 'index'])->name('emp/candidate-list');
-        Route::post('generate-link', [HRRequirmentController::class, 'add'])->name('emp/generate-link');
+        Route::post('generate-link', [HRRequirmentController::class, 'add_candidate_link'])->name('emp/generate-link');
         Route::get('delete-link/{id}', [HRRequirmentController::class, 'delete'])->name('emp/delete-link');
         Route::get('candidate-details', [HRRequirmentController::class, 'candidate_details'])->name('emp/candidate-details');
         Route::get('view-candidate/{id}', [HRRequirmentController::class, 'view_candidate'])->name('emp/view-candidate');
         Route::get('delete-candidate-details/{id}', [HRRequirmentController::class, 'candidate_details_delete'])->name('emp/delete-candidate-details');
-        Route::post('assign-candidate-details', [HRRequirmentController::class, 'assign_candidate_details'])->name('emp.assign-candidate-details');
         Route::get('candidate-cv-list', [HRRequirmentController::class, 'cv_list'])->name('emp/candidate-cv-list');
         Route::post('add-cv',[HRRequirmentController::class, 'store_cv'])->name('emp/add-cv');
         Route::get('website-cv-list', [HRRequirmentController::class, 'website_cv_list'])->name('emp/website-cv-list'); 
@@ -235,7 +237,6 @@ Route::prefix('admin')->group(function () {
         Route::get('activity_log', [EmployeeController::class, 'activity_log'])->name('admin/activity_log');
         Route::post('activity-log/download', [EmployeeController::class, 'downloadActivityLogPDF'])->name('admin/activity_log/download');
         Route::get('candidate-list', [RequirmentController::class, 'index'])->name('admin/candidate-list');
-        Route::post('generate-link', [RequirmentController::class, 'add'])->name('admin/generate-link');
         Route::get('delete-link/{id}', [RequirmentController::class, 'delete'])->name('admin/delete-link');
         Route::get('candidate-details', [RequirmentController::class, 'candidate_details'])->name('admin/candidate-details');
         Route::get('view-candidate/{id}', [RequirmentController::class, 'view_candidate'])->name('admin/view-candidate');
@@ -244,7 +245,6 @@ Route::prefix('admin')->group(function () {
         Route::post('add-hosting-data', [ClientController::class, 'hosting_data_store'])->name('admin/add-hosting-data');
         Route::delete('delete-hosting-data', [ClientController::class, 'hosting_data_delete'])->name('admin/delete-hosting-data');
         Route::post('update-hosting-data', [ClientController::class, 'update_hosting_data'])->name('admin/update-hosting-data');
-        Route::post('assign-candidate-details', [RequirmentController::class, 'assign_candidate_details'])->name('admin.assign-candidate-details');
         Route::post('add-candidate-followup', [RequirmentController::class, 'add_followup'])->name('admin/add-candidate-followup');
         Route::get('lead_questions',[LeadController::class, 'lead_question'])->name('admin/lead_questions');
         Route::post('add_lead_question',[LeadController::class, 'add_lead_question'])->name('admin/add_lead_question');
