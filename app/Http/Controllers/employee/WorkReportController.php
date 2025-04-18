@@ -34,7 +34,6 @@ class WorkReportController extends Controller
 
     public function add_work_report(Request $request)
     {
-        // return $request->all();  
         // Get the report data and other fields from the request
         $reportData = $request->input('report_data');
         $date = $request->input('report_date');
@@ -231,7 +230,7 @@ class WorkReportController extends Controller
         if (empty($data)) {
             return redirect()->back()->with('error', 'No work report found');
         }
-    
+        
         // Return view with data
         return view('employee/edit-work-report', compact('data', 'companydata','status'));
     }

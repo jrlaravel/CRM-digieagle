@@ -285,11 +285,12 @@ document.addEventListener("DOMContentLoaded", function () {
         }
 
         const reportDate = document.getElementById("report-date").value || new Date().toISOString().split('T')[0];
-
+        
         sendToController(tableData, reportDate);
     });
 
     function sendToController(data, reportDate) {
+
         fetch('/emp/add-work-report', {
             method: 'POST',
             headers: {

@@ -185,7 +185,7 @@
                                         <input type="time" name="end_time" class="form-control end-time" id="add-end-time" required />
                     
                                         <label for="form-label">Status</label>
-                                        <select name="status[]" class="form-control" required id="status">
+                                        <select name="status" class="form-control" required id="status">
                                             <option value="">Select Status</option>
                                             @foreach($status as $value)
                                              <option value="{{$value->name}}">{{$value->name}}</option>
